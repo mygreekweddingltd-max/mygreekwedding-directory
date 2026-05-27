@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-title" content="MGW Admin"/>
+<title>My Greek Wedding — Planner Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F8F5F0;--surface:#FFFFFF;--surface2:#F2EDE6;
+  --ink:#1A1714;--mid:#6B6052;--light:#A09080;
+  --gold:#C9A96E;--gold-light:#F0E6D3;--gold-dark:#A8864A;
+  --rose:#C97A7A;--rose-light:#F5E8E8;
+  --green:#5A8A5A;--green-light:#E8F2E8;
+  --blue:#5A7A9A;--blue-light:#E8EFF5;
+  --border:rgba(201,169,110,0.2);--border-strong:rgba(201,169,110,0.4);
+  --shadow:0 2px 20px rgba(26,23,20,0.08);
+  --shadow-lg:0 8px 40px rgba(26,23,20,0.12);
+  --radius:12px;--radius-sm:8px;
+}
+body{background:var(--bg);color:var(--ink);font-family:'Jost',sans-serif;font-weight:300;min-height:100vh}
+
+/* ── AUTH ── */
+#auth-screen{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center}
+.auth-card{background:var(--surface);border-radius:20px;padding:3rem;width:360px;box-shadow:var(--shadow-lg);text-align:center}
+.auth-logo{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;margin-bottom:.3rem}
+.auth-logo em{font-style:italic;color:var(--gold)}
+.auth-sub{font-size:11px;color:var(--light);letter-spacing:.1em;text-transform:uppercase;margin-bottom:2rem}
+.auth-input{width:100%;padding:12px 16px;border:1px solid var(--border-strong);border-radius:10px;background:var(--bg);font-family:'Jost',sans-serif;font-size:14px;color:var(--ink);outline:none;text-align:center;letter-spacing:.15em;margin-bottom:1rem}
+.auth-input:focus{border-color:var(--gold)}
+.auth-btn{width:100%;padding:12px;border-radius:10px;border:none;background:var(--gold);color:#fff;font-family:'Jost',sans-serif;font-size:13px;font-weight:500;cursor:pointer;letter-spacing:.05em;transition:background .15s}
+.auth-btn:hover{background:var(--gold-dark)}
+.auth-err{font-size:12px;color:var(--rose);min-height:16px;margin-top:.5rem}
+
+/* ── LAYOUT ── */
+.layout{display:flex;height:100vh;overflow:hidden}
+
+/* ── SIDEBAR ── */
+.sidebar{width:240px;min-width:240px;background:var(--ink);display:flex;flex-direction:column;height:100vh;position:sticky;top:0}
+.sidebar-top{padding:1.5rem 1.2rem 1rem;border-bottom:1px solid rgba(255,255,255,0.08)}
+.sidebar-logo{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:400;color:#fff;line-height:1.3}
+.sidebar-logo em{font-style:italic;color:var(--gold)}
+.sidebar-logo small{display:block;font-family:'Jost',sans-serif;font-size:9px;color:rgba(255,255,255,0.35);letter-spacing:.12em;text-transform:uppercase;margin-top:2px}
+.sidebar-nav{flex:1;padding:.8rem 0;overflow-y:auto}
+.nav-section{padding:.5rem 1.2rem .3rem;font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,0.3)}
+.nav-btn{display:flex;align-items:center;gap:.7rem;padding:.55rem 1.2rem;cursor:pointer;transition:background .12s;color:rgba(255,255,255,0.6);font-size:12.5px;border:none;background:none;width:100%;text-align:left}
+.nav-btn:hover{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.9)}
+.nav-btn.active{background:rgba(201,169,110,0.15);color:var(--gold)}
+.nav-btn .nav-icon{width:18px;text-align:center;font-size:14px}
+.nav-btn .nav-badge{margin-left:auto;background:var(--rose);color:#fff;font-size:9px;font-weight:600;padding:1px 6px;border-radius:99px}
+.sidebar-footer{padding:1rem 1.2rem;border-top:1px solid rgba(255,255,255,0.08)}
+.couple-selector{width:100%;padding:7px 10px;border:1px solid rgba(255,255,255,0.15);border-radius:8px;background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.8);font-family:'Jost',sans-serif;font-size:12px;outline:none;cursor:pointer}
+.couple-selector option{background:var(--ink);color:#fff}
+
+/* ── MAIN ── */
+.main{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:.9rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:0 1px 8px rgba(26,23,20,0.04)}
+.topbar-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;color:var(--ink)}
+.topbar-title em{font-style:italic;color:var(--gold)}
+.topbar-actions{display:flex;gap:8px;align-items:center}
+.btn{padding:7px 16px;border-radius:8px;border:none;font-family:'Jost',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all .15s}
+.btn-gold{background:var(--gold);color:#fff}
+.btn-gold:hover{background:var(--gold-dark)}
+.btn-outline{background:var(--surface);color:var(--mid);border:1px solid var(--border-strong)}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold-dark)}
+.btn-danger{background:var(--rose-light);color:var(--rose);border:1px solid rgba(201,122,122,0.3)}
+.btn-danger:hover{background:var(--rose);color:#fff}
+.content{flex:1;overflow-y:auto;padding:1.5rem}
+
+/* ── VIEWS ── */
+.view{display:none}
+.view.active{display:block}
+
+/* ── DASHBOARD ── */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:1.5rem}
+.stat-card{background:var(--surface);border-radius:var(--radius);padding:1.2rem;border:1px solid var(--border)}
+.stat-card .stat-label{font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--light);margin-bottom:.4rem}
+.stat-card .stat-value{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:500;color:var(--ink);line-height:1}
+.stat-card .stat-sub{font-size:11px;color:var(--light);margin-top:.3rem}
+.couples-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.couple-card{background:var(--surface);border-radius:var(--radius);padding:1.2rem;border:1px solid var(--border);cursor:pointer;transition:all .15s}
+.couple-card:hover{border-color:var(--gold);box-shadow:var(--shadow)}
+.couple-card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.8rem}
+.couple-names{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:500;color:var(--ink)}
+.couple-status-badge{font-size:9px;font-weight:600;padding:2px 8px;border-radius:99px;letter-spacing:.05em;text-transform:uppercase}
+.status-active{background:var(--green-light);color:var(--green)}
+.status-new{background:var(--gold-light);color:var(--gold-dark)}
+.couple-meta{font-size:11px;color:var(--light);display:flex;flex-direction:column;gap:3px}
+.couple-meta span{display:flex;align-items:center;gap:5px}
+.couple-progress{margin-top:.8rem}
+.progress-label{font-size:10px;color:var(--light);margin-bottom:4px;display:flex;justify-content:space-between}
+.progress-bar{height:4px;background:var(--surface2);border-radius:99px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-dark));border-radius:99px;transition:width .5s}
+
+/* ── COUPLE DETAIL ── */
+.couple-header{background:var(--surface);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.2rem;border:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:1rem}
+.couple-header-info h2{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:500}
+.couple-header-info h2 em{font-style:italic;color:var(--gold)}
+.couple-header-meta{display:flex;gap:1rem;margin-top:.5rem;flex-wrap:wrap}
+.meta-item{font-size:12px;color:var(--mid);display:flex;align-items:center;gap:4px}
+.tabs{display:flex;gap:4px;background:var(--surface2);border-radius:var(--radius-sm);padding:4px;margin-bottom:1.2rem}
+.tab{padding:7px 16px;border-radius:6px;border:none;background:none;font-family:'Jost',sans-serif;font-size:12px;font-weight:400;color:var(--mid);cursor:pointer;transition:all .15s}
+.tab.active{background:var(--surface);color:var(--ink);font-weight:500;box-shadow:0 1px 4px rgba(26,23,20,0.08)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* ── VENDOR ASSIGNMENT ── */
+.vendor-search-bar{display:flex;gap:8px;margin-bottom:1rem}
+.vendor-search-bar input{flex:1;padding:8px 12px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);background:var(--surface);font-family:'Jost',sans-serif;font-size:12.5px;color:var(--ink);outline:none}
+.vendor-search-bar input:focus{border-color:var(--gold)}
+.vendor-search-bar select{padding:8px 12px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);background:var(--surface);font-family:'Jost',sans-serif;font-size:12.5px;color:var(--ink);outline:none;cursor:pointer}
+.vendor-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+.vendor-item{background:var(--surface);border-radius:var(--radius-sm);padding:.9rem;border:1px solid var(--border);position:relative;transition:all .15s}
+.vendor-item:hover{border-color:var(--gold)}
+.vendor-item.assigned{border-color:var(--green);background:var(--green-light)}
+.vendor-item-name{font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:500;color:var(--ink);margin-bottom:3px}
+.vendor-item-meta{font-size:10.5px;color:var(--light)}
+.vendor-item-actions{display:flex;gap:5px;margin-top:.6rem}
+.btn-sm{padding:4px 10px;border-radius:6px;border:none;font-family:'Jost',sans-serif;font-size:10.5px;font-weight:500;cursor:pointer;transition:all .15s}
+.btn-assign{background:var(--gold);color:#fff}
+.btn-assign:hover{background:var(--gold-dark)}
+.btn-remove{background:var(--rose-light);color:var(--rose)}
+.btn-remove:hover{background:var(--rose);color:#fff}
+
+/* ── ASSIGNED VENDORS ── */
+.assigned-list{display:flex;flex-direction:column;gap:8px}
+.assigned-item{background:var(--surface);border-radius:var(--radius-sm);padding:.9rem 1rem;border:1px solid var(--border);display:flex;align-items:center;gap:.8rem}
+.assigned-item-info{flex:1;min-width:0}
+.assigned-item-name{font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:500;color:var(--ink)}
+.assigned-item-meta{font-size:10.5px;color:var(--light)}
+.status-select{padding:4px 8px;border-radius:6px;border:1px solid var(--border-strong);background:var(--bg);font-family:'Jost',sans-serif;font-size:11px;color:var(--ink);cursor:pointer;outline:none}
+.stars{display:flex;gap:2px;color:var(--gold);font-size:14px}
+.star{cursor:default;opacity:0.3}
+.star.on{opacity:1}
+
+/* ── CHAT ── */
+.chat-wrap{display:flex;flex-direction:column;height:500px;background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden}
+.chat-messages{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:.6rem}
+.msg{max-width:75%;padding:.7rem .9rem;border-radius:12px;font-size:13px;line-height:1.5}
+.msg-planner{background:var(--gold);color:#fff;align-self:flex-end;border-bottom-right-radius:3px}
+.msg-couple{background:var(--surface2);color:var(--ink);align-self:flex-start;border-bottom-left-radius:3px}
+.msg-meta{font-size:10px;opacity:.6;margin-top:3px}
+.chat-input-row{display:flex;gap:8px;padding:.8rem 1rem;border-top:1px solid var(--border)}
+.chat-input{flex:1;padding:8px 12px;border:1px solid var(--border-strong);border-radius:8px;background:var(--bg);font-family:'Jost',sans-serif;font-size:13px;color:var(--ink);outline:none;resize:none}
+.chat-input:focus{border-color:var(--gold)}
+.chat-send{padding:8px 16px;border-radius:8px;border:none;background:var(--gold);color:#fff;font-family:'Jost',sans-serif;font-size:12px;font-weight:500;cursor:pointer}
+.chat-send:hover{background:var(--gold-dark)}
+
+/* ── TASKS ── */
+.tasks-list{display:flex;flex-direction:column;gap:6px}
+.task-item{background:var(--surface);border-radius:var(--radius-sm);padding:.75rem 1rem;border:1px solid var(--border);display:flex;align-items:center;gap:.8rem}
+.task-check{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border-strong);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;transition:all .15s}
+.task-check.done{background:var(--green);border-color:var(--green);color:#fff}
+.task-title{flex:1;font-size:13px;color:var(--ink)}
+.task-title.done{text-decoration:line-through;color:var(--light)}
+.task-due{font-size:10.5px;color:var(--light)}
+.add-task-row{display:flex;gap:8px;margin-top:.8rem}
+.add-task-row input{flex:1;padding:8px 12px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);background:var(--surface);font-family:'Jost',sans-serif;font-size:12.5px;color:var(--ink);outline:none}
+.add-task-row input:focus{border-color:var(--gold)}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(26,23,20,0.6);z-index:500;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .2s;backdrop-filter:blur(3px)}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--surface);border-radius:18px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;padding:2rem;box-shadow:var(--shadow-lg);transform:translateY(12px);transition:transform .2s}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:500}
+.modal-close{width:30px;height:30px;border-radius:99px;border:1px solid var(--border-strong);background:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--mid);transition:all .15s}
+.modal-close:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.form-group{margin-bottom:1rem}
+.form-label{font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--light);margin-bottom:4px;display:block}
+.form-input{width:100%;padding:9px 12px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);background:var(--bg);font-family:'Jost',sans-serif;font-size:13px;color:var(--ink);outline:none;transition:border-color .15s}
+.form-input:focus{border-color:var(--gold)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-actions{display:flex;gap:8px;justify-content:flex-end;padding-top:.8rem;border-top:1px solid var(--border);margin-top:1rem}
+
+/* ── MISC ── */
+.empty{text-align:center;padding:3rem;color:var(--light)}
+.empty p{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-style:italic;color:var(--mid);margin-bottom:.3rem}
+.badge{font-size:9.5px;font-weight:600;padding:2px 7px;border-radius:99px}
+.badge-suggested{background:var(--blue-light);color:var(--blue)}
+.badge-shortlisted{background:var(--gold-light);color:var(--gold-dark)}
+.badge-decided{background:var(--green-light);color:var(--green)}
+.badge-rejected{background:var(--rose-light);color:var(--rose)}
+.badge-booked{background:var(--green);color:#fff}
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--ink);color:#fff;padding:.8rem 1.2rem;border-radius:10px;font-size:13px;z-index:9999;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+
+@media(max-width:768px){
+  .sidebar{display:none}
+  .form-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- AUTH -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">My Greek <em>Wedding</em></div>
+    <div class="auth-sub">Planner Dashboard</div>
+    <input class="auth-input" type="password" id="auth-pw" placeholder="Enter password" autocomplete="off"/>
+    <button class="auth-btn" onclick="authCheck()">Enter →</button>
+    <div class="auth-err" id="auth-err"></div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="layout" id="app" style="display:none">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-top">
+      <div class="sidebar-logo">My Greek <em>Wedding</em><small>Planner Portal</small></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">Overview</div>
+      <button class="nav-btn active" onclick="showView('dashboard')" id="nav-dashboard">
+        <span class="nav-icon">🏠</span> Dashboard
+      </button>
+      <button class="nav-btn" onclick="showView('couples')" id="nav-couples">
+        <span class="nav-icon">💑</span> All Couples
+      </button>
+      <div class="nav-section" style="margin-top:.5rem">Active Couple</div>
+      <button class="nav-btn" onclick="showCoupleTab('overview')" id="nav-overview">
+        <span class="nav-icon">📋</span> Overview
+      </button>
+      <button class="nav-btn" onclick="showCoupleTab('vendors')" id="nav-vendors">
+        <span class="nav-icon">🏛</span> Vendors
+      </button>
+      <button class="nav-btn" onclick="showCoupleTab('tasks')" id="nav-tasks">
+        <span class="nav-icon">✅</span> Tasks
+      </button>
+      <button class="nav-btn" onclick="showCoupleTab('chat')" id="nav-chat">
+        <span class="nav-icon">💬</span> Chat
+        <span class="nav-badge" id="unread-badge" style="display:none">0</span>
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <div style="font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Active Couple</div>
+      <select class="couple-selector" id="couple-selector" onchange="selectCouple(this.value)">
+        <option value="">— Select couple —</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topbar-title">Dashboard</div>
+      <div class="topbar-actions">
+        <button class="btn btn-gold" onclick="openNewCoupleModal()">+ New Couple</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- DASHBOARD VIEW -->
+      <div class="view active" id="view-dashboard">
+        <div class="stats-grid" id="stats-grid">
+          <div class="stat-card"><div class="stat-label">Total Couples</div><div class="stat-value" id="stat-couples">—</div></div>
+          <div class="stat-card"><div class="stat-label">Upcoming Weddings</div><div class="stat-value" id="stat-upcoming">—</div></div>
+          <div class="stat-card"><div class="stat-label">Unread Messages</div><div class="stat-value" id="stat-messages">—</div></div>
+          <div class="stat-card"><div class="stat-label">Pending Tasks</div><div class="stat-value" id="stat-tasks">—</div></div>
+        </div>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;margin-bottom:.8rem;color:var(--mid)">Your Couples</h3>
+        <div class="couples-grid" id="couples-grid"></div>
+      </div>
+
+      <!-- COUPLES LIST VIEW -->
+      <div class="view" id="view-couples">
+        <div class="couples-grid" id="all-couples-grid"></div>
+      </div>
+
+      <!-- COUPLE DETAIL VIEW -->
+      <div class="view" id="view-couple">
+        <div class="couple-header" id="couple-header"></div>
+        <div class="tabs">
+          <button class="tab active" onclick="showCoupleTab('overview')" id="tab-overview">Overview</button>
+          <button class="tab" onclick="showCoupleTab('vendors')" id="tab-vendors">Vendors</button>
+          <button class="tab" onclick="showCoupleTab('tasks')" id="tab-tasks">Tasks</button>
+          <button class="tab" onclick="showCoupleTab('chat')" id="tab-chat">Chat</button>
+        </div>
+
+        <!-- OVERVIEW TAB -->
+        <div class="tab-content active" id="tc-overview">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+            <div>
+              <h4 style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--light);margin-bottom:.6rem">Wedding Details</h4>
+              <div id="couple-details-card" style="background:var(--surface);border-radius:var(--radius-sm);padding:1rem;border:1px solid var(--border);font-size:13px;line-height:2;color:var(--mid)"></div>
+            </div>
+            <div>
+              <h4 style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--light);margin-bottom:.6rem">Login Details for Couple</h4>
+              <div id="couple-login-card" style="background:var(--gold-light);border-radius:var(--radius-sm);padding:1rem;border:1px solid var(--border-strong);font-size:13px;line-height:2;color:var(--mid)"></div>
+            </div>
+          </div>
+          <div style="margin-top:1rem">
+            <h4 style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--light);margin-bottom:.6rem">Planner Notes</h4>
+            <textarea id="couple-notes-edit" style="width:100%;padding:10px 12px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);background:var(--surface);font-family:'Jost',sans-serif;font-size:13px;color:var(--ink);outline:none;resize:vertical;min-height:100px" onchange="saveNotes()" placeholder="Internal notes about this couple…"></textarea>
+          </div>
+        </div>
+
+        <!-- VENDORS TAB -->
+        <div class="tab-content" id="tc-vendors">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+            <!-- Left: assigned -->
+            <div>
+              <h4 style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--light);margin-bottom:.6rem">Assigned to this couple</h4>
+              <div class="assigned-list" id="assigned-list"><div class="empty"><p>No vendors assigned yet</p></div></div>
+            </div>
+            <!-- Right: search & add -->
+            <div>
+              <h4 style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--light);margin-bottom:.6rem">Add from directory</h4>
+              <div class="vendor-search-bar">
+                <input type="text" id="vendor-search" placeholder="Search vendors…" oninput="searchVendors()"/>
+                <select id="vendor-cat-filter" onchange="searchVendors()">
+                  <option value="">All categories</option>
+                  <option value="venue">🏛 Venues</option>
+                  <option value="photography">📷 Photography</option>
+                  <option value="flowers">🌸 Florists</option>
+                  <option value="food">🍽 Catering</option>
+                  <option value="videography">🎥 Video</option>
+                  <option value="band">🎸 Bands</option>
+                  <option value="makeup">💄 Makeup</option>
+                  <option value="hair_makeup">💅 Hair & Makeup</option>
+                  <option value="hair">✂️ Hair</option>
+                  <option value="dj">🎧 DJ</option>
+                  <option value="pastries">🎂 Pastries</option>
+                  <option value="transportation">🚗 Transport</option>
+                  <option value="officiants">⛪ Officiants</option>
+                </select>
+              </div>
+              <div class="vendor-list" id="vendor-search-results" style="max-height:400px;overflow-y:auto;display:flex;flex-direction:column;gap:6px"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TASKS TAB -->
+        <div class="tab-content" id="tc-tasks">
+          <div class="tasks-list" id="tasks-list"></div>
+          <div class="add-task-row">
+            <input type="text" id="new-task-input" placeholder="Add a task…" onkeydown="if(event.key==='Enter')addTask()"/>
+            <input type="date" id="new-task-date" style="padding:8px 10px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);background:var(--surface);font-family:'Jost',sans-serif;font-size:12px;color:var(--ink);outline:none"/>
+            <button class="btn btn-gold" onclick="addTask()">Add</button>
+          </div>
+        </div>
+
+        <!-- CHAT TAB -->
+        <div class="tab-content" id="tc-chat">
+          <div class="chat-wrap">
+            <div class="chat-messages" id="chat-messages"></div>
+            <div class="chat-input-row">
+              <textarea class="chat-input" id="chat-input" rows="2" placeholder="Type a message…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage()}"></textarea>
+              <button class="chat-send" onclick="sendMessage()">Send ➤</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- NEW COUPLE MODAL -->
+<div class="modal-overlay" id="new-couple-modal" onclick="closeModal(event,'new-couple-modal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">New Couple</div>
+      <button class="modal-close" onclick="closeModalById('new-couple-modal')">×</button>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Partner 1 Name</label><input class="form-input" id="nc-p1" type="text" placeholder="e.g. Sarah"/></div>
+      <div class="form-group"><label class="form-label">Partner 2 Name</label><input class="form-input" id="nc-p2" type="text" placeholder="e.g. James"/></div>
+    </div>
+    <div class="form-group"><label class="form-label">Couple Name (for login)</label><input class="form-input" id="nc-name" type="text" placeholder="e.g. Sarah & James"/></div>
+    <div class="form-group"><label class="form-label">Email (their login)</label><input class="form-input" id="nc-email" type="email" placeholder="couple@email.com"/></div>
+    <div class="form-group"><label class="form-label">Password (for their portal)</label><input class="form-input" id="nc-pw" type="text" placeholder="e.g. Greece2025"/></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Wedding Date</label><input class="form-input" id="nc-date" type="date"/></div>
+      <div class="form-group"><label class="form-label">Location</label><input class="form-input" id="nc-location" type="text" placeholder="e.g. Santorini"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Guest Count</label><input class="form-input" id="nc-guests" type="number" placeholder="80"/></div>
+      <div class="form-group"><label class="form-label">Budget Goal (€)</label><input class="form-input" id="nc-budget" type="number" placeholder="25000"/></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-outline" onclick="closeModalById('new-couple-modal')">Cancel</button>
+      <button class="btn btn-gold" onclick="createCouple()">Create Couple →</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SB_URL = 'https://bfslgaalktrgtbxwbdlv.supabase.co';
+const SB_KEY = 'sb_publishable_DZt4P67RcstQs7i7fktNeA_iuh9MXnJ';
+const ADMIN_PW = 'Leenio';
+
+async function sbGet(table, query=''){
+  const res = await fetch(`${SB_URL}/rest/v1/${table}?${query}`,{headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`}});
+  if(!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+async function sbPost(table, data){
+  const res = await fetch(`${SB_URL}/rest/v1/${table}`,{method:'POST',headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify(data)});
+  if(!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+async function sbPatch(table, filter, data){
+  const res = await fetch(`${SB_URL}/rest/v1/${table}?${filter}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify(data)});
+  if(!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+async function sbDelete(table, filter){
+  const res = await fetch(`${SB_URL}/rest/v1/${table}?${filter}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`}});
+  if(!res.ok) throw new Error(await res.text());
+}
+
+// ── AUTH ──────────────────────────────────────────────────────────────────────
+document.getElementById('auth-pw').addEventListener('keydown', e => { if(e.key==='Enter') authCheck(); });
+function authCheck(){
+  if(document.getElementById('auth-pw').value === ADMIN_PW){
+    document.getElementById('auth-screen').style.display='none';
+    document.getElementById('app').style.display='flex';
+    init();
+  } else {
+    document.getElementById('auth-err').textContent='Wrong password';
+    document.getElementById('auth-pw').value='';
+  }
+}
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let couples=[], currentCouple=null, allVendors=[], assignedVendors=[], tasks=[], messages=[];
+let chatPoll=null;
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+async function init(){
+  await loadCouples();
+  await loadAllVendors();
+  renderDashboard();
+}
+
+async function loadCouples(){
+  couples = await sbGet('couples','order=wedding_date.asc');
+  const sel = document.getElementById('couple-selector');
+  sel.innerHTML = '<option value="">— Select couple —</option>';
+  couples.forEach(c => sel.add(new Option(`${c.partner1_name} & ${c.partner2_name}`, c.id)));
+}
+
+async function loadAllVendors(){
+  let all=[], page=0;
+  while(true){
+    const batch = await sbGet('vendors', `select=id,name,category,category_label,region,type,price_range&limit=1000&offset=${page*1000}&order=name.asc`);
+    all = all.concat(batch);
+    if(batch.length<1000) break;
+    page++;
+  }
+  allVendors = all;
+}
+
+// ── DASHBOARD ─────────────────────────────────────────────────────────────────
+async function renderDashboard(){
+  const now = new Date();
+  const upcoming = couples.filter(c => c.wedding_date && new Date(c.wedding_date) > now).length;
+  
+  // Count unread messages
+  let unread=0;
+  try{ const msgs = await sbGet('messages','read_by_planner=eq.false'); unread=msgs.length; }catch(e){}
+  
+  // Count pending tasks
+  let pending=0;
+  try{ const t = await sbGet('tasks','completed=eq.false'); pending=t.length; }catch(e){}
+
+  document.getElementById('stat-couples').textContent = couples.length;
+  document.getElementById('stat-upcoming').textContent = upcoming;
+  document.getElementById('stat-messages').textContent = unread;
+  document.getElementById('stat-tasks').textContent = pending;
+  if(unread>0){ document.getElementById('unread-badge').textContent=unread; document.getElementById('unread-badge').style.display=''; }
+
+  const grid = document.getElementById('couples-grid');
+  const allGrid = document.getElementById('all-couples-grid');
+  const html = couples.map(c => coupleCardHTML(c)).join('');
+  grid.innerHTML = html || '<div class="empty"><p>No couples yet</p><small>Click "+ New Couple" to add one</small></div>';
+  allGrid.innerHTML = html;
+}
+
+function coupleCardHTML(c){
+  const wDate = c.wedding_date ? new Date(c.wedding_date).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}) : 'Date TBD';
+  const daysLeft = c.wedding_date ? Math.ceil((new Date(c.wedding_date)-new Date())/(1000*60*60*24)) : null;
+  return `<div class="couple-card" onclick="selectCouple('${c.id}')">
+    <div class="couple-card-header">
+      <div class="couple-names">${c.partner1_name} <em style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold)">&</em> ${c.partner2_name}</div>
+      <span class="couple-status-badge status-active">Active</span>
+    </div>
+    <div class="couple-meta">
+      <span>📅 ${wDate}${daysLeft!==null&&daysLeft>0?` <em style="color:var(--gold)">· ${daysLeft} days</em>`:''}</span>
+      ${c.wedding_location?`<span>📍 ${c.wedding_location}</span>`:''}
+      ${c.guest_count?`<span>👥 ${c.guest_count} guests</span>`:''}
+    </div>
+  </div>`;
+}
+
+// ── SELECT COUPLE ─────────────────────────────────────────────────────────────
+async function selectCouple(id){
+  if(!id) return;
+  currentCouple = couples.find(c=>c.id===id);
+  if(!currentCouple) return;
+  document.getElementById('couple-selector').value = id;
+  showView('couple');
+  renderCoupleHeader();
+  await loadAssignedVendors();
+  await loadTasks();
+  await loadMessages();
+  showCoupleTab('overview');
+}
+
+function renderCoupleHeader(){
+  const c = currentCouple;
+  const wDate = c.wedding_date ? new Date(c.wedding_date).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}) : 'Date TBD';
+  document.getElementById('couple-header').innerHTML = `
+    <div class="couple-header-info">
+      <h2>${c.partner1_name} <em>&</em> ${c.partner2_name}</h2>
+      <div class="couple-header-meta">
+        ${c.wedding_date?`<span class="meta-item">📅 ${wDate}</span>`:''}
+        ${c.wedding_location?`<span class="meta-item">📍 ${c.wedding_location}</span>`:''}
+        ${c.guest_count?`<span class="meta-item">👥 ${c.guest_count} guests</span>`:''}
+        ${c.budget_goal?`<span class="meta-item">💰 €${Number(c.budget_goal).toLocaleString()} budget</span>`:''}
+      </div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-outline" onclick="openEditCoupleModal()">Edit</button>
+      <button class="btn btn-danger" onclick="deleteCouple()">Delete</button>
+    </div>`;
+  
+  document.getElementById('couple-details-card').innerHTML = `
+    <div>📧 ${c.email}</div>
+    <div>📅 ${wDate}</div>
+    ${c.wedding_location?`<div>📍 ${c.wedding_location}</div>`:''}
+    ${c.guest_count?`<div>👥 ${c.guest_count} guests</div>`:''}
+    ${c.budget_goal?`<div>💰 €${Number(c.budget_goal).toLocaleString()}</div>`:''}`;
+
+  document.getElementById('couple-login-card').innerHTML = `
+    <div>🌐 <strong>Portal URL:</strong> couple-portal.html</div>
+    <div>📧 <strong>Email:</strong> ${c.email}</div>
+    <div>🔑 <strong>Password:</strong> ${c.password_hash}</div>
+    <div style="font-size:11px;margin-top:.3rem;color:var(--gold-dark)">Share these login details with the couple</div>`;
+
+  document.getElementById('couple-notes-edit').value = c.notes||'';
+}
+
+async function saveNotes(){
+  if(!currentCouple) return;
+  await sbPatch('couples',`id=eq.${currentCouple.id}`,{notes:document.getElementById('couple-notes-edit').value});
+}
+
+// ── VENDOR ASSIGNMENT ─────────────────────────────────────────────────────────
+async function loadAssignedVendors(){
+  assignedVendors = await sbGet('couple_vendors',`couple_id=eq.${currentCouple.id}&order=created_at.asc`);
+  renderAssigned();
+  searchVendors();
+}
+
+function renderAssigned(){
+  const list = document.getElementById('assigned-list');
+  if(!assignedVendors.length){ list.innerHTML='<div class="empty"><p>No vendors yet</p></div>'; return; }
+  list.innerHTML = assignedVendors.map(av => {
+    const v = allVendors.find(x=>x.id===av.vendor_id)||{name:'Unknown',category:'',region:''};
+    const stars = [1,2,3,4,5].map(i=>`<span class="star${av.rating>=i?' on':''}" onclick="rateVendor('${av.id}',${i})">♥</span>`).join('');
+    return `<div class="assigned-item">
+      <div class="assigned-item-info">
+        <div class="assigned-item-name">${v.name}</div>
+        <div class="assigned-item-meta">${v.category||''}${v.region?' · '+v.region:''}</div>
+        <div class="stars">${stars}</div>
+      </div>
+      <select class="status-select" onchange="updateVendorStatus('${av.id}',this.value)">
+        <option value="suggested"${av.status==='suggested'?' selected':''}>Suggested</option>
+        <option value="shortlisted"${av.status==='shortlisted'?' selected':''}>Shortlisted</option>
+        <option value="decided"${av.status==='decided'?' selected':''}>Decided</option>
+        <option value="booked"${av.status==='booked'?' selected':''}>Booked ✓</option>
+        <option value="rejected"${av.status==='rejected'?' selected':''}>Rejected</option>
+      </select>
+      <button class="btn-sm btn-remove" onclick="removeVendor('${av.id}')">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function searchVendors(){
+  const q = document.getElementById('vendor-search').value.toLowerCase();
+  const cat = document.getElementById('vendor-cat-filter').value;
+  const assignedIds = new Set(assignedVendors.map(av=>av.vendor_id));
+  
+  let results = allVendors.filter(v => {
+    if(cat && v.category!==cat) return false;
+    if(q && !v.name.toLowerCase().includes(q) && !(v.region||'').toLowerCase().includes(q)) return false;
+    return true;
+  }).slice(0,30);
+
+  const el = document.getElementById('vendor-search-results');
+  if(!results.length){ el.innerHTML='<div style="font-size:12px;color:var(--light);text-align:center;padding:1rem">No vendors found</div>'; return; }
+  
+  el.innerHTML = results.map(v => {
+    const isAssigned = assignedIds.has(v.id);
+    return `<div class="vendor-item${isAssigned?' assigned':''}">
+      <div class="vendor-item-name">${v.name}</div>
+      <div class="vendor-item-meta">${v.category||''}${v.region?' · '+v.region:''}${v.price_range?' · '+v.price_range:''}</div>
+      <div class="vendor-item-actions">
+        ${isAssigned
+          ? `<button class="btn-sm btn-remove" onclick="removeVendorByVendorId('${v.id}')">Remove</button>`
+          : `<button class="btn-sm btn-assign" onclick="assignVendor('${v.id}','${v.category||''}')">+ Assign</button>`
+        }
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function assignVendor(vendorId, category){
+  if(!currentCouple) return;
+  try{
+    await sbPost('couple_vendors',{couple_id:currentCouple.id, vendor_id:vendorId, category});
+    await loadAssignedVendors();
+    toast('Vendor assigned! ✓');
+  }catch(e){ if(e.message.includes('duplicate')) toast('Already assigned!'); else toast('Error: '+e.message); }
+}
+
+async function removeVendor(cvId){
+  await sbDelete('couple_vendors',`id=eq.${cvId}`);
+  await loadAssignedVendors();
+  toast('Vendor removed');
+}
+
+async function removeVendorByVendorId(vendorId){
+  const av = assignedVendors.find(x=>x.vendor_id===vendorId);
+  if(av) await removeVendor(av.id);
+}
+
+async function updateVendorStatus(cvId, status){
+  await sbPatch('couple_vendors',`id=eq.${cvId}`,{status});
+  await loadAssignedVendors();
+}
+
+async function rateVendor(cvId, rating){
+  await sbPatch('couple_vendors',`id=eq.${cvId}`,{rating});
+  await loadAssignedVendors();
+}
+
+// ── TASKS ─────────────────────────────────────────────────────────────────────
+async function loadTasks(){
+  tasks = await sbGet('tasks',`couple_id=eq.${currentCouple.id}&order=created_at.asc`);
+  renderTasks();
+}
+
+function renderTasks(){
+  const el = document.getElementById('tasks-list');
+  if(!tasks.length){ el.innerHTML='<div class="empty"><p>No tasks yet</p></div>'; return; }
+  el.innerHTML = tasks.map(t => `
+    <div class="task-item">
+      <div class="task-check${t.completed?' done':''}" onclick="toggleTask('${t.id}',${!t.completed})">${t.completed?'✓':''}</div>
+      <div class="task-title${t.completed?' done':''}">${t.title}</div>
+      ${t.due_date?`<div class="task-due">📅 ${new Date(t.due_date).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</div>`:''}
+      <button style="background:none;border:none;color:var(--light);cursor:pointer;font-size:14px" onclick="deleteTask('${t.id}')">✕</button>
+    </div>`).join('');
+}
+
+async function addTask(){
+  const title = document.getElementById('new-task-input').value.trim();
+  const due = document.getElementById('new-task-date').value;
+  if(!title) return;
+  await sbPost('tasks',{couple_id:currentCouple.id, title, due_date:due||null});
+  document.getElementById('new-task-input').value='';
+  document.getElementById('new-task-date').value='';
+  await loadTasks();
+}
+
+async function toggleTask(id, completed){
+  await sbPatch('tasks',`id=eq.${id}`,{completed, completed_at:completed?new Date().toISOString():null});
+  await loadTasks();
+}
+
+async function deleteTask(id){
+  await sbDelete('tasks',`id=eq.${id}`);
+  await loadTasks();
+}
+
+// ── CHAT ──────────────────────────────────────────────────────────────────────
+async function loadMessages(){
+  if(chatPoll) clearInterval(chatPoll);
+  messages = await sbGet('messages',`couple_id=eq.${currentCouple.id}&order=created_at.asc`);
+  renderMessages();
+  // Mark all as read by planner
+  try{ await sbPatch('messages',`couple_id=eq.${currentCouple.id}&read_by_planner=eq.false`,{read_by_planner:true}); }catch(e){}
+  chatPoll = setInterval(async()=>{
+    if(currentCouple && document.getElementById('tc-chat').classList.contains('active')){
+      messages = await sbGet('messages',`couple_id=eq.${currentCouple.id}&order=created_at.asc`);
+      renderMessages();
+    }
+  }, 5000);
+}
+
+function renderMessages(){
+  const el = document.getElementById('chat-messages');
+  if(!messages.length){ el.innerHTML='<div style="text-align:center;padding:2rem;color:var(--light);font-size:13px">No messages yet — start the conversation!</div>'; return; }
+  el.innerHTML = messages.map(m => `
+    <div class="msg msg-${m.sender}" style="align-self:${m.sender==='planner'?'flex-end':'flex-start'}">
+      ${m.content}
+      <div class="msg-meta">${m.sender_name||m.sender} · ${new Date(m.created_at).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}</div>
+    </div>`).join('');
+  el.scrollTop = el.scrollHeight;
+}
+
+async function sendMessage(){
+  const input = document.getElementById('chat-input');
+  const content = input.value.trim();
+  if(!content||!currentCouple) return;
+  input.value='';
+  await sbPost('messages',{couple_id:currentCouple.id, sender:'planner', sender_name:'Planner', content, read_by_couple:false, read_by_planner:true});
+  await loadMessages();
+}
+
+// ── CREATE COUPLE ─────────────────────────────────────────────────────────────
+function openNewCoupleModal(){ document.getElementById('new-couple-modal').classList.add('open'); }
+
+async function createCouple(){
+  const p1=document.getElementById('nc-p1').value.trim();
+  const p2=document.getElementById('nc-p2').value.trim();
+  const name=document.getElementById('nc-name').value.trim()||`${p1} & ${p2}`;
+  const email=document.getElementById('nc-email').value.trim();
+  const pw=document.getElementById('nc-pw').value.trim();
+  const date=document.getElementById('nc-date').value;
+  const loc=document.getElementById('nc-location').value.trim();
+  const guests=document.getElementById('nc-guests').value;
+  const budget=document.getElementById('nc-budget').value;
+  if(!p1||!p2||!email||!pw){ toast('Please fill in required fields'); return; }
+  try{
+    await sbPost('couples',{name, partner1_name:p1, partner2_name:p2, email, password_hash:pw, wedding_date:date||null, wedding_location:loc||null, guest_count:guests?parseInt(guests):null, budget_goal:budget?parseFloat(budget):null});
+    closeModalById('new-couple-modal');
+    await loadCouples();
+    renderDashboard();
+    toast(`${p1} & ${p2} created! ✓`);
+    ['nc-p1','nc-p2','nc-name','nc-email','nc-pw','nc-date','nc-location','nc-guests','nc-budget'].forEach(id=>document.getElementById(id).value='');
+  }catch(e){ toast('Error: '+e.message); }
+}
+
+async function deleteCouple(){
+  if(!currentCouple) return;
+  if(!confirm(`Delete ${currentCouple.partner1_name} & ${currentCouple.partner2_name}? This cannot be undone.`)) return;
+  await sbDelete('couples',`id=eq.${currentCouple.id}`);
+  currentCouple=null;
+  await loadCouples();
+  showView('dashboard');
+  renderDashboard();
+  toast('Couple deleted');
+}
+
+// ── VIEW / TAB SWITCHING ──────────────────────────────────────────────────────
+function showView(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById(`view-${name}`).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const nb = document.getElementById(`nav-${name}`);
+  if(nb) nb.classList.add('active');
+  const titles={dashboard:'Dashboard',couples:'All Couples',couple:`${currentCouple?.partner1_name||''} & ${currentCouple?.partner2_name||''}`};
+  document.getElementById('topbar-title').textContent = titles[name]||'';
+}
+
+function showCoupleTab(name){
+  if(!currentCouple){ showView('dashboard'); return; }
+  showView('couple');
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(`tc-${name}`).classList.add('active');
+  document.getElementById(`tab-${name}`).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const nb = document.getElementById(`nav-${name}`);
+  if(nb) nb.classList.add('active');
+  if(name==='chat') loadMessages();
+}
+
+// ── MODAL ─────────────────────────────────────────────────────────────────────
+function closeModal(e, id){ if(e.target===document.getElementById(id)) closeModalById(id); }
+function closeModalById(id){ document.getElementById(id).classList.remove('open'); }
+
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// ── KEYBOARD ──────────────────────────────────────────────────────────────────
+document.addEventListener('keydown',e=>{if(e.key==='Escape') document.querySelectorAll('.modal-overlay.open').forEach(m=>m.classList.remove('open'));});
+</script>
+</body>
+</html>
