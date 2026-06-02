@@ -2,291 +2,238 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-title" content="My Wedding"/>
-<meta name="theme-color" content="#C9A96E"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>My Greek Wedding — Your Wedding Portal</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#FDFAF5;--surface:#FFFFFF;--surface2:#F5F0E8;
-  --ink:#1A1714;--mid:#6B6052;--light:#A09080;
-  --gold:#C9A96E;--gold-light:#F0E6D3;--gold-dark:#A8864A;
-  --rose:#C97A7A;--rose-light:#F5E8E8;
-  --green:#5A8A5A;--green-light:#E8F2E8;
-  --border:rgba(201,169,110,0.2);--border-strong:rgba(201,169,110,0.35);
-  --shadow:0 2px 20px rgba(26,23,20,0.07);
-  --shadow-lg:0 8px 40px rgba(26,23,20,0.12);
-  --radius:14px;--radius-sm:9px;
+:root {
+  --bg: #FDFAF5;
+  --surface: #FFFFFF;
+  --surface2: #F5F0E8;
+  --ink: #1A1714;
+  --mid: #6B6052;
+  --light: #A09080;
+  --gold: #C9A96E;
+  --gold-light: #F0E6D3;
+  --gold-dark: #A8864A;
+  --rose: #C97A7A;
+  --rose-light: #F5E8E8;
+  --green: #5A8A5A;
+  --green-light: #E8F2E8;
+  --blue: #5A7A9A;
+  --blue-light: #E8EFF5;
+  --border: rgba(201,169,110,0.2);
+  --border-strong: rgba(201,169,110,0.35);
+  --shadow: 0 2px 20px rgba(26,23,20,0.08);
+  --shadow-lg: 0 8px 40px rgba(26,23,20,0.12);
+  --radius: 14px;
+  --radius-sm: 9px;
 }
-body{background:var(--bg);color:var(--ink);font-family:'Jost',sans-serif;font-weight:300;min-height:100vh}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Jost',sans-serif;font-weight:300;background:var(--bg);color:var(--ink);min-height:100vh;}
 
-/* ── LOGIN ── */
-#login-screen{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center}
-.login-card{background:var(--surface);border-radius:24px;padding:3rem 2.5rem;width:380px;box-shadow:var(--shadow-lg);text-align:center}
-.login-logo{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:400;margin-bottom:.2rem;line-height:1.2}
-.login-logo em{font-style:italic;color:var(--gold)}
-.login-tagline{font-size:11px;color:var(--light);letter-spacing:.1em;text-transform:uppercase;margin-bottom:2rem}
-.login-form{display:flex;flex-direction:column;gap:.8rem}
-.login-input{width:100%;padding:13px 16px;border:1px solid var(--border-strong);border-radius:11px;background:var(--bg);font-family:'Jost',sans-serif;font-size:14px;color:var(--ink);outline:none;transition:border-color .15s}
-.login-input:focus{border-color:var(--gold)}
-.login-input::placeholder{color:var(--light)}
-.login-btn{padding:13px;border-radius:11px;border:none;background:var(--gold);color:#fff;font-family:'Cormorant Garamond',serif;font-size:17px;font-style:italic;cursor:pointer;letter-spacing:.05em;transition:background .15s}
-.login-btn:hover{background:var(--gold-dark)}
-.login-err{font-size:12px;color:var(--rose);min-height:16px}
+/* ── LOGIN SCREEN ── */
+#loginScreen{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;padding:20px;}
+.login-logo{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-style:italic;color:var(--gold-dark);letter-spacing:0.02em;text-align:center;}
+.login-tagline{font-size:0.78rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--light);margin-top:-16px;text-align:center;}
+.login-box{background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius);padding:36px 40px;width:100%;max-width:360px;display:flex;flex-direction:column;gap:16px;box-shadow:var(--shadow);}
+.login-box h2{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:var(--ink);text-align:center;}
+.login-box label{font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid);display:block;margin-bottom:4px;}
+.login-box input{border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:11px 14px;font-family:'Jost',sans-serif;font-weight:300;font-size:0.95rem;background:var(--bg);color:var(--ink);outline:none;width:100%;}
+.login-box input:focus{border-color:var(--gold);}
+.btn-gold{background:var(--gold);color:#fff;border:none;border-radius:var(--radius-sm);padding:12px 20px;font-family:'Jost',sans-serif;font-weight:500;font-size:0.9rem;cursor:pointer;transition:background 0.2s;width:100%;}
+.btn-gold:hover{background:var(--gold-dark);}
+.login-err{color:var(--rose);font-size:0.82rem;text-align:center;display:none;}
 
-/* ── APP LAYOUT ── */
-.app{display:none;flex-direction:column;min-height:100vh}
+/* ── MAIN APP ── */
+#app{display:none;flex-direction:column;min-height:100vh;}
 
-/* ── HEADER ── */
-.header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100;box-shadow:0 1px 10px rgba(26,23,20,0.05)}
-.header-logo{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:500;color:var(--ink)}
-.header-logo em{font-style:italic;color:var(--gold)}
-.header-couple{font-size:12px;color:var(--mid)}
-.header-nav{display:flex;gap:2px}
-.hnav-btn{padding:6px 12px;border-radius:8px;border:none;background:none;font-family:'Jost',sans-serif;font-size:12px;color:var(--mid);cursor:pointer;transition:all .15s;position:relative}
-.hnav-btn:hover{background:var(--gold-light);color:var(--gold-dark)}
-.hnav-btn.active{background:var(--gold-light);color:var(--gold-dark);font-weight:500}
-.hnav-badge{position:absolute;top:2px;right:4px;width:8px;height:8px;background:var(--rose);border-radius:50%;display:none}
-.hnav-badge.show{display:block}
+/* HERO */
+.portal-hero{background:linear-gradient(135deg,var(--gold-dark) 0%,var(--gold) 50%,#E8C88A 100%);padding:40px 24px 32px;color:#fff;text-align:center;position:relative;overflow:hidden;}
+.portal-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
+.hero-names{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-style:italic;line-height:1.1;margin-bottom:4px;}
+.hero-date{font-size:0.88rem;letter-spacing:0.1em;opacity:0.85;text-transform:uppercase;}
+.hero-location{font-size:0.88rem;opacity:0.85;margin-top:2px;}
+.countdown-row{display:flex;gap:20px;justify-content:center;margin-top:20px;}
+.countdown-box{text-align:center;}
+.countdown-num{font-family:'Cormorant Garamond',serif;font-size:2rem;line-height:1;}
+.countdown-label{font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;opacity:0.75;margin-top:2px;}
+.countdown-sep{font-size:1.8rem;opacity:0.5;line-height:2.2rem;}
 
-/* ── CONTENT ── */
-.content{flex:1;padding:1.5rem;max-width:1000px;margin:0 auto;width:100%}
-.view{display:none}
-.view.active{display:block}
+/* TOP NAV */
+.portal-nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0 16px;display:flex;align-items:center;gap:0;overflow-x:auto;flex-shrink:0;position:sticky;top:0;z-index:100;}
+.pnav-btn{display:flex;flex-direction:column;align-items:center;gap:2px;padding:0 14px;height:52px;border:none;background:none;font-family:'Jost',sans-serif;font-weight:400;font-size:0.75rem;color:var(--light);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.15s;white-space:nowrap;flex-shrink:0;}
+.pnav-btn:hover{color:var(--ink);}
+.pnav-btn.active{color:var(--gold-dark);border-bottom-color:var(--gold);font-weight:500;}
+.pnav-icon{font-size:1.1rem;}
 
-/* ── HOME ── */
-.hero{background:linear-gradient(135deg,var(--ink) 0%,#2D2820 100%);border-radius:20px;padding:2.5rem;margin-bottom:1.5rem;color:#fff;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;right:-30px;top:-30px;width:180px;height:180px;border-radius:50%;background:rgba(201,169,110,0.15)}
-.hero::after{content:'';position:absolute;right:20px;bottom:-40px;width:120px;height:120px;border-radius:50%;background:rgba(201,169,110,0.08)}
-.hero-names{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:400;line-height:1.2;margin-bottom:.4rem;position:relative}
-.hero-names em{font-style:italic;color:var(--gold)}
-.hero-date{font-size:13px;color:rgba(255,255,255,0.6);letter-spacing:.05em;position:relative}
-.hero-countdown{margin-top:1.5rem;display:flex;gap:1.5rem;position:relative}
-.countdown-unit{text-align:center}
-.countdown-num{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:400;color:var(--gold);line-height:1}
-.countdown-label{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:2px}
+/* CONTENT */
+.portal-content{flex:1;padding:20px 16px;max-width:800px;margin:0 auto;width:100%;}
 
-.section-title{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:500;color:var(--ink);margin-bottom:.8rem}
-.section-title em{font-style:italic;color:var(--gold)}
+/* ── OVERVIEW TAB ── */
+.cat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;}
+.cat-card-header{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;}
+.cat-card-header:hover{background:var(--gold-light);}
+.cat-card-emoji{font-size:1.3rem;width:30px;text-align:center;}
+.cat-card-name{font-weight:500;flex:1;}
+.cat-card-status{font-size:0.72rem;padding:3px 9px;border-radius:20px;}
+.badge-decided{background:var(--green-light);color:var(--green);}
+.badge-draft{background:#F0EDE8;color:var(--mid);}
+.cat-card-body{display:none;border-top:1px solid var(--border);padding:12px 16px;}
+.cat-card-body.open{display:block;}
+.vendor-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;}
+.vc-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+.vc-name{font-weight:500;font-size:0.95rem;}
+.vc-region{font-size:0.78rem;color:var(--light);}
+.vc-price{font-size:0.78rem;background:var(--gold-light);color:var(--gold-dark);padding:2px 8px;border-radius:10px;font-weight:500;flex-shrink:0;}
+.vc-rating{display:flex;gap:3px;margin-top:8px;}
+.heart-btn{background:none;border:none;cursor:pointer;font-size:1.2rem;padding:2px;transition:transform 0.15s;}
+.heart-btn:hover{transform:scale(1.2);}
+.heart-btn.filled{color:var(--rose);}
+.heart-btn.empty{color:var(--border-strong);}
+.vc-notes{margin-top:10px;}
+.vc-notes-input{width:100%;border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;font-family:'Jost',sans-serif;font-weight:300;font-size:0.85rem;background:var(--surface);color:var(--ink);outline:none;resize:vertical;min-height:48px;}
+.vc-notes-input:focus{border-color:var(--gold);}
+.vc-save-btn{margin-top:6px;background:var(--gold-light);color:var(--gold-dark);border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:6px 14px;font-family:'Jost',sans-serif;font-size:0.78rem;font-weight:500;cursor:pointer;}
+.vc-save-btn:hover{background:var(--gold);color:#fff;}
 
-/* Progress cards */
-.progress-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:1.5rem}
-.prog-card{background:var(--surface);border-radius:var(--radius-sm);padding:.9rem;border:1px solid var(--border);text-align:center}
-.prog-card-emoji{font-size:1.5rem;margin-bottom:.3rem}
-.prog-card-label{font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--light);margin-bottom:.5rem}
-.prog-card-status{font-size:11px;font-weight:500;padding:2px 8px;border-radius:99px}
-.status-suggested{background:rgba(90,122,154,0.1);color:#5A7A9A}
-.status-shortlisted{background:var(--gold-light);color:var(--gold-dark)}
-.status-decided{background:var(--green-light);color:var(--green)}
-.status-booked{background:var(--green);color:#fff}
-.status-rejected{background:var(--rose-light);color:var(--rose)}
+/* ── BUDGET TAB ── */
+.budget-summary{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.bs-item{text-align:center;}
+.bs-label{font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--light);}
+.bs-val{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--gold-dark);margin-top:4px;}
+.bs-val.red{color:var(--rose);}
+.budget-progress{background:var(--border);border-radius:4px;height:8px;overflow:hidden;margin-top:16px;grid-column:1/-1;}
+.budget-progress-fill{height:100%;background:var(--gold);border-radius:4px;transition:width 0.5s;}
+.budget-cat-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;overflow:hidden;}
+.budget-cat-row{display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer;}
+.budget-cat-row:hover{background:var(--gold-light);}
+.bcr-name{font-weight:500;flex:1;}
+.bcr-goal{font-size:0.85rem;color:var(--mid);}
+.bcr-actual{font-size:0.85rem;font-weight:500;}
+.bcr-actual.red{color:var(--rose);}
+.budget-items-body{display:none;border-top:1px solid var(--border);padding:12px 16px;}
+.budget-items-body.open{display:block;}
+.bli-row{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg);border-radius:var(--radius-sm);margin-bottom:6px;border:1px solid var(--border);}
+.bli-row-name{flex:1;font-size:0.88rem;}
+.bli-row-formula{font-size:0.78rem;color:var(--mid);}
+.bli-row-cost{font-size:0.88rem;font-weight:500;}
 
-/* ── VENDORS ── */
-.vendor-cats{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
-.cat-chip{padding:5px 12px;border-radius:99px;border:1px solid var(--border-strong);background:var(--surface);font-size:11px;color:var(--mid);cursor:pointer;transition:all .15s}
-.cat-chip:hover{border-color:var(--gold);color:var(--gold-dark)}
-.cat-chip.active{background:var(--gold);border-color:var(--gold);color:#fff}
-.vendor-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
-.vcard{background:var(--surface);border-radius:var(--radius);padding:1.1rem;border:1px solid var(--border);transition:all .15s;cursor:pointer}
-.vcard:hover{border-color:var(--gold);box-shadow:var(--shadow);transform:translateY(-2px)}
-.vcard-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.5rem}
-.vcard-name{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:500;color:var(--ink);line-height:1.25}
-.vcard-region{font-size:10.5px;color:var(--light);margin-bottom:.5rem}
-.vcard-tags{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:.6rem}
-.vcard-tag{font-size:9px;font-weight:500;padding:2px 6px;border-radius:99px;background:var(--gold-light);color:var(--gold-dark)}
-.vcard-footer{display:flex;align-items:center;justify-content:space-between}
-.vcard-stars{display:flex;gap:2px;font-size:16px;color:var(--gold)}
-.vcard-star{cursor:pointer;opacity:0.3;transition:opacity .1s}
-.vcard-star.on{opacity:1}
-.vcard-note{font-size:10px;color:var(--light);font-style:italic;margin-top:.3rem}
+/* ── PLAN TAB ── */
+.plan-progress{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;gap:16px;}
+.pp-label{font-size:0.82rem;color:var(--mid);flex:1;}
+.pp-pct{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--gold-dark);}
+.task-group{margin-bottom:20px;}
+.task-group-header{font-family:'Cormorant Garamond',serif;font-size:0.95rem;font-style:italic;color:var(--mid);padding:6px 0;border-bottom:1px solid var(--border);margin-bottom:10px;}
+.task-item{display:flex;align-items:flex-start;gap:12px;padding:10px 12px;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border);margin-bottom:6px;}
+.task-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border-strong);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.7rem;transition:all 0.2s;margin-top:1px;}
+.task-check.done{background:var(--green);border-color:var(--green);color:#fff;}
+.task-title{flex:1;font-size:0.9rem;}
+.task-title.done{text-decoration:line-through;color:var(--light);}
+.task-due{font-size:0.75rem;color:var(--mid);}
 
-/* Vendor detail modal */
-.vdetail-modal .modal{max-width:640px}
-.vdetail-contact{background:var(--surface2);border-radius:var(--radius-sm);padding:.8rem 1rem;margin-bottom:.8rem}
-.vdetail-contact-row{display:flex;align-items:center;gap:.5rem;font-size:13px;color:var(--mid);margin-bottom:3px}
-.vdetail-contact-row a{color:var(--gold-dark);text-decoration:none}
-.vdetail-contact-row a:hover{text-decoration:underline}
-.links-row{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.5rem}
-.link-pill{font-size:10.5px;font-weight:500;padding:4px 10px;border-radius:99px;border:1px solid var(--border-strong);background:var(--surface);color:var(--mid);text-decoration:none;transition:all .15s}
-.link-pill:hover{background:var(--gold);border-color:var(--gold);color:#fff}
-.vdetail-note-input{width:100%;padding:9px 12px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);background:var(--bg);font-family:'Jost',sans-serif;font-size:13px;color:var(--ink);outline:none;resize:vertical;min-height:70px}
-.vdetail-note-input:focus{border-color:var(--gold)}
+/* ── CHAT TAB ── */
+.chat-layout-portal{display:flex;flex-direction:column;height:calc(100vh - 200px);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.chat-list{border-bottom:1px solid var(--border);overflow-y:auto;max-height:220px;}
+.chat-list-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s;}
+.chat-list-item:hover,.chat-list-item.active{background:var(--gold-light);}
+.chat-list-item.active{border-left:3px solid var(--gold);}
+.cli-name{font-size:0.9rem;flex:1;}
+.cli-preview{font-size:0.75rem;color:var(--light);}
+.cli-time{font-size:0.7rem;color:var(--light);}
+.chat-messages-portal{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;}
+.msg-niovi{align-self:flex-start;max-width:78%;}
+.msg-me{align-self:flex-end;max-width:78%;}
+.msg-niovi .msg-bubble{background:var(--surface2);border-radius:4px 12px 12px 12px;padding:10px 14px;font-size:0.88rem;line-height:1.5;}
+.msg-me .msg-bubble{background:var(--gold-light);border-radius:12px 4px 12px 12px;padding:10px 14px;font-size:0.88rem;line-height:1.5;}
+.msg-meta{font-size:0.7rem;color:var(--light);margin-top:3px;padding:0 4px;}
+.msg-me .msg-meta{text-align:right;}
+.chat-input-portal{padding:12px 14px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:flex-end;}
+.chat-input-portal textarea{flex:1;border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:9px 12px;font-family:'Jost',sans-serif;font-weight:300;font-size:0.88rem;background:var(--bg);outline:none;resize:none;min-height:38px;max-height:100px;}
+.chat-input-portal textarea:focus{border-color:var(--gold);}
+.chat-send-portal{background:var(--gold);color:#fff;border:none;border-radius:var(--radius-sm);width:36px;height:36px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.95rem;flex-shrink:0;}
+.chat-send-portal:hover{background:var(--gold-dark);}
+.chat-new-thread-btn{margin:10px 14px;background:var(--gold-light);color:var(--gold-dark);border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:8px 14px;font-family:'Jost',sans-serif;font-size:0.82rem;font-weight:500;cursor:pointer;width:calc(100% - 28px);}
 
-/* ── TASKS ── */
-.task-item{background:var(--surface);border-radius:var(--radius-sm);padding:.8rem 1rem;border:1px solid var(--border);display:flex;align-items:center;gap:.8rem;margin-bottom:6px}
-.task-check{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--border-strong);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;transition:all .15s}
-.task-check.done{background:var(--green);border-color:var(--green);color:#fff}
-.task-info{flex:1}
-.task-title{font-size:13px;color:var(--ink)}
-.task-title.done{text-decoration:line-through;color:var(--light)}
-.task-due{font-size:11px;color:var(--light);margin-top:1px}
-
-/* ── CHAT ── */
-.chat-wrap{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);display:flex;flex-direction:column;height:60vh;overflow:hidden}
-.chat-messages{flex:1;overflow-y:auto;padding:1.2rem;display:flex;flex-direction:column;gap:.6rem}
-.msg{max-width:72%;padding:.7rem 1rem;border-radius:14px;font-size:13px;line-height:1.55}
-.msg-couple{background:var(--gold);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
-.msg-planner{background:var(--surface2);color:var(--ink);align-self:flex-start;border-bottom-left-radius:4px}
-.msg-meta{font-size:10px;opacity:.6;margin-top:3px}
-.chat-bottom{padding:.9rem 1.2rem;border-top:1px solid var(--border);display:flex;gap:8px}
-.chat-textarea{flex:1;padding:9px 13px;border:1px solid var(--border-strong);border-radius:10px;background:var(--bg);font-family:'Jost',sans-serif;font-size:13px;color:var(--ink);outline:none;resize:none}
-.chat-textarea:focus{border-color:var(--gold)}
-.chat-send-btn{padding:9px 18px;border-radius:10px;border:none;background:var(--gold);color:#fff;font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;cursor:pointer;transition:background .15s}
-.chat-send-btn:hover{background:var(--gold-dark)}
-
-/* ── MODAL ── */
-.modal-overlay{position:fixed;inset:0;background:rgba(26,23,20,0.55);z-index:500;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .2s;backdrop-filter:blur(3px)}
-.modal-overlay.open{opacity:1;pointer-events:all}
-.modal{background:var(--surface);border-radius:20px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;padding:1.8rem;box-shadow:var(--shadow-lg);transform:translateY(12px);transition:transform .2s}
-.modal-overlay.open .modal{transform:translateY(0)}
-.modal-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.2rem;gap:1rem}
-.modal-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:500}
-.modal-close{width:30px;height:30px;border-radius:99px;border:1px solid var(--border-strong);background:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--mid);flex-shrink:0;transition:all .15s}
-.modal-close:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
-.modal-section{margin-bottom:1.2rem}
-.modal-section-label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--light);margin-bottom:.6rem}
-.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:6px;margin-top:.5rem}
-.gallery-img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px;cursor:pointer;transition:opacity .15s}
-.gallery-img:hover{opacity:.85}
-.notes-box{background:var(--surface2);border-radius:8px;padding:.8rem 1rem;font-size:13px;color:var(--mid);line-height:1.6;white-space:pre-wrap;word-break:break-word}
-.notes-box.empty{color:var(--light);font-style:italic;white-space:normal}
-.save-btn{padding:8px 18px;border-radius:8px;border:none;background:var(--gold);color:#fff;font-family:'Jost',sans-serif;font-size:12px;font-weight:500;cursor:pointer}
-.save-btn:hover{background:var(--gold-dark)}
+/* ── MEDIA TAB ── */
+.media-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;}
+.media-section-title{font-weight:500;font-size:0.9rem;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.media-file-row{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border);margin-bottom:6px;cursor:pointer;}
+.media-file-row:hover{background:var(--gold-light);}
+.mfr-icon{font-size:1.3rem;width:28px;text-align:center;}
+.mfr-name{flex:1;font-size:0.88rem;}
+.mfr-type{font-size:0.7rem;padding:2px 7px;border-radius:10px;background:var(--gold-light);color:var(--gold-dark);font-weight:500;}
 
 /* ── TOAST ── */
-.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--ink);color:#fff;padding:.8rem 1.2rem;border-radius:10px;font-size:13px;z-index:9999;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none}
-.toast.show{opacity:1;transform:translateY(0)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:var(--radius-sm);font-size:0.85rem;z-index:999;opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.success{background:var(--green);}
+.toast.error{background:var(--rose);}
 
-@media(max-width:600px){
-  .content{padding:1rem}
-  .hero{padding:1.5rem}
-  .hero-names{font-size:1.7rem}
-  .vendor-cards{grid-template-columns:1fr 1fr}
-  .modal{padding:1.3rem}
+/* ── LOADING ── */
+.loading-screen{display:flex;align-items:center;justify-content:center;padding:60px;flex-direction:column;gap:12px;color:var(--light);}
+.spinner{width:28px;height:28px;border:2px solid var(--border-strong);border-top-color:var(--gold);border-radius:50%;animation:spin 0.7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:40px 20px;color:var(--light);}
+.empty-state-icon{font-size:2.2rem;margin-bottom:10px;}
+
+@media(max-width:500px){
+  .hero-names{font-size:1.8rem;}
+  .portal-content{padding:16px 12px;}
+  .login-box{padding:28px 24px;}
+  .budget-summary{grid-template-columns:1fr 1fr;}
 }
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="login-screen">
-  <div class="login-card">
-    <div class="login-logo">My Greek <em>Wedding</em></div>
-    <div class="login-tagline">Your Wedding Portal</div>
-    <div class="login-form">
-      <input class="login-input" type="email" id="login-email" placeholder="Your email address" autocomplete="email"/>
-      <input class="login-input" type="password" id="login-pw" placeholder="Password" autocomplete="current-password"/>
-      <button class="login-btn" onclick="doLogin()">Enter your portal →</button>
-      <div class="login-err" id="login-err"></div>
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-logo">My Greek Wedding</div>
+  <div class="login-tagline">Your Wedding Portal</div>
+  <div class="login-box">
+    <h2>Welcome 🌸</h2>
+    <div>
+      <label>Email</label>
+      <input type="email" id="loginEmail" placeholder="your@email.com" autocomplete="email"/>
     </div>
+    <div>
+      <label>Password</label>
+      <input type="password" id="loginPassword" placeholder="Your password" autocomplete="current-password"/>
+    </div>
+    <button class="btn-gold" onclick="doLogin()">Sign In</button>
+    <div class="login-err" id="loginErr">Incorrect email or password</div>
   </div>
 </div>
 
-<!-- APP -->
-<div class="app" id="app">
-  <div class="header">
-    <div class="header-logo">My Greek <em>Wedding</em></div>
-    <div class="header-nav">
-      <button class="hnav-btn active" onclick="showView('home')" id="hnav-home">🏠 Home</button>
-      <button class="hnav-btn" onclick="showView('vendors')" id="hnav-vendors">🏛 Vendors</button>
-      <button class="hnav-btn" onclick="showView('tasks')" id="hnav-tasks">✅ Tasks</button>
-      <button class="hnav-btn" onclick="showView('chat')" id="hnav-chat">
-        💬 Chat
-        <span class="hnav-badge" id="chat-badge"></span>
-      </button>
-    </div>
+<!-- MAIN APP -->
+<div id="app">
+  <!-- HERO -->
+  <div class="portal-hero" id="portalHero">
+    <div class="hero-names" id="heroNames">Loading...</div>
+    <div class="hero-date" id="heroDate"></div>
+    <div class="hero-location" id="heroLocation"></div>
+    <div class="countdown-row" id="countdownRow"></div>
   </div>
 
-  <div class="content">
+  <!-- NAV -->
+  <nav class="portal-nav">
+    <button class="pnav-btn active" data-tab="overview" onclick="switchTab('overview')"><span class="pnav-icon">♥</span>Overview</button>
+    <button class="pnav-btn" data-tab="budget" onclick="switchTab('budget')"><span class="pnav-icon">💰</span>Budget</button>
+    <button class="pnav-btn" data-tab="plan" onclick="switchTab('plan')"><span class="pnav-icon">📋</span>Plan</button>
+    <button class="pnav-btn" data-tab="media" onclick="switchTab('media')"><span class="pnav-icon">🖼</span>Documents</button>
+    <button class="pnav-btn" data-tab="chat" onclick="switchTab('chat')"><span class="pnav-icon">💬</span>Chat<span id="unreadDot" style="display:none;width:6px;height:6px;background:var(--rose);border-radius:50%;margin-left:3px;display:inline-block"></span></button>
+  </nav>
 
-    <!-- HOME -->
-    <div class="view active" id="view-home">
-      <div class="hero">
-        <div class="hero-names" id="hero-names">Loading…</div>
-        <div class="hero-date" id="hero-date"></div>
-        <div class="hero-countdown" id="hero-countdown"></div>
-      </div>
-      <div class="section-title">Your <em>Vendors</em> at a Glance</div>
-      <div class="progress-cards" id="progress-cards"></div>
-      <div class="section-title">Upcoming <em>Tasks</em></div>
-      <div id="home-tasks"></div>
-    </div>
-
-    <!-- VENDORS -->
-    <div class="view" id="view-vendors">
-      <div class="vendor-cats" id="vendor-cats"></div>
-      <div class="vendor-cards" id="vendor-cards"></div>
-    </div>
-
-    <!-- TASKS -->
-    <div class="view" id="view-tasks">
-      <div id="tasks-list"></div>
-    </div>
-
-    <!-- CHAT -->
-    <div class="view" id="view-chat">
-      <div class="chat-wrap">
-        <div class="chat-messages" id="chat-messages"></div>
-        <div class="chat-bottom">
-          <textarea class="chat-textarea" id="chat-input" rows="2" placeholder="Type a message to your planner…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}"></textarea>
-          <button class="chat-send-btn" onclick="sendMsg()">Send →</button>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- VENDOR DETAIL MODAL -->
-<div class="modal-overlay" id="vdetail-modal" onclick="closeModal(event,'vdetail-modal')">
-  <div class="modal">
-    <div class="modal-header">
-      <div>
-        <div class="modal-title" id="vd-name"></div>
-        <div id="vd-sub" style="font-size:11.5px;color:var(--light);margin-top:2px"></div>
-      </div>
-      <button class="modal-close" onclick="closeModalById('vdetail-modal')">×</button>
-    </div>
-    <!-- Stars -->
-    <div class="modal-section">
-      <div class="modal-section-label">Your Rating</div>
-      <div id="vd-stars" style="display:flex;gap:4px;font-size:24px;color:var(--gold)"></div>
-    </div>
-    <!-- Status -->
-    <div class="modal-section">
-      <div class="modal-section-label">Status</div>
-      <div id="vd-status"></div>
-    </div>
-    <!-- Contact -->
-    <div class="modal-section" id="vd-contact-section">
-      <div class="modal-section-label">Contact</div>
-      <div class="vdetail-contact" id="vd-contact"></div>
-    </div>
-    <!-- Links -->
-    <div class="modal-section" id="vd-links-section">
-      <div class="modal-section-label">Links</div>
-      <div class="links-row" id="vd-links"></div>
-    </div>
-    <!-- Notes from planner -->
-    <div class="modal-section" id="vd-admin-notes-section">
-      <div class="modal-section-label">Planner's Notes</div>
-      <div class="notes-box" id="vd-admin-notes"></div>
-    </div>
-    <!-- Photos -->
-    <div class="modal-section">
-      <div class="modal-section-label">Photos</div>
-      <div class="gallery-grid" id="vd-gallery"></div>
-    </div>
-    <!-- Couple notes -->
-    <div class="modal-section">
-      <div class="modal-section-label">Your Notes</div>
-      <textarea class="vdetail-note-input" id="vd-couple-notes" placeholder="Add your thoughts about this vendor…"></textarea>
-      <button class="save-btn" style="margin-top:.5rem" onclick="saveCoupleNote()">Save Note</button>
-    </div>
+  <!-- CONTENT -->
+  <div class="portal-content">
+    <div id="tabOverview"></div>
+    <div id="tabBudget" style="display:none"></div>
+    <div id="tabPlan" style="display:none"></div>
+    <div id="tabMedia" style="display:none"></div>
+    <div id="tabChat" style="display:none"></div>
   </div>
 </div>
 
@@ -296,328 +243,500 @@ body{background:var(--bg);color:var(--ink);font-family:'Jost',sans-serif;font-we
 const SB_URL = 'https://bfslgaalktrgtbxwbdlv.supabase.co';
 const SB_KEY = 'sb_publishable_DZt4P67RcstQs7i7fktNeA_iuh9MXnJ';
 
-async function sbGet(table,query=''){
-  const res=await fetch(`${SB_URL}/rest/v1/${table}?${query}`,{headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`}});
-  if(!res.ok) throw new Error(await res.text());
-  return res.json();
-}
-async function sbPost(table,data){
-  const res=await fetch(`${SB_URL}/rest/v1/${table}`,{method:'POST',headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify(data)});
-  if(!res.ok) throw new Error(await res.text());
-  return res.json();
-}
-async function sbPatch(table,filter,data){
-  const res=await fetch(`${SB_URL}/rest/v1/${table}?${filter}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify(data)});
-  if(!res.ok) throw new Error(await res.text());
-  return res.json();
-}
+let couple = null;
+let coupleVendors = [];
+let vendors = [];
+let tasks = [];
+let budgetItems = [];
+let chatThreads = [];
+let threadMessages = [];
+let mediaFiles = [];
+let activeThread = null;
+let countdownInterval = null;
 
-// ── LOGIN ─────────────────────────────────────────────────────────────────────
-let currentCouple=null, assignedVendors=[], allVendors=[], tasks=[], messages=[], currentCV=null;
-let chatPoll=null;
+const CATEGORIES = [
+  {id:'wedding_planning',label:'Wedding Planning',emoji:'📋'},
+  {id:'venue',label:'Venue',emoji:'🏛'},
+  {id:'photography',label:'Photography',emoji:'📷'},
+  {id:'videography',label:'Videography',emoji:'🎥'},
+  {id:'hair_makeup',label:'Hair & Makeup',emoji:'💄'},
+  {id:'hair',label:'Hair',emoji:'💇'},
+  {id:'makeup',label:'Makeup',emoji:'💋'},
+  {id:'flowers',label:'Florist',emoji:'🌸'},
+  {id:'officiants',label:'Officiants',emoji:'⛪'},
+  {id:'food',label:'Catering',emoji:'🍽'},
+  {id:'band',label:'Band',emoji:'🎸'},
+  {id:'dj',label:'DJ',emoji:'🎧'},
+  {id:'sound_light',label:'Sound & Lighting',emoji:'🔊'},
+  {id:'transportation',label:'Transportation',emoji:'🚌'},
+  {id:'accommodation',label:'Accommodation',emoji:'🏨'},
+  {id:'pastries',label:'Pastries',emoji:'🎂'},
+  {id:'rentals',label:'Rentals',emoji:'🪑'},
+  {id:'printing',label:'Printing',emoji:'🖨'},
+  {id:'fireworks',label:'Fireworks',emoji:'🎆'},
+  {id:'photo_booth',label:'Photo Booth',emoji:'📸'},
+  {id:'yacht',label:'Yacht',emoji:'⛵'},
+  {id:'live_entertainment',label:'Entertainment',emoji:'🎭'},
+  {id:'bar',label:'Bar',emoji:'🍸'},
+];
 
-document.getElementById('login-pw').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-
-async function doLogin(){
-  const email=document.getElementById('login-email').value.trim();
-  const pw=document.getElementById('login-pw').value.trim();
-  if(!email||!pw){document.getElementById('login-err').textContent='Please enter email and password';return;}
-  try{
-    const couples=await sbGet('couples',`email=eq.${encodeURIComponent(email)}`);
-    if(!couples.length){document.getElementById('login-err').textContent='Email not found';return;}
-    const c=couples[0];
-    if(c.password_hash!==pw){document.getElementById('login-err').textContent='Wrong password';return;}
-    currentCouple=c;
-    document.getElementById('login-screen').style.display='none';
-    document.getElementById('app').style.display='flex';
-    await init();
-  }catch(e){document.getElementById('login-err').textContent='Error: '+e.message;}
-}
-
-async function init(){
-  renderHero();
-  await loadAssignedVendors();
-  await loadTasks();
-  await loadMessages();
-  renderHome();
-  pollMessages();
-}
-
-// ── HERO ──────────────────────────────────────────────────────────────────────
-function renderHero(){
-  const c=currentCouple;
-  document.getElementById('hero-names').innerHTML=`${c.partner1_name} <em>&</em> ${c.partner2_name}`;
-  if(c.wedding_date){
-    const wDate=new Date(c.wedding_date);
-    document.getElementById('hero-date').textContent=wDate.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+(c.wedding_location?` · ${c.wedding_location}`:'');
-    const now=new Date();
-    const diff=wDate-now;
-    if(diff>0){
-      const d=Math.floor(diff/(1000*60*60*24));
-      const h=Math.floor((diff%(1000*60*60*24))/(1000*60*60));
-      const m=Math.floor((diff%(1000*60*60))/(1000*60));
-      document.getElementById('hero-countdown').innerHTML=`
-        <div class="countdown-unit"><div class="countdown-num">${d}</div><div class="countdown-label">Days</div></div>
-        <div class="countdown-unit"><div class="countdown-num">${h}</div><div class="countdown-label">Hours</div></div>
-        <div class="countdown-unit"><div class="countdown-num">${m}</div><div class="countdown-label">Minutes</div></div>`;
-    } else {
-      document.getElementById('hero-countdown').innerHTML='<div style="color:var(--gold);font-family:Cormorant Garamond,serif;font-size:1.5rem;font-style:italic">Congratulations! 🎉</div>';
-    }
-  }
-}
-
-// ── LOAD DATA ─────────────────────────────────────────────────────────────────
-async function loadAssignedVendors(){
-  assignedVendors=await sbGet('couple_vendors',`couple_id=eq.${currentCouple.id}&order=category.asc`);
-  // Load vendor details
-  if(assignedVendors.length){
-    const ids=assignedVendors.map(av=>av.vendor_id).join(',');
-    allVendors=await sbGet('vendors',`id=in.(${ids})&select=*`);
-  }
-}
-
-async function loadTasks(){
-  tasks=await sbGet('tasks',`couple_id=eq.${currentCouple.id}&order=due_date.asc.nullslast`);
-}
-
-async function loadMessages(){
-  messages=await sbGet('messages',`couple_id=eq.${currentCouple.id}&order=created_at.asc`);
-  // Mark as read by couple
-  try{await sbPatch('messages',`couple_id=eq.${currentCouple.id}&read_by_couple=eq.false`,{read_by_couple:true});}catch(e){}
-  renderMessages();
-  updateChatBadge(0);
-}
-
-function pollMessages(){
-  chatPoll=setInterval(async()=>{
-    const msgs=await sbGet('messages',`couple_id=eq.${currentCouple.id}&order=created_at.asc`);
-    const unread=msgs.filter(m=>m.sender==='planner'&&!m.read_by_couple).length;
-    if(unread>0){
-      updateChatBadge(unread);
-      const view=document.getElementById('view-chat');
-      if(view.classList.contains('active')){
-        messages=msgs;
-        renderMessages();
-        await sbPatch('messages',`couple_id=eq.${currentCouple.id}&read_by_couple=eq.false`,{read_by_couple:true});
-        updateChatBadge(0);
-      }
-    }
-  },6000);
-}
-
-function updateChatBadge(n){
-  const b=document.getElementById('chat-badge');
-  if(n>0){b.classList.add('show');}else{b.classList.remove('show');}
-}
-
-// ── HOME ──────────────────────────────────────────────────────────────────────
-function renderHome(){
-  // Progress cards
-  const cats={};
-  assignedVendors.forEach(av=>{
-    if(!cats[av.category]||['booked','decided'].includes(av.status)) cats[av.category]=av.status;
+async function sbGet(table, query='') {
+  const res = await fetch(`${SB_URL}/rest/v1/${table}?${query}`, {
+    headers: {'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`, 'Range': '0-999'}
   });
-  const catMeta={venue:'🏛',photography:'📷',flowers:'🌸',food:'🍽',videography:'🎥',band:'🎸',makeup:'💄',hair_makeup:'💅',hair:'✂️',dj:'🎧',pastries:'🎂',transportation:'🚗',officiants:'⛪',accommodation:'🏨'};
-  const catLabels={venue:'Venue',photography:'Photography',flowers:'Florist',food:'Catering',videography:'Video',band:'Band',makeup:'Makeup',hair_makeup:'Hair & Makeup',hair:'Hair',dj:'DJ',pastries:'Pastries',transportation:'Transport',officiants:'Officiant',accommodation:'Stay'};
-  const el=document.getElementById('progress-cards');
-  el.innerHTML=Object.keys(cats).map(cat=>`
-    <div class="prog-card" onclick="showView('vendors')">
-      <div class="prog-card-emoji">${catMeta[cat]||'📦'}</div>
-      <div class="prog-card-label">${catLabels[cat]||cat}</div>
-      <span class="prog-card-status status-${cats[cat]}">${cats[cat]}</span>
-    </div>`).join('') || '<div style="color:var(--light);font-size:13px">No vendors assigned yet</div>';
-
-  // Upcoming tasks
-  const upcoming=tasks.filter(t=>!t.completed).slice(0,5);
-  document.getElementById('home-tasks').innerHTML=upcoming.length
-    ? upcoming.map(t=>`
-        <div class="task-item">
-          <div class="task-check" onclick="toggleTask('${t.id}',true)"></div>
-          <div class="task-info">
-            <div class="task-title">${t.title}</div>
-            ${t.due_date?`<div class="task-due">📅 ${new Date(t.due_date).toLocaleDateString('en-GB',{day:'numeric',month:'long'})}</div>`:''}
-          </div>
-        </div>`).join('')
-    : '<div style="color:var(--light);font-size:13px;padding:.5rem 0">All tasks done! 🎉</div>';
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+async function sbPost(table, data) {
+  const res = await fetch(`${SB_URL}/rest/v1/${table}`, {
+    method: 'POST',
+    headers: {'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation'},
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+async function sbPatch(table, filter, data) {
+  const res = await fetch(`${SB_URL}/rest/v1/${table}?${filter}`, {
+    method: 'PATCH',
+    headers: {'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation'},
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
 }
 
-// ── VENDORS VIEW ──────────────────────────────────────────────────────────────
-function renderVendors(filterCat='all'){
-  const cats=['all',...new Set(assignedVendors.map(av=>av.category))];
-  const catLabels={all:'All',venue:'🏛 Venues',photography:'📷 Photography',flowers:'🌸 Florists',food:'🍽 Catering',videography:'🎥 Video',band:'🎸 Bands',makeup:'💄 Makeup',hair_makeup:'💅 Hair & Makeup',hair:'✂️ Hair',dj:'🎧 DJs',pastries:'🎂 Pastries',transportation:'🚗 Transport',officiants:'⛪ Officiants',accommodation:'🏨 Stay'};
-  document.getElementById('vendor-cats').innerHTML=cats.map(c=>`
-    <div class="cat-chip${filterCat===c?' active':''}" onclick="renderVendors('${c}')">${catLabels[c]||c}</div>`).join('');
+// ── LOGIN ──
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const pw = document.getElementById('loginPassword').value;
+  if (!email || !pw) return;
+  try {
+    const results = await sbGet('couples', `email=eq.${encodeURIComponent(email)}&select=*`);
+    if (!results.length) { showLoginError(); return; }
+    const c = results[0];
+    if (c.password_hash !== pw) { showLoginError(); return; }
+    couple = c;
+    localStorage.setItem('mgw_couple_id', c.id);
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    initPortal();
+  } catch(e) { showLoginError(); }
+}
 
-  const filtered=assignedVendors.filter(av=>filterCat==='all'||av.category===filterCat);
-  document.getElementById('vendor-cards').innerHTML=filtered.map(av=>{
-    const v=allVendors.find(x=>x.id===av.vendor_id)||{name:'Unknown',region:'',type:'',price_range:''};
-    const stars=[1,2,3,4,5].map(i=>`<span class="vcard-star${av.rating>=i?' on':''}">♥</span>`).join('');
-    return `<div class="vcard" onclick="openVendorDetail('${av.id}')">
-      <div class="vcard-header">
-        <div class="vcard-name">${v.name}</div>
-        <span class="prog-card-status status-${av.status}" style="font-size:9px;padding:2px 6px;border-radius:99px">${av.status}</span>
+function showLoginError() {
+  const el = document.getElementById('loginErr');
+  el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, 3000);
+}
+
+['loginEmail','loginPassword'].forEach(id => {
+  document.getElementById(id).addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+});
+
+// Auto-login if stored
+window.addEventListener('DOMContentLoaded', async () => {
+  const stored = localStorage.getItem('mgw_couple_id');
+  if (stored) {
+    try {
+      const results = await sbGet('couples', `id=eq.${stored}&select=*`);
+      if (results.length) {
+        couple = results[0];
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('app').style.display = 'flex';
+        initPortal();
+        return;
+      }
+    } catch(e) {}
+    localStorage.removeItem('mgw_couple_id');
+  }
+});
+
+async function initPortal() {
+  renderHero();
+  await loadData();
+  switchTab('overview');
+}
+
+function renderHero() {
+  const c = couple;
+  document.getElementById('heroNames').textContent = `${c.partner1_name} & ${c.partner2_name}`;
+  if (c.wedding_date) {
+    const d = new Date(c.wedding_date);
+    document.getElementById('heroDate').textContent = d.toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+  }
+  if (c.wedding_location) {
+    document.getElementById('heroLocation').textContent = '📍 ' + c.wedding_location;
+  }
+  startCountdown();
+}
+
+function startCountdown() {
+  if (!couple.wedding_date) return;
+  const target = new Date(couple.wedding_date);
+  function update() {
+    const now = new Date();
+    const diff = target - now;
+    if (diff < 0) { document.getElementById('countdownRow').innerHTML = '🎉 Your wedding day has arrived!'; return; }
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    document.getElementById('countdownRow').innerHTML = `
+      <div class="countdown-box"><div class="countdown-num">${d}</div><div class="countdown-label">Days</div></div>
+      <div class="countdown-sep">:</div>
+      <div class="countdown-box"><div class="countdown-num">${String(h).padStart(2,'0')}</div><div class="countdown-label">Hours</div></div>
+      <div class="countdown-sep">:</div>
+      <div class="countdown-box"><div class="countdown-num">${String(m).padStart(2,'0')}</div><div class="countdown-label">Mins</div></div>
+      <div class="countdown-sep">:</div>
+      <div class="countdown-box"><div class="countdown-num">${String(s).padStart(2,'0')}</div><div class="countdown-label">Secs</div></div>`;
+  }
+  update();
+  countdownInterval = setInterval(update, 1000);
+}
+
+async function loadData() {
+  const id = couple.id;
+  try {
+    [coupleVendors, tasks, budgetItems, chatThreads, threadMessages, mediaFiles] = await Promise.all([
+      sbGet('couple_vendors', `couple_id=eq.${id}&order=created_at.asc`),
+      sbGet('tasks', `couple_id=eq.${id}&order=due_date.asc`),
+      sbGet('budget_items', `couple_id=eq.${id}&visible_to_couple=eq.true&order=sort_order.asc`).catch(()=>[]),
+      sbGet('chat_threads', `couple_id=eq.${id}&order=sort_order.asc`).catch(()=>[]),
+      sbGet('thread_messages', `couple_id=eq.${id}&order=created_at.asc`).catch(()=>[]),
+      sbGet('media_files', `couple_id=eq.${id}&visible_to_couple=eq.true&order=created_at.desc`).catch(()=>[])
+    ]);
+    // Load visible vendors only
+    const shownVendors = coupleVendors.filter(cv => cv.show_to_couple !== false);
+    if (shownVendors.length) {
+      const ids = shownVendors.map(cv => `"${cv.vendor_id}"`).join(',');
+      vendors = await sbGet('vendors', `id=in.(${ids})`).catch(()=>[]);
+    }
+  } catch(e) { showToast('Error loading data', 'error'); }
+}
+
+// ── TABS ──
+function switchTab(tab) {
+  ['overview','budget','plan','media','chat'].forEach(t => {
+    document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).style.display = 'none';
+    document.querySelector(`[data-tab="${t}"]`)?.classList.remove('active');
+  });
+  document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).style.display = 'block';
+  document.querySelector(`[data-tab="${tab}"]`)?.classList.add('active');
+  if (tab === 'overview') renderOverview();
+  if (tab === 'budget') renderBudget();
+  if (tab === 'plan') renderPlan();
+  if (tab === 'media') renderMediaTab();
+  if (tab === 'chat') renderChatTab();
+}
+
+// ── OVERVIEW ──
+function renderOverview() {
+  const el = document.getElementById('tabOverview');
+  const shownVendors = coupleVendors.filter(cv => cv.show_to_couple !== false);
+  const usedCats = [...new Set(shownVendors.map(v => v.category))];
+  if (!usedCats.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🌸</div><div>Niovi is setting up your wedding plan.<br/>Check back soon!</div></div>`;
+    return;
+  }
+  el.innerHTML = CATEGORIES.filter(c => usedCats.includes(c.id)).map(cat => {
+    const cvs = shownVendors.filter(v => v.category === cat.id);
+    const decided = cvs.some(v => v.status === 'decided' || v.status === 'booked');
+    return `<div class="cat-card">
+      <div class="cat-card-header" onclick="toggleCatCard('${cat.id}')">
+        <span class="cat-card-emoji">${cat.emoji}</span>
+        <span class="cat-card-name">${cat.label}</span>
+        <span class="cat-card-status badge-${decided?'decided':'draft'}">${decided?'✓ Decided':'In progress'}</span>
+        <span>▼</span>
       </div>
-      <div class="vcard-region">📍 ${v.region||'Greece'}</div>
-      <div class="vcard-tags">
-        ${v.type?`<span class="vcard-tag">${v.type}</span>`:''}
-        ${v.price_range?`<span class="vcard-tag">${v.price_range}</span>`:''}
+      <div class="cat-card-body" id="catcard_${cat.id}">
+        ${cvs.map(cv => renderVendorCard(cv)).join('')}
       </div>
-      <div class="vcard-footer">
-        <div class="vcard-stars">${stars}</div>
-      </div>
-      ${av.couple_notes?`<div class="vcard-note">📝 ${av.couple_notes.substring(0,50)}…</div>`:''}
     </div>`;
-  }).join('') || '<div style="color:var(--light);font-size:13px;grid-column:1/-1;text-align:center;padding:2rem">No vendors in this category yet</div>';
+  }).join('');
 }
 
-// ── VENDOR DETAIL ─────────────────────────────────────────────────────────────
-function openVendorDetail(cvId){
-  currentCV=assignedVendors.find(av=>av.id===cvId);
-  if(!currentCV) return;
-  const v=allVendors.find(x=>x.id===currentCV.vendor_id)||{};
-  const c=v.contact||{};
-  const ac=c.all_contacts||[];
-
-  document.getElementById('vd-name').textContent=v.name||'Vendor';
-  document.getElementById('vd-sub').textContent=[v.type,v.region].filter(Boolean).join(' · ');
-
-  // Stars
-  document.getElementById('vd-stars').innerHTML=[1,2,3,4,5].map(i=>
-    `<span style="cursor:pointer;opacity:${currentCV.rating>=i?1:0.3}" onclick="rateVendorModal(${i})">♥</span>`).join('');
-
-  // Status
-  document.getElementById('vd-status').innerHTML=`<span class="prog-card-status status-${currentCV.status}">${currentCV.status}</span>`;
-
-  // Contact
-  if(ac.length){
-    document.getElementById('vd-contact-section').style.display='';
-    document.getElementById('vd-contact').innerHTML=ac.map(ct=>`
-      <div class="vdetail-contact-row">${ct.name?`<strong>${ct.name}</strong>`:''}</div>
-      ${(ct.phones||[]).map(p=>`<div class="vdetail-contact-row">📞 <a href="tel:${p}">${p}</a></div>`).join('')}
-      ${ct.email?`<div class="vdetail-contact-row">✉️ <a href="mailto:${ct.email}">${ct.email}</a></div>`:''}`).join('<hr style="border:none;border-top:1px solid var(--border);margin:.4rem 0">');
-  } else document.getElementById('vd-contact-section').style.display='none';
-
-  // Links
-  const links=[];
-  if(c.website){const u=c.website.startsWith('http')?c.website:'https://'+c.website;links.push(`<a class="link-pill" href="${u}" target="_blank">🌐 Website</a>`);}
-  if(c.instagram) links.push(`<a class="link-pill" href="${c.instagram}" target="_blank">📸 Instagram</a>`);
-  if(c.facebook) links.push(`<a class="link-pill" href="${c.facebook}" target="_blank">👥 Facebook</a>`);
-  const ls=document.getElementById('vd-links-section');
-  if(links.length){document.getElementById('vd-links').innerHTML=links.join('');ls.style.display='';}
-  else ls.style.display='none';
-
-  // Admin notes
-  const adminNotes=document.getElementById('vd-admin-notes');
-  if(currentCV.admin_notes){adminNotes.textContent=currentCV.admin_notes;adminNotes.classList.remove('empty');}
-  else{adminNotes.textContent='No notes from planner yet';adminNotes.classList.add('empty');}
-  document.getElementById('vd-admin-notes-section').style.display=currentCV.admin_notes?'':'none';
-
-  // Photos
-  const imgs=v.images||[];
-  document.getElementById('vd-gallery').innerHTML=imgs.length
-    ?imgs.map(src=>`<img class="gallery-img" src="${src}" onclick="window.open('${src}','_blank')">`).join('')
-    :'<div style="font-size:11px;color:var(--light);font-style:italic">No photos yet</div>';
-
-  // Couple notes
-  document.getElementById('vd-couple-notes').value=currentCV.couple_notes||'';
-
-  document.getElementById('vdetail-modal').classList.add('open');
-  document.body.style.overflow='hidden';
+function renderVendorCard(cv) {
+  const v = vendors.find(a => a.id === cv.vendor_id);
+  const name = v ? v.name : cv.vendor_id;
+  const region = v ? v.region || '' : '';
+  const price = v ? v.price_range || '' : '';
+  const rating = cv.rating || 0;
+  const hearts = [1,2,3,4,5].map(i => `<button class="heart-btn ${i<=rating?'filled':'empty'}" onclick="rateVendor('${cv.id}',${i})">${i<=rating?'♥':'♡'}</button>`).join('');
+  return `<div class="vendor-card">
+    <div class="vc-header">
+      <div><div class="vc-name">${name}</div><div class="vc-region">${region}</div></div>
+      ${price ? `<span class="vc-price">${price}</span>` : ''}
+    </div>
+    <div class="vc-rating">${hearts}</div>
+    <div class="vc-notes">
+      <textarea class="vc-notes-input" id="notes_${cv.id}" placeholder="Add your notes about this vendor..." rows="2">${cv.couple_notes || ''}</textarea>
+      <button class="vc-save-btn" onclick="saveNotes('${cv.id}')">Save notes</button>
+    </div>
+  </div>`;
 }
 
-async function rateVendorModal(rating){
-  if(!currentCV) return;
-  await sbPatch('couple_vendors',`id=eq.${currentCV.id}`,{rating});
-  currentCV.rating=rating;
-  document.getElementById('vd-stars').innerHTML=[1,2,3,4,5].map(i=>
-    `<span style="cursor:pointer;opacity:${rating>=i?1:0.3}" onclick="rateVendorModal(${i})">♥</span>`).join('');
-  assignedVendors.find(av=>av.id===currentCV.id).rating=rating;
-  renderVendors();
-  toast('Rating saved ✓');
+function toggleCatCard(catId) {
+  const el = document.getElementById('catcard_' + catId);
+  if (el) el.classList.toggle('open');
 }
 
-async function saveCoupleNote(){
-  if(!currentCV) return;
-  const notes=document.getElementById('vd-couple-notes').value.trim();
-  await sbPatch('couple_vendors',`id=eq.${currentCV.id}`,{couple_notes:notes});
-  currentCV.couple_notes=notes;
-  assignedVendors.find(av=>av.id===currentCV.id).couple_notes=notes;
-  renderVendors();
-  toast('Note saved ✓');
+async function rateVendor(cvId, rating) {
+  try {
+    await sbPatch('couple_vendors', `id=eq.${cvId}`, {rating, updated_at: new Date().toISOString()});
+    const cv = coupleVendors.find(v => v.id === cvId);
+    if (cv) cv.rating = rating;
+    renderOverview();
+    showToast('Rating saved!', 'success');
+  } catch(e) { showToast('Error saving rating', 'error'); }
 }
 
-// ── TASKS ─────────────────────────────────────────────────────────────────────
-function renderTasksList(){
-  const pending=tasks.filter(t=>!t.completed);
-  const done=tasks.filter(t=>t.completed);
-  const renderTask=t=>`
-    <div class="task-item">
-      <div class="task-check${t.completed?' done':''}" onclick="toggleTask('${t.id}',${!t.completed})">${t.completed?'✓':''}</div>
-      <div class="task-info">
-        <div class="task-title${t.completed?' done':''}">${t.title}</div>
-        ${t.due_date?`<div class="task-due">📅 ${new Date(t.due_date).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</div>`:''}
+async function saveNotes(cvId) {
+  const notes = document.getElementById('notes_' + cvId).value;
+  try {
+    await sbPatch('couple_vendors', `id=eq.${cvId}`, {couple_notes: notes, updated_at: new Date().toISOString()});
+    const cv = coupleVendors.find(v => v.id === cvId);
+    if (cv) cv.couple_notes = notes;
+    showToast('Notes saved!', 'success');
+  } catch(e) { showToast('Error saving notes', 'error'); }
+}
+
+// ── BUDGET ──
+function renderBudget() {
+  const el = document.getElementById('tabBudget');
+  const goal = couple.budget_goal || 0;
+  let actual = 0;
+  budgetItems.forEach(b => { actual += (b.guests||0)*(b.item_price||0); });
+  const pct = goal > 0 ? Math.min(100, (actual/goal)*100) : 0;
+
+  let html = `<div class="budget-summary">
+    <div class="bs-item"><div class="bs-label">Your Goal</div><div class="bs-val">€${Math.round(goal).toLocaleString()}</div></div>
+    <div class="bs-item"><div class="bs-label">Actual Total</div><div class="bs-val ${actual>goal?'red':''}">€${Math.round(actual).toLocaleString()}</div></div>
+    <div class="budget-progress" style="grid-column:1/-1"><div class="budget-progress-fill" style="width:${pct}%;background:${actual>goal?'var(--rose)':'var(--gold)'}"></div></div>
+  </div>`;
+
+  const cats = [...new Set(budgetItems.map(b => b.category))];
+  if (!cats.length) {
+    el.innerHTML = html + `<div class="empty-state"><div class="empty-state-icon">💰</div><div>Budget breakdown coming soon!</div></div>`;
+    return;
+  }
+  html += cats.map(catId => {
+    const cat = CATEGORIES.find(c => c.id === catId) || {emoji:'📦', label: catId};
+    const items = budgetItems.filter(b => b.category === catId);
+    let catActual = 0;
+    items.forEach(b => { catActual += (b.guests||0)*(b.item_price||0); });
+    const cvs = coupleVendors.filter(v => v.category === catId);
+    const catGoal = cvs.reduce((s,v) => s+(v.price_quoted||0), 0);
+    return `<div class="budget-cat-section">
+      <div class="budget-cat-row" onclick="toggleBudgetSection('${catId}')">
+        <span>${cat.emoji}</span>
+        <span class="bcr-name">${cat.label}</span>
+        ${catGoal ? `<span class="bcr-goal">Goal: €${Math.round(catGoal).toLocaleString()}</span>` : ''}
+        <span class="bcr-actual ${catActual>catGoal&&catGoal>0?'red':''}">€${Math.round(catActual).toLocaleString()}</span>
+        <span>▼</span>
+      </div>
+      <div class="budget-items-body" id="budgetsec_${catId}">
+        ${items.map(item => {
+          const cost = (item.guests||0)*(item.item_price||0);
+          return `<div class="bli-row">
+            <span class="bli-row-name">${item.item_name}</span>
+            ${item.guests && item.item_price ? `<span class="bli-row-formula">${item.guests} × €${item.item_price}</span>` : ''}
+            <span class="bli-row-cost">€${Math.round(cost).toLocaleString()}</span>
+          </div>`;
+        }).join('')}
       </div>
     </div>`;
-  document.getElementById('tasks-list').innerHTML=
-    (pending.length?`<div style="font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--light);margin-bottom:.6rem">To Do (${pending.length})</div>`+pending.map(renderTask).join(''):'')+
-    (done.length?`<div style="font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--light);margin:.8rem 0 .6rem">Completed (${done.length})</div>`+done.map(renderTask).join(''):'')
-    ||'<div style="text-align:center;padding:3rem;color:var(--light)">No tasks yet 🎉</div>';
+  }).join('');
+  el.innerHTML = html;
 }
 
-async function toggleTask(id,completed){
-  await sbPatch('tasks',`id=eq.${id}`,{completed,completed_at:completed?new Date().toISOString():null});
-  await loadTasks();
-  renderTasksList();
-  renderHome();
-  toast(completed?'Task done! ✓':'Task reopened');
+function toggleBudgetSection(catId) {
+  const el = document.getElementById('budgetsec_' + catId);
+  if (el) el.classList.toggle('open');
 }
 
-// ── CHAT ──────────────────────────────────────────────────────────────────────
-function renderMessages(){
-  const el=document.getElementById('chat-messages');
-  if(!messages.length){el.innerHTML='<div style="text-align:center;padding:2rem;color:var(--light);font-size:13px">No messages yet — say hi to your planner! 👋</div>';return;}
-  el.innerHTML=messages.map(m=>`
-    <div class="msg msg-${m.sender}" style="align-self:${m.sender==='couple'?'flex-end':'flex-start'}">
-      ${m.content}
-      <div class="msg-meta">${m.sender==='couple'?'You':'Your Planner'} · ${new Date(m.created_at).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}</div>
-    </div>`).join('');
-  el.scrollTop=el.scrollHeight;
+// ── PLAN ──
+function renderPlan() {
+  const el = document.getElementById('tabPlan');
+  const total = tasks.length;
+  const done = tasks.filter(t => t.completed).length;
+  const pct = total > 0 ? Math.round((done/total)*100) : 0;
+
+  let html = `<div class="plan-progress">
+    <div class="pp-label">${done} of ${total} tasks completed</div>
+    <div class="pp-pct">${pct}%</div>
+  </div>`;
+
+  if (!tasks.length) {
+    el.innerHTML = html + `<div class="empty-state"><div class="empty-state-icon">📋</div><div>Your wedding checklist will appear here!</div></div>`;
+    return;
+  }
+
+  const byMonth = {};
+  tasks.forEach(t => {
+    const key = t.due_date ? t.due_date.slice(0,7) : 'no-date';
+    if (!byMonth[key]) byMonth[key] = [];
+    byMonth[key].push(t);
+  });
+
+  html += Object.entries(byMonth).sort().map(([month, items]) => {
+    const label = month === 'no-date' ? 'Upcoming' : new Date(month+'-01').toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+    return `<div class="task-group">
+      <div class="task-group-header">${label}</div>
+      ${items.map(t => {
+        const dateStr = t.due_date ? new Date(t.due_date).toLocaleDateString('en-GB',{day:'numeric',month:'short'}) : '';
+        return `<div class="task-item">
+          <div class="task-check ${t.completed?'done':''}" onclick="checkTask('${t.id}',${!t.completed})">${t.completed?'✓':''}</div>
+          <div class="task-title ${t.completed?'done':''}">${t.title}</div>
+          ${dateStr ? `<div class="task-due">${dateStr}</div>` : ''}
+        </div>`;
+      }).join('')}
+    </div>`;
+  }).join('');
+  el.innerHTML = html;
 }
 
-async function sendMsg(){
-  const input=document.getElementById('chat-input');
-  const content=input.value.trim();
-  if(!content) return;
-  input.value='';
-  await sbPost('messages',{couple_id:currentCouple.id,sender:'couple',sender_name:currentCouple.name,content,read_by_couple:true,read_by_planner:false});
-  messages=await sbGet('messages',`couple_id=eq.${currentCouple.id}&order=created_at.asc`);
-  renderMessages();
+async function checkTask(id, completed) {
+  try {
+    await sbPatch('tasks', `id=eq.${id}`, {completed, completed_at: completed ? new Date().toISOString() : null});
+    const t = tasks.find(t => t.id === id);
+    if (t) { t.completed = completed; }
+    renderPlan();
+    if (completed) showToast('✓ Task completed!', 'success');
+  } catch(e) { showToast('Error', 'error'); }
 }
 
-// ── VIEW SWITCHING ────────────────────────────────────────────────────────────
-function showView(name){
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-  document.querySelectorAll('.hnav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById(`view-${name}`).classList.add('active');
-  document.getElementById(`hnav-${name}`).classList.add('active');
-  if(name==='vendors') renderVendors();
-  if(name==='tasks') renderTasksList();
-  if(name==='chat'){loadMessages();}
+// ── MEDIA ──
+function renderMediaTab() {
+  const el = document.getElementById('tabMedia');
+  if (!mediaFiles.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📄</div><div>No documents shared yet.<br/>Niovi will share contracts and documents here.</div></div>`;
+    return;
+  }
+  const icons = {contract:'📄', invoice:'🧾', proof_of_payment:'✅', offer:'📝', other:'📎'};
+  const byType = {};
+  mediaFiles.forEach(f => {
+    const t = f.file_type || 'other';
+    if (!byType[t]) byType[t] = [];
+    byType[t].push(f);
+  });
+  el.innerHTML = Object.entries(byType).map(([type, files]) => {
+    const labels = {contract:'Contracts',invoice:'Invoices',proof_of_payment:'Payment Proofs',offer:'Offers',other:'Documents'};
+    return `<div class="media-section">
+      <div class="media-section-title">${icons[type]} ${labels[type]||type}</div>
+      ${files.map(f => `<div class="media-file-row" onclick="window.open('${f.file_url}','_blank')">
+        <span class="mfr-icon">${icons[type]||'📎'}</span>
+        <span class="mfr-name">${f.file_name}</span>
+        <span class="mfr-type">${type}</span>
+      </div>`).join('')}
+    </div>`;
+  }).join('');
 }
 
-// ── MODAL ─────────────────────────────────────────────────────────────────────
-function closeModal(e,id){if(e.target===document.getElementById(id))closeModalById(id);}
-function closeModalById(id){document.getElementById(id).classList.remove('open');document.body.style.overflow='';}
-
-// ── TOAST ─────────────────────────────────────────────────────────────────────
-function toast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;
-  t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2500);
+// ── CHAT ──
+function renderChatTab() {
+  const el = document.getElementById('tabChat');
+  if (!chatThreads.length) {
+    el.innerHTML = `<div class="chat-layout-portal" style="align-items:center;justify-content:center;flex-direction:column;gap:8px;color:var(--light)">
+      <div style="font-size:2rem">💬</div>
+      <div style="font-size:0.9rem">No conversations yet</div>
+      <button class="chat-new-thread-btn" style="margin:0;width:auto" onclick="startGeneralChat()">Message Niovi</button>
+    </div>`;
+    return;
+  }
+  renderChatLayout(el);
 }
 
-document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal-overlay.open').forEach(m=>{m.classList.remove('open');document.body.style.overflow='';});});
+function renderChatLayout(el) {
+  const threads = [...chatThreads].sort((a,b) => {
+    const aMsg = threadMessages.filter(m=>m.thread_id===a.id);
+    const bMsg = threadMessages.filter(m=>m.thread_id===b.id);
+    const aLast = aMsg[aMsg.length-1]?.created_at || a.created_at;
+    const bLast = bMsg[bMsg.length-1]?.created_at || b.created_at;
+    return new Date(bLast) - new Date(aLast);
+  });
+
+  const listHtml = threads.map(t => {
+    const msgs = threadMessages.filter(m => m.thread_id === t.id);
+    const last = msgs[msgs.length-1];
+    const unread = msgs.filter(m => m.sender !== 'couple' && !m.read_by_couple).length;
+    return `<div class="chat-list-item ${activeThread?.id===t.id?'active':''}" onclick="openPortalThread(${JSON.stringify(t).replace(/"/g,'&quot;')})">
+      <div style="flex:1">
+        <div class="cli-name">${t.thread_name} ${unread ? `<span style="background:var(--rose);color:#fff;font-size:0.65rem;padding:1px 5px;border-radius:8px">${unread}</span>` : ''}</div>
+        ${last ? `<div class="cli-preview">${last.sender_name||last.sender}: ${last.content.slice(0,40)}${last.content.length>40?'…':''}</div>` : ''}
+      </div>
+      <div class="cli-time">${last ? timeAgo(new Date(last.created_at)) : ''}</div>
+    </div>`;
+  }).join('');
+
+  const msgs = activeThread ? threadMessages.filter(m => m.thread_id === activeThread.id) : [];
+  const msgsHtml = !activeThread ? '<div style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--light);font-size:0.88rem">Select a conversation</div>' :
+    msgs.length ? msgs.map(m => `<div class="msg-${m.sender==='couple'?'me':'niovi'}">
+      <div class="msg-bubble">${m.content}</div>
+      <div class="msg-meta">${m.sender_name||m.sender} · ${timeAgo(new Date(m.created_at))}</div>
+    </div>`).join('') : '<div style="text-align:center;color:var(--light);font-size:0.84rem;margin:auto">Start the conversation! 👋</div>';
+
+  el.innerHTML = `<div class="chat-layout-portal">
+    <div class="chat-list">${listHtml}</div>
+    <div class="chat-messages-portal" id="portalMsgs">${msgsHtml}</div>
+    <div class="chat-input-portal">
+      <textarea id="portalInput" placeholder="Message Niovi..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendPortalMessage();}"></textarea>
+      <button class="chat-send-portal" onclick="sendPortalMessage()">➤</button>
+    </div>
+  </div>`;
+  setTimeout(() => { const m = document.getElementById('portalMsgs'); if(m) m.scrollTop = m.scrollHeight; }, 50);
+}
+
+function openPortalThread(t) {
+  activeThread = t;
+  renderChatTab();
+}
+
+async function startGeneralChat() {
+  try {
+    const res = await sbPost('chat_threads', {couple_id: couple.id, category: 'general', thread_name: 'General Chat'});
+    chatThreads.push(res[0]);
+    activeThread = res[0];
+    renderChatTab();
+  } catch(e) { showToast('Error starting chat', 'error'); }
+}
+
+async function sendPortalMessage() {
+  if (!activeThread) return;
+  const input = document.getElementById('portalInput');
+  const content = input.value.trim();
+  if (!content) return;
+  try {
+    const res = await sbPost('thread_messages', {
+      thread_id: activeThread.id,
+      couple_id: couple.id,
+      sender: 'couple',
+      sender_name: couple.partner1_name,
+      content,
+      read_by_couple: true,
+      read_by_planner: false
+    });
+    threadMessages.push(res[0]);
+    input.value = '';
+    renderChatTab();
+  } catch(e) { showToast('Error sending message', 'error'); }
+}
+
+function timeAgo(date) {
+  const diff = (new Date() - date) / 1000;
+  if (diff < 60) return 'just now';
+  if (diff < 3600) return Math.floor(diff/60) + 'm ago';
+  if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
+  if (diff < 2592000) return Math.floor(diff/86400) + 'd ago';
+  return Math.floor(diff/2592000) + 'mo ago';
+}
+
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type?' '+type:'');
+  setTimeout(() => { t.className = 'toast'; }, 3000);
+}
 </script>
 </body>
 </html>
