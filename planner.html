@@ -1207,13 +1207,22 @@ function buildMedia() {
 // ── CHAT ──────────────────────────────────────────────────────────
 function buildChat() {
   return `<div class="chat-wrap">
-    <div class="chat-sidebar">
-      <div style="padding:10px 12px;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--light);border-bottom:1px solid var(--border)">Threads</div>
+    <div class="chat-sidebar" id="chat-sidebar-el">
+      <div style="padding:10px 12px;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--light);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+        <span>Threads</span>
+        <button class="btn-sm" style="padding:2px 8px;font-size:0.68rem" onclick="newChatThread()">＋</button>
+      </div>
       <div id="thread-list"></div>
     </div>
-    <div class="chat-area">
-      <div class="chat-header" id="chat-hd">Select a thread</div>
-      <div class="chat-messages" id="chat-msgs"><div style="margin:auto;color:var(--light);font-size:0.82rem">Pick a category to start</div></div>
+    <div class="chat-area" id="chat-area-el">
+      <div class="chat-header" id="chat-hd" style="display:flex;align-items:center;justify-content:space-between;">
+        <span>Select a thread</span>
+      </div>
+      <div class="chat-messages" id="chat-msgs">
+        <div style="margin:auto;color:var(--light);font-size:0.82rem;text-align:center">
+          Select a category or vendor thread to start chatting
+        </div>
+      </div>
       <div class="chat-input-wrap" id="chat-input-wrap" style="display:none">
         <input id="chat-in" placeholder="Type a message…" onkeydown="if(event.key==='Enter')sendMsg()"/>
         <button class="chat-send" onclick="sendMsg()">➤</button>
@@ -1223,55 +1232,148 @@ function buildChat() {
 }
 
 function initChat() {
-  const el=document.getElementById('thread-list');
+  const el = document.getElementById('thread-list');
   if(!el) return;
-  let h=`<div class="chat-thread-item" onclick="selectThread('general',null,'💬 General Chat')">
+
+  // Track which categories are expanded
+  if(!S.chatExpanded) S.chatExpanded = {};
+
+  let h = '';
+
+  // General Chat always at top
+  const isGeneralActive = S.currentThread?.catKey === 'general';
+  h += `<div class="chat-thread-item ${isGeneralActive?'active':''}" onclick="selectThread('general',null,'💬 General Chat')">
     <div class="chat-thread-name">💬 General Chat</div>
+    <div class="chat-thread-preview">General conversation</div>
   </div>`;
-  CATS.forEach(cat=>{
-    const cvs=S.coupleVendors.filter(cv=>cv.category===cat.key);
-    h+=`<div class="chat-thread-item" onclick="selectThread('${cat.key}',null,'${cat.emoji} ${cat.label}')">
-      <div class="chat-thread-name">${cat.emoji} ${cat.label}</div>
+
+  // Each category with vendor sub-threads
+  CATS.forEach(cat => {
+    const cvs = S.coupleVendors.filter(cv => cv.category === cat.key);
+    const isExpanded = S.chatExpanded[cat.key] || cvs.some(cv => S.currentThread?.vendorId === cv.vendor_id);
+    const isCatActive = S.currentThread?.catKey === cat.key && !S.currentThread?.vendorId;
+    const hasVendors = cvs.length > 0;
+
+    h += `<div class="chat-thread-item ${isCatActive?'active':''}" style="display:flex;align-items:center;gap:0;padding:0">
+      <div style="flex:1;padding:9px 13px;cursor:pointer" onclick="selectThread('${cat.key}',null,'${cat.emoji} ${cat.label}')">
+        <div class="chat-thread-name">${cat.emoji} ${cat.label}</div>
+      </div>
+      ${hasVendors ? `<div style="padding:9px 10px;cursor:pointer;color:var(--light);font-size:0.72rem;transition:transform 0.2s;transform:${isExpanded?'rotate(90deg)':'rotate(0)'}" onclick="toggleChatCat('${cat.key}')">▶</div>` : ''}
     </div>`;
-    cvs.forEach(cv=>{
-      const v=S.vendorCache[cv.vendor_id];
-      if(v) h+=`<div class="chat-vendor-item" onclick="selectThread('${cat.key}','${cv.vendor_id}','${v.name}')">
-        <div class="chat-vendor-name">› ${v.name}</div>
-      </div>`;
-    });
+
+    if(hasVendors && isExpanded) {
+      cvs.forEach(cv => {
+        const v = S.vendorCache[cv.vendor_id];
+        if(!v) return;
+        const isVendorActive = S.currentThread?.vendorId === cv.vendor_id;
+        const safeName = v.name.replace(/'/g, "\\'");
+        h += `<div class="chat-vendor-item ${isVendorActive?'active':''}" onclick="selectThread('${cat.key}','${cv.vendor_id}','${safeName}')">
+          <div class="chat-vendor-name">› ${v.name}</div>
+        </div>`;
+      });
+    }
   });
-  el.innerHTML=h;
+
+  el.innerHTML = h;
+}
+
+function toggleChatCat(catKey) {
+  if(!S.chatExpanded) S.chatExpanded = {};
+  S.chatExpanded[catKey] = !S.chatExpanded[catKey];
+  initChat();
 }
 
 async function selectThread(catKey, vendorId, title) {
-  S.currentThread={catKey,vendorId};
-  document.getElementById('chat-hd').textContent=title||catKey;
-  document.getElementById('chat-input-wrap').style.display='flex';
-  document.querySelectorAll('.chat-thread-item,.chat-vendor-item').forEach(e=>e.classList.remove('active'));
+  S.currentThread = {catKey, vendorId};
+
+  // Update header
+  const hd = document.getElementById('chat-hd');
+  if(hd) hd.innerHTML = `<span>${title||catKey}</span>`;
+
+  document.getElementById('chat-input-wrap').style.display = 'flex';
+
+  // Re-render thread list to show active state
+  initChat();
+
+  // Load messages
   try {
-    const cat = vendorId ? `${catKey}_${vendorId}` : catKey;
-    const msgs=await sbGet('messages',`couple_id=eq.${S.current.id}&category=eq.${cat}&order=created_at.asc`);
-    const el=document.getElementById('chat-msgs');
-    if(!msgs.length){el.innerHTML='<div style="margin:auto;color:var(--light);font-size:0.82rem">No messages yet</div>';return;}
-    el.innerHTML=msgs.map(m=>`<div class="chat-msg ${m.sender}">
-      <div>${m.content}</div>
-      <div class="chat-msg-meta">${m.sender_name||m.sender} · ${new Date(m.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</div>
-    </div>`).join('');
-    el.scrollTop=el.scrollHeight;
-  } catch(e){toast('Error loading messages: '+e.message,true);}
+    const category = vendorId ? `${catKey}_${vendorId}` : catKey;
+    const msgs = await sbGet('messages',
+      `couple_id=eq.${S.current.id}&category=eq.${encodeURIComponent(category)}&order=created_at.asc`);
+    renderChatMessages(msgs);
+  } catch(e) { toast('Error loading messages: '+e.message, true); }
+}
+
+function renderChatMessages(msgs) {
+  const el = document.getElementById('chat-msgs');
+  if(!el) return;
+  if(!msgs.length) {
+    el.innerHTML = `<div style="margin:auto;color:var(--light);font-size:0.82rem;text-align:center">No messages yet — start the conversation!</div>`;
+    return;
+  }
+  el.innerHTML = msgs.map(m => {
+    const isPlanner = m.sender === 'planner';
+    const time = new Date(m.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+    return `<div style="display:flex;flex-direction:column;align-items:${isPlanner?'flex-start':'flex-end'}">
+      <div class="chat-msg ${m.sender}">${m.content}</div>
+      <div class="chat-msg-meta" style="text-align:${isPlanner?'left':'right'}">${m.sender_name||m.sender} · ${time}</div>
+    </div>`;
+  }).join('');
+  el.scrollTop = el.scrollHeight;
 }
 
 async function sendMsg() {
-  const inp=document.getElementById('chat-in');
-  const content=inp.value.trim();
-  if(!content||!S.currentThread)return;
-  const {catKey,vendorId}=S.currentThread;
-  const category=vendorId?`${catKey}_${vendorId}`:catKey;
+  const inp = document.getElementById('chat-in');
+  const content = inp.value.trim();
+  if(!content || !S.currentThread) return;
+  const {catKey, vendorId} = S.currentThread;
+  const category = vendorId ? `${catKey}_${vendorId}` : catKey;
   try {
-    await sbPost('messages',{couple_id:S.current.id,sender:'planner',sender_name:'Niovi',content,category,read_by_couple:false,read_by_planner:true});
-    inp.value='';
-    await selectThread(catKey,vendorId,document.getElementById('chat-hd').textContent);
-  } catch(e){toast('Error: '+e.message,true);}
+    await sbPost('messages', {
+      couple_id: S.current.id,
+      sender: 'planner',
+      sender_name: 'Niovi',
+      content,
+      category,
+      read_by_couple: false,
+      read_by_planner: true
+    });
+    inp.value = '';
+    // Reload messages
+    const msgs = await sbGet('messages',
+      `couple_id=eq.${S.current.id}&category=eq.${encodeURIComponent(category)}&order=created_at.asc`);
+    renderChatMessages(msgs);
+  } catch(e) { toast('Error: '+e.message, true); }
+}
+
+function newChatThread() {
+  // Allow creating a custom thread
+  showModal('modal-new-thread', 'New Thread', `
+    <div class="form-group">
+      <label class="form-label">Thread Name</label>
+      <input class="form-input" id="nt-name" placeholder="e.g. Seating Plan details"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Category (optional)</label>
+      <select class="form-input" id="nt-cat">
+        <option value="general">General</option>
+        ${CATS.map(c=>`<option value="${c.key}">${c.label}</option>`).join('')}
+      </select>
+    </div>
+    <div class="modal-footer" style="padding:16px 0 0;border:none;display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn-sm" onclick="closeModal('dyn-modal-new-thread')">Cancel</button>
+      <button class="btn-sm primary" onclick="createCustomThread()">Create</button>
+    </div>
+  `);
+}
+
+function createCustomThread() {
+  const name = document.getElementById('nt-name')?.value.trim();
+  const cat = document.getElementById('nt-cat')?.value || 'general';
+  if(!name) { toast('Enter thread name'); return; }
+  closeModal('dyn-modal-new-thread');
+  selectThread(cat, null, name);
+  toast('Thread created!');
 }
 
 // ── CREATE COUPLE ─────────────────────────────────────────────────
