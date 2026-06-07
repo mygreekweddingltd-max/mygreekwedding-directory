@@ -47,7 +47,7 @@ body{font-family:'Jost',sans-serif;font-weight:300;background:var(--bg);color:va
 .tab-btn{padding:13px 18px;font-family:'Jost',sans-serif;font-size:0.82rem;color:var(--mid);border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;}
 .tab-btn:hover{color:var(--ink);}
 .tab-btn.active{color:var(--gold-dark);border-bottom-color:var(--gold);font-weight:500;}
-.tab-content{flex:1;overflow-y:auto;padding:20px 24px;overflow-x:visible;}
+.tab-content{flex:1;overflow-y:auto;padding:20px 24px;}
 .couple-header{background:var(--surface);border-radius:var(--radius);padding:18px 22px;border:1px solid var(--border);margin-bottom:18px;display:flex;align-items:center;gap:20px;}
 .couple-header-name{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-style:italic;}
 .couple-header-detail{font-size:0.8rem;color:var(--light);margin-top:3px;}
@@ -62,7 +62,7 @@ body{font-family:'Jost',sans-serif;font-weight:300;background:var(--bg);color:va
 .btn-sm:hover{background:var(--gold-light);color:var(--gold-dark);border-color:var(--gold);}
 .btn-sm.primary{background:var(--gold);color:#fff;border-color:var(--gold);}
 .btn-sm.primary:hover{background:var(--gold-dark);}
-.category-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:7px;}
+.category-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:7px;overflow:hidden;}
 .cat-row-header{display:flex;align-items:center;padding:11px 14px;cursor:pointer;gap:8px;transition:background 0.15s;}
 .cat-row-header:hover{background:var(--surface2);}
 .cat-emoji{width:26px;text-align:center;font-size:1rem;}
@@ -75,7 +75,7 @@ body{font-family:'Jost',sans-serif;font-weight:300;background:var(--bg);color:va
 .cat-icon-btn:hover{background:var(--gold-light);border-color:var(--gold);}
 .cat-chevron{font-size:0.72rem;color:var(--light);transition:transform 0.2s;margin-left:4px;}
 .cat-chevron.open{transform:rotate(180deg);}
-.cat-body{display:none;padding:10px 14px 14px;background:var(--surface2);border-top:1px solid var(--border);border-radius:0 0 var(--radius-sm) var(--radius-sm);}
+.cat-body{display:none;padding:10px 14px 14px;background:var(--surface2);border-top:1px solid var(--border);}
 .cat-body.open{display:block;}
 .vendor-chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px;}
 .vendor-chip{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:4px 11px;font-size:0.76rem;display:flex;align-items:center;gap:5px;cursor:pointer;}
@@ -91,7 +91,7 @@ body{font-family:'Jost',sans-serif;font-weight:300;background:var(--bg);color:va
 .vendor-search-wrap{position:relative;}
 .vendor-search-wrap input{width:100%;border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:7px 11px;font-family:'Jost',sans-serif;font-size:0.8rem;background:var(--surface);outline:none;}
 .vendor-search-wrap input:focus{border-color:var(--gold);}
-.vendor-dropdown{position:fixed;background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius-sm);max-height:220px;overflow-y:auto;z-index:9999;box-shadow:0 8px 24px rgba(26,23,20,0.15);min-width:300px;}
+.vendor-dropdown{position:absolute;top:calc(100% + 2px);left:0;right:0;background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius-sm);max-height:200px;overflow-y:auto;z-index:200;box-shadow:var(--shadow);}
 .vendor-dd-item{padding:8px 12px;font-size:0.8rem;cursor:pointer;border-bottom:1px solid var(--border);}
 .vendor-dd-item:hover{background:var(--gold-light);}
 .vendor-dd-item:last-child{border-bottom:none;}
@@ -167,10 +167,7 @@ body{font-family:'Jost',sans-serif;font-weight:300;background:var(--bg);color:va
 /* modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(26,23,20,0.5);z-index:1000;display:none;align-items:center;justify-content:center;}
 .modal-overlay.open{display:flex;}
-.modal{background:var(--surface);border-radius:var(--radius);width:820px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg);}
-.region-btn{border:1px solid var(--border-strong);border-radius:20px;padding:4px 12px;font-family:'Jost',sans-serif;font-size:0.75rem;cursor:pointer;background:transparent;color:var(--mid);transition:all 0.15s;}
-.region-btn:hover{background:var(--gold-light);border-color:var(--gold);color:var(--gold-dark);}
-.region-btn.active{background:var(--gold);border-color:var(--gold);color:#fff;}
+.modal{background:var(--surface);border-radius:var(--radius);width:480px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg);}
 .modal-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
 .modal-title{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-style:italic;}
 .modal-close{background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--mid);}
@@ -225,7 +222,6 @@ body{font-family:'Jost',sans-serif;font-weight:300;background:var(--bg);color:va
         <button class="tab-btn" onclick="switchTab('plan',this)">📋 Plan</button>
         <button class="tab-btn" onclick="switchTab('media',this)">🖼 Media</button>
         <button class="tab-btn" onclick="switchTab('chat',this)">💬 Chat</button>
-        <button class="tab-btn" onclick="switchTab('venues',this)">🏛 Venues</button>
       </div>
       <div class="tab-content" id="tab-content">
         <div class="no-couple">
@@ -391,21 +387,17 @@ async function loadCoupleData() {
   if(!S.current) return;
   const id = S.current.id;
   try {
-    [S.coupleVendors, S.tasks, S.budgetItems, S.mediaFiles, S.payments] = await Promise.all([
+    [S.coupleVendors, S.tasks, S.budgetItems, S.mediaFiles] = await Promise.all([
       sbGet('couple_vendors',`couple_id=eq.${id}&order=created_at.asc`).catch(()=>[]),
       sbGet('tasks',`couple_id=eq.${id}&order=due_date.asc`).catch(()=>[]),
       sbGet('budget_items',`couple_id=eq.${id}&order=sort_order.asc`).catch(()=>[]),
       sbGet('media_files',`couple_id=eq.${id}&order=created_at.desc`).catch(()=>[]),
-      sbGet('payments',`couple_id=eq.${id}&order=due_date.asc`).catch(()=>[]),
     ]);
-    // resolve vendor names - fetch each one individually to avoid ID format issues
-    const ids = [...new Set(S.coupleVendors.map(v=>v.vendor_id).filter(v=>v && !S.vendorCache[v]))];
-    for(const vid of ids) {
-      try {
-        const res = await sbGet('vendors',`id=eq.${encodeURIComponent(vid)}&select=id,name,category,region,price_range`);
-        if(res && res[0]) S.vendorCache[vid] = res[0];
-        else S.vendorCache[vid] = {id:vid, name:vid, category:'', region:''};
-      } catch(e) { S.vendorCache[vid] = {id:vid, name:vid, category:'', region:''}; }
+    // resolve vendor names
+    const ids = [...new Set(S.coupleVendors.map(v=>v.vendor_id).filter(v=>!S.vendorCache[v]))];
+    if(ids.length) {
+      const vlist = await sbGet('vendors',`id=in.(${ids.map(i=>`"${i}"`).join(',')})&select=id,name,category,region,price_range`).catch(()=>[]);
+      vlist.forEach(v=>S.vendorCache[v.id]=v);
     }
   } catch(e) { toast('Error loading data: '+e.message, true); }
 }
@@ -448,7 +440,6 @@ function switchTabDirect(tab) {
   else if(tab==='plan') el.innerHTML = buildPlan();
   else if(tab==='media') el.innerHTML = buildMedia();
   else if(tab==='chat') { el.innerHTML = buildChat(); initChat(); }
-  else if(tab==='venues') el.innerHTML = buildVenues();
 }
 
 // ── OVERVIEW ──────────────────────────────────────────────────────
@@ -471,10 +462,9 @@ function buildOverview() {
     h += `<div class="category-row">
       <div class="cat-row-header" onclick="toggleCat(this)">
         <span class="cat-emoji">${cat.emoji}</span>
-        <span class="cat-name" style="cursor:pointer" onclick="event.stopPropagation();browseVendors('${cat.key}','${cat.label}',\`${cat.emoji}\`)">${cat.label}</span>
+        <span class="cat-name">${cat.label}</span>
         <span class="cat-status ${decided?'decided':'draft'}">${decided?'✓ Decided':'DRAFT'}</span>
         <div class="cat-actions" onclick="event.stopPropagation()">
-          <button class="cat-icon-btn" title="Browse vendors" onclick="browseVendors('${cat.key}','${cat.label}','${cat.emoji}')">🔍</button>
           <button class="cat-icon-btn" title="Compare" onclick="openCompare('${cat.key}','${cat.label}')">⊞</button>
           <button class="cat-icon-btn" title="Chat" onclick="goToChat('${cat.key}')">💬</button>
         </div>
@@ -495,170 +485,20 @@ function buildOverview() {
   return h;
 }
 
-// ── VENDOR BROWSER ────────────────────────────────────────────────
-async function browseVendors(catKey, catLabel, catEmoji) {
-  // Show loading modal first
-  showModal('modal-browse', `${catEmoji} ${catLabel} — All Vendors`,
-    `<div style="text-align:center;padding:30px;color:var(--light)">Loading vendors…</div>`);
-
-  try {
-    // Load all vendors for this category
-    const vendors = await sbGet('vendors',
-      `category=eq.${catKey}&select=id,name,region,price_range,type,contact&order=name.asc&limit=200`);
-
-    // Get unique regions
-    const regions = [...new Set(vendors.map(v=>v.region).filter(Boolean))].sort();
-
-    // Already assigned vendor IDs for this couple+category
-    const assignedIds = new Set(S.coupleVendors.filter(cv=>cv.category===catKey).map(cv=>cv.vendor_id));
-
-    renderVendorBrowser(catKey, catLabel, catEmoji, vendors, regions, assignedIds, '');
-  } catch(e) {
-    document.querySelector('#dyn-modal-browse .modal-body').innerHTML =
-      `<div style="color:var(--rose);padding:20px">Error: ${e.message}</div>`;
-  }
-}
-
-function renderVendorBrowser(catKey, catLabel, catEmoji, vendors, regions, assignedIds, regionFilter) {
-  const filtered = regionFilter ? vendors.filter(v=>v.region===regionFilter) : vendors;
-
-  const regionBtns = [`<button class="region-btn ${!regionFilter?'active':''}" onclick="filterBrowser('${catKey}','${catLabel}','${catEmoji}','')">All (${vendors.length})</button>`];
-  regions.forEach(r => {
-    const count = vendors.filter(v=>v.region===r).length;
-    regionBtns.push(`<button class="region-btn ${regionFilter===r?'active':''}" onclick="filterBrowser('${catKey}','${catLabel}','${catEmoji}','${r}')">${r} (${count})</button>`);
-  });
-
-  const cards = filtered.map(v => {
-    const assigned = assignedIds.has(v.id);
-    const price = v.price_range || '';
-    const phone = v.contact?.phone || '';
-    const email = v.contact?.email || '';
-    return `<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;display:flex;flex-direction:column;gap:6px;">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
-        <div style="font-weight:500;font-size:0.88rem;flex:1">${v.name}</div>
-        ${price?`<span style="font-size:0.75rem;color:var(--gold-dark);background:var(--gold-light);padding:2px 8px;border-radius:10px;flex-shrink:0">${price}</span>`:''}
-      </div>
-      <div style="font-size:0.75rem;color:var(--light);display:flex;gap:10px;flex-wrap:wrap">
-        ${v.region?`<span>📍 ${v.region}</span>`:''}
-        ${v.type?`<span>· ${v.type}</span>`:''}
-      </div>
-      ${phone?`<div style="font-size:0.75rem;color:var(--mid)">📞 ${phone}</div>`:''}
-      ${email?`<div style="font-size:0.75rem;color:var(--mid)">✉️ ${email}</div>`:''}
-      <div style="margin-top:4px">
-        ${assigned
-          ? `<span style="font-size:0.75rem;color:var(--green);background:var(--green-light);padding:3px 10px;border-radius:10px">✓ Already assigned</span>`
-          : `<button class="btn-sm primary" style="font-size:0.75rem;padding:5px 12px" onmousedown="assignFromBrowser('${v.id}','${catKey}','${v.name.replace(/'/g,"\\'")}','${catLabel}','${catEmoji}')">＋ Assign</button>`
-        }
-      </div>
-    </div>`;
-  }).join('');
-
-  const body = `
-    <div style="margin-bottom:12px">
-      <input type="text" placeholder="🔍 Search by name…" oninput="searchBrowser(this,'${catKey}','${catLabel}','${catEmoji}')"
-        style="width:100%;border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:8px 12px;font-family:'Jost',sans-serif;font-size:0.84rem;background:var(--bg);outline:none;"/>
-    </div>
-    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px" id="browser-regions">
-      ${regionBtns.join('')}
-    </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-      <div style="font-size:0.78rem;color:var(--light)">${filtered.length} vendor${filtered.length!==1?'s':''} found</div>
-      <button class="btn-sm primary" onclick="closeModal('dyn-modal-browse');switchTabDirect('overview')">✓ Done</button>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;max-height:55vh;overflow-y:auto" id="browser-grid">
-      ${cards || `<div style="color:var(--light);font-size:0.85rem;padding:20px">No vendors found in this region</div>`}
-    </div>`;
-
-  // Store data on window for filter access
-  window._browserData = {catKey, catLabel, catEmoji, vendors, regions, assignedIds};
-
-  const modalBody = document.querySelector('#dyn-modal-browse .modal-body');
-  if(modalBody) modalBody.innerHTML = body;
-}
-
-function filterBrowser(catKey, catLabel, catEmoji, region) {
-  const d = window._browserData;
-  if(!d) return;
-  renderVendorBrowser(catKey, catLabel, catEmoji, d.vendors, d.regions, d.assignedIds, region);
-}
-
-function searchBrowser(input, catKey, catLabel, catEmoji) {
-  const q = input.value.toLowerCase().trim();
-  const d = window._browserData;
-  if(!d) return;
-  const filtered = q ? d.vendors.filter(v=>v.name.toLowerCase().includes(q)) : d.vendors;
-  const grid = document.getElementById('browser-grid');
-  if(!grid) return;
-  if(!filtered.length) { grid.innerHTML='<div style="color:var(--light);font-size:0.85rem;padding:20px">No results</div>'; return; }
-  grid.innerHTML = filtered.map(v => {
-    const assigned = d.assignedIds.has(v.id);
-    const phone = v.contact?.phone || '';
-    return `<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;display:flex;flex-direction:column;gap:6px;">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
-        <div style="font-weight:500;font-size:0.88rem;flex:1">${v.name}</div>
-        ${v.price_range?`<span style="font-size:0.75rem;color:var(--gold-dark);background:var(--gold-light);padding:2px 8px;border-radius:10px">${v.price_range}</span>`:''}
-      </div>
-      <div style="font-size:0.75rem;color:var(--light)">${v.region?'📍 '+v.region:''} ${v.type?'· '+v.type:''}</div>
-      ${phone?`<div style="font-size:0.75rem;color:var(--mid)">📞 ${phone}</div>`:''}
-      <div style="margin-top:4px">
-        ${assigned
-          ? `<span style="font-size:0.75rem;color:var(--green);background:var(--green-light);padding:3px 10px;border-radius:10px">✓ Already assigned</span>`
-          : `<button class="btn-sm primary" style="font-size:0.75px;padding:5px 12px" onmousedown="assignFromBrowser('${v.id}','${catKey}','${v.name.replace(/'/g,"\\'")}','${catLabel}','${catEmoji}')">＋ Assign</button>`
-        }
-      </div>
-    </div>`;
-  }).join('');
-}
-
-async function assignFromBrowser(vendorId, catKey, vendorName, catLabel, catEmoji) {
-  if(S.coupleVendors.find(cv=>cv.vendor_id===vendorId)) { toast('Already assigned'); return; }
-  try {
-    const res = await sbPost('couple_vendors',{
-      couple_id:S.current.id, vendor_id:vendorId, category:catKey, status:'suggested'
-    });
-    S.coupleVendors.push(res[0]);
-    if(!S.vendorCache[vendorId]) S.vendorCache[vendorId]={id:vendorId,name:vendorName,category:catKey};
-    // update assigned set in browser
-    if(window._browserData) window._browserData.assignedIds.add(vendorId);
-    toast(`✓ ${vendorName} assigned!`);
-    // refresh the button to show assigned
-    const btns = document.querySelectorAll('#browser-grid button');
-    btns.forEach(btn => {
-      if(btn.getAttribute('onmousedown')?.includes(vendorId)) {
-        btn.outerHTML = `<span style="font-size:0.75rem;color:var(--green);background:var(--green-light);padding:3px 10px;border-radius:10px">✓ Assigned</span>`;
-      }
-    });
-  } catch(e) { toast('Error: '+e.message, true); }
-}
-
 function toggleCat(header) {
   header.nextElementSibling.classList.toggle('open');
   header.querySelector('.cat-chevron').classList.toggle('open');
 }
-function showDd(k){
-  const inp = document.querySelector(`#dd-${k}`)?.previousElementSibling;
-  const dd = document.getElementById('dd-'+k);
-  if(!dd||!inp) return;
-  const rect = inp.getBoundingClientRect();
-  dd.style.display='block';
-  dd.style.top=(rect.bottom+2)+'px';
-  dd.style.left=rect.left+'px';
-  dd.style.width=rect.width+'px';
-}
+function showDd(k){const d=document.getElementById('dd-'+k);if(d)d.style.display='block';}
 function hideDd(k){const d=document.getElementById('dd-'+k);if(d)d.style.display='none';}
 
 async function searchVendors(input, catKey) {
   const q = input.value.trim();
   const dd = document.getElementById('dd-'+catKey);
   if(!dd) return;
-  // reposition
-  const rect = input.getBoundingClientRect();
-  dd.style.top=(rect.bottom+2)+'px';
-  dd.style.left=rect.left+'px';
-  dd.style.width=Math.max(rect.width,300)+'px';
-  dd.style.display='block';
   if(q.length < 2) { dd.innerHTML=''; return; }
   try {
+    // Search across ALL vendors (not filtering by category so user can find any vendor)
     const res = await sbGet('vendors',`name=ilike.*${encodeURIComponent(q)}*&select=id,name,category,region&limit=10`);
     if(!res.length) { dd.innerHTML='<div class="vendor-dd-item" style="color:var(--light)">No results</div>'; return; }
     dd.innerHTML = res.map(v=>{
@@ -679,12 +519,7 @@ async function assignVendor(vendorId, category, vendorName) {
     });
     S.coupleVendors.push(res[0]);
     if(!S.vendorCache[vendorId]) S.vendorCache[vendorId]={id:vendorId,name:vendorName,category};
-    // clear the search input and hide dropdown
-    const dd = document.getElementById('dd-'+category);
-    if(dd){ dd.innerHTML=''; dd.style.display='none'; }
-    const inputs = document.querySelectorAll('.vendor-search-wrap input');
-    inputs.forEach(inp=>{ if(inp.closest('.cat-body')) inp.value=''; });
-    toast(`✓ ${vendorName} assigned!`);
+    toast(`${vendorName} assigned! ✓`);
     switchTabDirect('overview');
   } catch(e) { toast('Error assigning vendor: '+e.message, true); }
 }
@@ -769,144 +604,53 @@ function goToChat(catKey) {
 }
 
 // ── BUDGET ────────────────────────────────────────────────────────
-function calcItemTotal(b) {
-  const guests = Number(S.current.guest_count||0);
-  const price = Number(b.item_price||0);
-  const qty = Number(b.guests||0);
-  const perHead = b.pricing_type==='per_head';
-  const base = perHead ? (qty||guests) * price : price;
-  const comm = base * (Number(b.commission_rate||0)/100);
-  const vat = base * (Number(b.vat_amount||0)/100);
-  return {base, comm, vat, total: base+vat};
-}
-
 function buildBudget() {
-  let totPaid=0, totActual=0, totComm=0;
+  let totPend=0,totPaid=0,totActual=0;
   CATS.forEach(cat=>{
     S.budgetItems.filter(b=>b.category===cat.key).forEach(b=>{
-      const {total,comm} = calcItemTotal(b);
-      totPaid += Number(b.amount_paid||0);
-      totActual += total;
-      totComm += comm;
+      totPaid+=Number(b.amount_paid||0);
+      totActual+=Number(b.item_price||0);
     });
   });
-  const totPend = totActual - totPaid;
-  const goal = Number(S.current.budget_goal||0);
+  totPend=totActual-totPaid;
+  const goal=Number(S.current.budget_goal||0);
 
-  let h=`<div class="section-toolbar"><h2>Budget</h2>
-    <button class="btn-sm" onclick="showPaymentsSummary()">💳 Payments</button>
-  </div>
+  let h=`<div class="section-toolbar"><h2>Budget</h2></div>
   <div class="budget-summary">
-    <div class="budget-card pending"><div class="val">€${Math.round(totPend).toLocaleString()}</div><div class="lbl">Pending</div></div>
-    <div class="budget-card paid"><div class="val">€${Math.round(totPaid).toLocaleString()}</div><div class="lbl">Paid</div></div>
+    <div class="budget-card pending"><div class="val">€${totPend.toLocaleString()}</div><div class="lbl">Pending</div></div>
+    <div class="budget-card paid"><div class="val">€${totPaid.toLocaleString()}</div><div class="lbl">Paid</div></div>
     <div class="budget-card"><div class="val">€${goal.toLocaleString()}</div><div class="lbl">Goal</div></div>
-    <div class="budget-card ${totActual>goal&&goal>0?'over':''}"><div class="val">€${Math.round(totActual).toLocaleString()}</div><div class="lbl">Actual</div></div>
-  </div>
-  <div style="background:var(--green-light);border:1px solid rgba(90,138,90,0.2);border-radius:var(--radius-sm);padding:10px 16px;margin-bottom:14px;font-size:0.82rem;color:var(--green)">
-    💰 Your total commission: <strong>€${Math.round(totComm).toLocaleString()}</strong>
+    <div class="budget-card ${totActual>goal&&goal>0?'over':''}"><div class="val">€${totActual.toLocaleString()}</div><div class="lbl">Actual</div></div>
   </div>
   <div class="budget-col-labels"><span>Category</span><span>Pending</span><span>Paid</span><span>Goal</span><span>Actual</span><span></span></div>`;
 
   CATS.forEach(cat=>{
-    const items = S.budgetItems.filter(b=>b.category===cat.key);
-    let catPaid=0, catAct=0;
-    items.forEach(b=>{ const {total}=calcItemTotal(b); catPaid+=Number(b.amount_paid||0); catAct+=total; });
-    const catPend = catAct - catPaid;
-    const decided = items.some(b=>b.status==='decided');
-    const over = catAct > goal/CATS.length && goal > 0;
-
+    const items=S.budgetItems.filter(b=>b.category===cat.key);
+    let catPaid=0,catAct=0;
+    items.forEach(b=>{catPaid+=Number(b.amount_paid||0);catAct+=Number(b.item_price||0);});
+    const catPend=catAct-catPaid;
+    const decided=items.some(b=>b.status==='decided');
     h+=`<div class="budget-row">
       <div class="budget-row-header" onclick="this.nextElementSibling.classList.toggle('open')">
         <span class="bcol name">${cat.emoji} ${cat.label} <span class="cat-status ${decided?'decided':'draft'}">${decided?'✓':'DRAFT'}</span></span>
-        <span class="bcol">€${Math.round(catPend).toLocaleString()}</span>
-        <span class="bcol" style="color:var(--green)">€${Math.round(catPaid).toLocaleString()}</span>
-        <span class="bcol">€${Math.round(catAct).toLocaleString()}</span>
-        <span class="bcol">€${Math.round(catAct).toLocaleString()}</span>
+        <span class="bcol">€${catPend.toLocaleString()}</span>
+        <span class="bcol" style="color:var(--green)">€${catPaid.toLocaleString()}</span>
+        <span class="bcol">€${catAct.toLocaleString()}</span>
+        <span class="bcol ${catAct>catPaid&&catAct>0&&catAct>catAct?'over':''}">€${catAct.toLocaleString()}</span>
         <span style="color:var(--light);font-size:0.75rem">▾</span>
       </div>
       <div class="budget-body">
-        ${items.length ? `
-        <table style="width:100%;font-size:0.79rem;border-collapse:collapse;margin-bottom:10px">
-          <tr style="color:var(--light);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em">
-            <th style="text-align:left;padding:4px 6px;font-weight:400">Item</th>
-            <th style="text-align:center;padding:4px 6px;font-weight:400">Type</th>
-            <th style="text-align:right;padding:4px 6px;font-weight:400">Price</th>
-            <th style="text-align:right;padding:4px 6px;font-weight:400">VAT%</th>
-            <th style="text-align:right;padding:4px 6px;font-weight:400;color:var(--green)">Comm%</th>
-            <th style="text-align:right;padding:4px 6px;font-weight:400;color:var(--green)">Comm€</th>
-            <th style="text-align:right;padding:4px 6px;font-weight:400">Total</th>
-            <th style="padding:4px 2px"></th>
-          </tr>
-          ${items.map(b=>{
-            const {base,comm,vat,total}=calcItemTotal(b);
-            const perHead=b.pricing_type==='per_head';
-            const guests=Number(b.guests||S.current.guest_count||0);
-            return `<tr style="border-top:1px solid var(--border)">
-              <td style="padding:6px 6px;color:var(--ink)">${b.item_name}</td>
-              <td style="padding:6px 6px;text-align:center">
-                <span style="font-size:0.7rem;padding:2px 7px;border-radius:10px;background:${perHead?'var(--blue-light)':'var(--gold-light)'};color:${perHead?'var(--blue)':'var(--gold-dark)'}">
-                  ${perHead?`👥 ×${guests}`:'📌 Fixed'}
-                </span>
-              </td>
-              <td style="padding:6px 6px;text-align:right">€${Number(b.item_price||0).toLocaleString()}</td>
-              <td style="padding:6px 6px;text-align:right;color:var(--mid)">${b.vat_amount||0}%</td>
-              <td style="padding:6px 6px;text-align:right;color:var(--green)">${b.commission_rate||0}%</td>
-              <td style="padding:6px 6px;text-align:right;color:var(--green)">€${Math.round(comm).toLocaleString()}</td>
-              <td style="padding:6px 6px;text-align:right;font-weight:500">€${Math.round(total).toLocaleString()}</td>
-              <td style="padding:6px 2px">
-                <button class="cat-icon-btn" onmousedown="editBudgetItem('${b.id}')" title="Edit">✏️</button>
-                <button class="cat-icon-btn" onmousedown="removeBudgetItem('${b.id}')" title="Remove">✕</button>
-              </td>
-            </tr>`;
-          }).join('')}
-          <tr style="border-top:2px solid var(--border-strong);font-weight:500">
-            <td colspan="6" style="padding:6px 6px;color:var(--mid);font-size:0.78rem">Category Total</td>
-            <td style="padding:6px 6px;text-align:right;color:var(--gold-dark)">€${Math.round(catAct).toLocaleString()}</td>
-            <td></td>
-          </tr>
-        </table>` : `<div style="font-size:0.78rem;color:var(--light);padding:8px 0 10px">No items yet</div>`}
-
-        <!-- ADD ITEM FORM -->
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-top:4px">
-          <div style="font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid);margin-bottom:8px">＋ Add Item</div>
-          <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:flex-end">
-            <div style="flex:2;min-width:130px">
-              <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Item name *</div>
-              <input id="bi-n-${cat.key}" class="form-input" placeholder="e.g. Planning fee"/>
-            </div>
-            <div>
-              <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Type</div>
-              <select id="bi-t-${cat.key}" class="form-input" style="width:110px">
-                <option value="fixed">📌 Fixed</option>
-                <option value="per_head">👥 Per head</option>
-              </select>
-            </div>
-            <div style="width:90px">
-              <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Price (€)</div>
-              <input id="bi-p-${cat.key}" class="form-input" type="number" placeholder="0"/>
-            </div>
-            <div style="width:70px">
-              <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">VAT %</div>
-              <input id="bi-v-${cat.key}" class="form-input" type="number" placeholder="0"/>
-            </div>
-            <div style="width:80px">
-              <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Comm % <span style="color:var(--light)">(opt)</span></div>
-              <input id="bi-c-${cat.key}" class="form-input" type="number" placeholder="—"/>
-            </div>
-            <button class="btn-sm primary" style="height:36px" onclick="addBudgetItem('${cat.key}')">＋ Add</button>
-          </div>
-        </div>
-
-        <!-- PAYMENTS SECTION -->
-        <div style="margin-top:12px">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px">
-            <div style="font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid)">💳 Payments</div>
-            <button class="btn-sm" onclick="addPaymentForm('${cat.key}')" style="font-size:0.72rem;padding:4px 10px">＋ Add Payment</button>
-          </div>
-          <div id="payments-${cat.key}">
-            ${buildPaymentsList(cat.key)}
-          </div>
-          <div id="payment-form-${cat.key}" style="display:none"></div>
+        ${items.map(b=>`<div class="bi-row">
+          <span style="color:var(--mid)">${b.item_name}</span>
+          <span class="bi-comm">(+${b.commission_rate||0}%)</span>
+          <span>€${Number(b.item_price||0).toLocaleString()}</span>
+          <button class="cat-icon-btn" onmousedown="removeBudgetItem('${b.id}')">✕</button>
+        </div>`).join('')}
+        <div class="budget-add-row" style="margin-top:10px">
+          <input id="bi-n-${cat.key}" placeholder="Item name" style="flex:2;min-width:120px"/>
+          <input id="bi-p-${cat.key}" type="number" placeholder="Price €" style="width:90px"/>
+          <input id="bi-c-${cat.key}" type="number" placeholder="Comm %" style="width:80px"/>
+          <button class="btn-sm primary" onclick="addBudgetItem('${cat.key}')">＋ Add</button>
         </div>
       </div>
     </div>`;
@@ -914,198 +658,22 @@ function buildBudget() {
   return h;
 }
 
-function buildPaymentsList(catKey) {
-  const payments = (S.payments||[]).filter(p=>p.category===catKey);
-  if(!payments.length) return `<div style="font-size:0.78rem;color:var(--light)">No payments recorded yet</div>`;
-  return payments.map(p=>{
-    const vatAmt = Number(p.amount||0) * (Number(p.vat_rate||0)/100);
-    const total = Number(p.amount||0) + vatAmt;
-    const isPaid = p.status==='paid';
-    return `<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:0.8rem">
-      <span style="font-size:1rem">${p.method==='bank'?'🏦':'💵'}</span>
-      <span style="flex:1;color:var(--mid)">${p.description||'Payment'}</span>
-      <span style="color:var(--light);font-size:0.72rem">${p.due_date?new Date(p.due_date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):''}</span>
-      ${p.vat_rate?`<span style="color:var(--light);font-size:0.7rem">+${p.vat_rate}% VAT</span>`:''}
-      <span style="font-weight:500;color:${isPaid?'var(--green)':'var(--gold-dark)'}">€${Math.round(total).toLocaleString()}</span>
-      <span style="font-size:0.7rem;padding:2px 7px;border-radius:10px;background:${isPaid?'var(--green-light)':'var(--gold-light)'};color:${isPaid?'var(--green)':'var(--gold-dark)'}">
-        ${isPaid?'✓ Paid':'Pending'}
-      </span>
-      <button class="cat-icon-btn" onmousedown="togglePaymentPaid('${p.id}','${catKey}')">✓</button>
-      <button class="cat-icon-btn" onmousedown="removePayment('${p.id}','${catKey}')">✕</button>
-    </div>`;
-  }).join('');
-}
-
-function addPaymentForm(catKey) {
-  const el = document.getElementById(`payment-form-${catKey}`);
-  if(!el) return;
-  el.style.display = 'block';
-  el.innerHTML = `<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-top:8px">
-    <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:flex-end">
-      <div style="flex:2;min-width:120px">
-        <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Description</div>
-        <input id="pf-desc-${catKey}" class="form-input" placeholder="e.g. Deposit"/>
-      </div>
-      <div style="width:100px">
-        <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Amount (€)</div>
-        <input id="pf-amt-${catKey}" class="form-input" type="number" placeholder="0"/>
-      </div>
-      <div style="width:70px">
-        <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">VAT %</div>
-        <input id="pf-vat-${catKey}" class="form-input" type="number" placeholder="0"/>
-      </div>
-      <div>
-        <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Method</div>
-        <select id="pf-method-${catKey}" class="form-input" style="width:100px">
-          <option value="bank">🏦 Bank</option>
-          <option value="cash">💵 Cash</option>
-        </select>
-      </div>
-      <div style="width:130px">
-        <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Due Date</div>
-        <input id="pf-due-${catKey}" class="form-input" type="date"/>
-      </div>
-      <button class="btn-sm primary" style="height:36px" onclick="savePayment('${catKey}')">Save</button>
-      <button class="btn-sm" style="height:36px" onclick="document.getElementById('payment-form-${catKey}').style.display='none'">Cancel</button>
-    </div>
-  </div>`;
-}
-
-async function savePayment(catKey) {
-  const desc = document.getElementById(`pf-desc-${catKey}`)?.value.trim();
-  const amt = parseFloat(document.getElementById(`pf-amt-${catKey}`)?.value)||0;
-  const vat = parseFloat(document.getElementById(`pf-vat-${catKey}`)?.value)||0;
-  const method = document.getElementById(`pf-method-${catKey}`)?.value;
-  const due = document.getElementById(`pf-due-${catKey}`)?.value;
-  if(!amt){ toast('Enter amount'); return; }
-  try {
-    const res = await sbPost('payments',{
-      couple_id:S.current.id, category:catKey,
-      description:desc||'Payment', amount:amt, vat_rate:vat,
-      method, due_date:due||null, status:'pending'
-    });
-    if(!S.payments) S.payments=[];
-    S.payments.push(res[0]);
-    document.getElementById(`payment-form-${catKey}`).style.display='none';
-    document.getElementById(`payments-${catKey}`).innerHTML = buildPaymentsList(catKey);
-    toast('Payment added!');
-  } catch(e){ toast('Error: '+e.message, true); }
-}
-
-async function togglePaymentPaid(id, catKey) {
-  if(!S.payments) return;
-  const p = S.payments.find(p=>p.id===id);
-  if(!p) return;
-  p.status = p.status==='paid'?'pending':'paid';
-  await sbPatch('payments',`id=eq.${id}`,{status:p.status}).catch(e=>toast('Error: '+e.message,true));
-  document.getElementById(`payments-${catKey}`).innerHTML = buildPaymentsList(catKey);
-}
-
-async function removePayment(id, catKey) {
-  await sbDelete('payments',`id=eq.${id}`).catch(e=>toast('Error: '+e.message,true));
-  if(S.payments) S.payments = S.payments.filter(p=>p.id!==id);
-  document.getElementById(`payments-${catKey}`).innerHTML = buildPaymentsList(catKey);
-}
-
-function editBudgetItem(id) {
-  const b = S.budgetItems.find(x=>x.id===id);
-  if(!b) return;
-  showModal('modal-edit-bi','Edit Budget Item',`
-    <div class="form-group"><label class="form-label">Item Name</label>
-      <input class="form-input" id="ebi-name" value="${b.item_name}"/></div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Type</label>
-        <select class="form-input" id="ebi-type">
-          <option value="fixed" ${b.pricing_type!=='per_head'?'selected':''}>📌 Fixed</option>
-          <option value="per_head" ${b.pricing_type==='per_head'?'selected':''}>👥 Per Head</option>
-        </select></div>
-      <div class="form-group"><label class="form-label">Price (€)</label>
-        <input class="form-input" type="number" id="ebi-price" value="${b.item_price||0}"/></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">VAT %</label>
-        <input class="form-input" type="number" id="ebi-vat" value="${b.vat_amount||0}"/></div>
-      <div class="form-group"><label class="form-label">Commission % <span style="color:var(--light)">(optional)</span></label>
-        <input class="form-input" type="number" id="ebi-comm" value="${b.commission_rate||0}"/></div>
-    </div>
-    <div class="modal-footer" style="padding:16px 0 0;border:none">
-      <button class="btn-sm" onclick="closeModal('dyn-modal-edit-bi')">Cancel</button>
-      <button class="btn-sm primary" onclick="saveBudgetItemEdit('${id}')">Save</button>
-    </div>
-  `);
-}
-
-async function saveBudgetItemEdit(id) {
-  const b = S.budgetItems.find(x=>x.id===id);
-  if(!b) return;
-  b.item_name = document.getElementById('ebi-name').value.trim();
-  b.pricing_type = document.getElementById('ebi-type').value;
-  b.item_price = parseFloat(document.getElementById('ebi-price').value)||0;
-  b.vat_amount = parseFloat(document.getElementById('ebi-vat').value)||0;
-  b.commission_rate = parseFloat(document.getElementById('ebi-comm').value)||0;
-  await sbPatch('budget_items',`id=eq.${id}`,{
-    item_name:b.item_name, pricing_type:b.pricing_type,
-    item_price:b.item_price, vat_amount:b.vat_amount, commission_rate:b.commission_rate
-  }).catch(e=>toast('Error: '+e.message,true));
-  closeModal('dyn-modal-edit-bi');
-  toast('Saved!');
-  switchTabDirect('budget');
-}
-
 async function addBudgetItem(catKey) {
-  const name = document.getElementById(`bi-n-${catKey}`)?.value.trim();
-  const price = parseFloat(document.getElementById(`bi-p-${catKey}`)?.value)||0;
-  const vat = parseFloat(document.getElementById(`bi-v-${catKey}`)?.value)||0;
-  const comm = parseFloat(document.getElementById(`bi-c-${catKey}`)?.value)||0;
-  const type = document.getElementById(`bi-t-${catKey}`)?.value||'fixed';
-  if(!name){ toast('Enter item name'); return; }
+  const name=document.getElementById(`bi-n-${catKey}`)?.value.trim();
+  const price=parseFloat(document.getElementById(`bi-p-${catKey}`)?.value)||0;
+  const comm=parseFloat(document.getElementById(`bi-c-${catKey}`)?.value)||0;
+  if(!name){toast('Enter item name');return;}
   try {
-    const res = await sbPost('budget_items',{
-      couple_id:S.current.id, category:catKey, item_name:name,
-      item_price:price, vat_amount:vat, commission_rate:comm,
-      pricing_type:type, sort_order:S.budgetItems.length
-    });
+    const res=await sbPost('budget_items',{couple_id:S.current.id,category:catKey,item_name:name,item_price:price,commission_rate:comm,sort_order:S.budgetItems.length});
     S.budgetItems.push(res[0]);
     toast('Item added!');
     switchTabDirect('budget');
-  } catch(e){ toast('Error: '+e.message, true); }
+  } catch(e){toast('Error: '+e.message,true);}
 }
-
 async function removeBudgetItem(id) {
   await sbDelete('budget_items',`id=eq.${id}`).catch(e=>toast('Error: '+e.message,true));
-  S.budgetItems = S.budgetItems.filter(b=>b.id!==id);
+  S.budgetItems=S.budgetItems.filter(b=>b.id!==id);
   switchTabDirect('budget');
-}
-
-function showPaymentsSummary() {
-  if(!S.payments?.length){ toast('No payments recorded yet'); return; }
-  const pending = S.payments.filter(p=>p.status!=='paid');
-  const paid = S.payments.filter(p=>p.status==='paid');
-  const sumPending = pending.reduce((a,p)=>a+Number(p.amount||0)*(1+Number(p.vat_rate||0)/100),0);
-  const sumPaid = paid.reduce((a,p)=>a+Number(p.amount||0)*(1+Number(p.vat_rate||0)/100),0);
-  const rows = p => p.map(x=>`<div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:0.8rem">
-    <span>${x.method==='bank'?'🏦':'💵'}</span>
-    <span style="flex:1">${x.description}</span>
-    <span style="color:var(--light)">${CATS.find(c=>c.key===x.category)?.label||x.category}</span>
-    <span style="color:var(--light)">${x.due_date?new Date(x.due_date).toLocaleDateString('en-GB',{day:'numeric',month:'short'}):''}</span>
-    <span style="font-weight:500">€${Math.round(Number(x.amount||0)*(1+Number(x.vat_rate||0)/100)).toLocaleString()}</span>
-  </div>`).join('');
-  showModal('modal-payments','💳 All Payments',`
-    <div style="margin-bottom:14px">
-      <div style="display:flex;gap:12px;margin-bottom:14px">
-        <div style="flex:1;background:var(--rose-light);border-radius:var(--radius-sm);padding:12px;text-align:center">
-          <div style="font-size:1.2rem;font-weight:500;color:var(--rose)">€${Math.round(sumPending).toLocaleString()}</div>
-          <div style="font-size:0.7rem;color:var(--mid)">Pending</div>
-        </div>
-        <div style="flex:1;background:var(--green-light);border-radius:var(--radius-sm);padding:12px;text-align:center">
-          <div style="font-size:1.2rem;font-weight:500;color:var(--green)">€${Math.round(sumPaid).toLocaleString()}</div>
-          <div style="font-size:0.7rem;color:var(--mid)">Paid</div>
-        </div>
-      </div>
-      ${pending.length?`<div style="font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid);margin-bottom:6px">Pending</div>${rows(pending)}`:''}
-      ${paid.length?`<div style="font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid);margin-top:12px;margin-bottom:6px">Paid</div>${rows(paid)}`:''}
-    </div>
-  `);
 }
 
 // ── PLAN ──────────────────────────────────────────────────────────
@@ -1325,230 +893,8 @@ function toast(msg,err=false,dur=3000){
   el._t=setTimeout(()=>el.className='',dur);
 }
 
-
-// ── ATHENIAN VENUES ───────────────────────────────────────────────
-const VENUES = [
-  {
-    name: 'Pyrgos Vasilissis',
-    days: {
-      weekday: { total: 20300, rent: 2000, rentNote: 'For the mulberry trees garden', minGuests: 'N/A', welcomeDrinks: 'Included in menu pricing', canapes: 'Included in menu pricing', menu: {guests:100,price:75,total:7500,note:'For served menu'}, drinksDinner: {guests:100,price:15,total:1500,note:'Wines must be provided by the venue'}, openBar: {guests:100,price:30,total:3000,note:'Simple labels and 3 cocktails for the entire duration of the event'}, serviceTips: {cost:2500,note:'Estimation for 1 maitre, 10-12 waiters, 2 Bartender, 6-8 Chef, 1-2 cleaning lady'}, soundLighting: {cost:2500,note:'Including basic sound package, DJ and ceremony sound'}, dj: 'Included in S&L', ceremonySetup: {guests:100,price:9,total:900,note:'cost is for chairs'}, prepRoom: 'N/A', rentExtension: 'N/A', waterStation: {guests:100,price:4,total:400}, earlySetup: 'N/A', partyLights: '⚠️' },
-      friday: { total: 20300, rent: 2000, rentNote: 'For the mulberry trees garden', minGuests: 'N/A', welcomeDrinks: 'Included in menu pricing', canapes: 'Included in menu pricing', menu: {guests:100,price:75,total:7500,note:'For served menu'}, drinksDinner: {guests:100,price:15,total:1500,note:'Wines must be provided by the venue'}, openBar: {guests:100,price:30,total:3000,note:'Simple labels and 3 cocktails for the entire duration'}, serviceTips: {cost:2500,note:'Estimation for 1 maitre, 10-12 waiters, 2 Bartender, 6-8 Chef, 1-2 cleaning lady'}, soundLighting: {cost:2500,note:'Including basic sound package, DJ and ceremony sound'}, dj: 'Included in S&L', ceremonySetup: {guests:100,price:9,total:900,note:'cost is for chairs'}, prepRoom: 'N/A', rentExtension: 'N/A', waterStation: {guests:100,price:4,total:400}, earlySetup: 'N/A', partyLights: '⚠️' },
-      saturday: { total: 38300, rent: 23000, rentNote: 'Rent for the Gardens at the Queen\'s tower', minGuests: 'N/A', welcomeDrinks: 'Included in menu pricing', canapes: 'Included in menu pricing', menu: {guests:100,price:75,total:7500,note:'For served menu'}, drinksDinner: {guests:100,price:15,total:1500,note:'Wines must be provided by the venue'}, openBar: {guests:100,price:30,total:3000,note:'Simple labels and 3 cocktails for the entire duration'}, serviceTips: {cost:2500,note:'Estimation for 1 maitre, 10-12 waiters, 2 Bartender, 6-8 Chef, 1-2 cleaning lady'}, soundLighting: {cost:2500,note:'Including basic sound package, DJ and ceremony sound'}, dj: 'Included in S&L', ceremonySetup: {guests:100,price:9,total:900,note:'cost is for chairs'}, prepRoom: 'N/A', rentExtension: 'N/A', waterStation: {guests:100,price:4,total:400}, earlySetup: 'N/A', partyLights: '⚠️' },
-      sunday: { total: 20300, rent: 2000, rentNote: 'For the mulberry trees garden', minGuests: 'N/A', welcomeDrinks: 'Included in menu pricing', canapes: 'Included in menu pricing', menu: {guests:100,price:75,total:7500,note:'For served menu'}, drinksDinner: {guests:100,price:15,total:1500,note:'Wines must be provided by the venue'}, openBar: {guests:100,price:30,total:3000,note:'Simple labels and 3 cocktails for the entire duration'}, serviceTips: {cost:2500,note:'Estimation for 1 maitre, 10-12 waiters, 2 Bartender, 6-8 Chef, 1-2 cleaning lady'}, soundLighting: {cost:2500,note:'Including basic sound package, DJ and ceremony sound'}, dj: 'Included in S&L', ceremonySetup: {guests:100,price:9,total:900,note:'cost is for chairs'}, prepRoom: 'N/A', rentExtension: 'N/A', waterStation: {guests:100,price:4,total:400}, earlySetup: 'N/A', partyLights: '⚠️' },
-    }
-  },
-  {
-    name: 'Residence (Island Resort)',
-    days: {
-      weekday: { total: 22570, rent: 'Included in menu pricing', minGuests: '80 guests', welcomeDrinks: 'Included in menu pricing', canapes: 'Included in menu pricing', menu: {guests:100,price:124.2,total:12420,note:'10% discount on weekdays on F&B, starting price for seated menu'}, openBar: {guests:100,price:40.5,total:4050,note:'10% discount on weekdays on F&B'}, soundLighting: {cost:2100,note:'Included in sound & lighting pricing'}, dj: 'Included in S&L', ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', rentExtension: 'N/A', waterStation: 'N/A', earlySetup: 'N/A', partyLights: 'Included' },
-      friday: { total: 32800, rent: 'Included in menu pricing', minGuests: '150 guests (150×€56=€8400, 250 guests)', welcomeDrinks: 'Included in menu pricing', canapes: 'Included in menu pricing', menu: {guests:100,price:138,total:13800,note:'starting price for seated menu'}, openBar: {guests:100,price:45,total:4500}, soundLighting: {cost:2100}, dj: 'Included in S&L', ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', rentExtension: 'N/A', waterStation: 'N/A', earlySetup: 'N/A', partyLights: 'Included' },
-      saturday: { total: 35600, rent: 'included in menu pricing', minGuests: '200 guests (200×€56=€11200, 300 guests)', welcomeDrinks: 'Included in menu pricing', canapes: 'Included in menu pricing', menu: {guests:100,price:136,total:13600,note:'starting price for seated menu'}, openBar: {guests:100,price:45,total:4500}, soundLighting: {cost:2100}, dj: 'Included in S&L', ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', rentExtension: 'N/A', waterStation: 'N/A', earlySetup: 'N/A', partyLights: 'Included' },
-      sunday: { total: 24400, rent: 'Included in menu pricing', minGuests: '100 guests', welcomeDrinks: 'Included in menu pricing', canapes: 'Included in menu pricing', menu: {guests:100,price:138,total:13800,note:'starting price for seated menu'}, openBar: {guests:100,price:45,total:4500}, soundLighting: {cost:2100}, dj: 'Included in S&L', ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', rentExtension: 'N/A', waterStation: 'N/A', earlySetup: 'N/A', partyLights: 'Included' },
-    }
-  },
-  {
-    name: 'Gallery (Island Resort)',
-    days: {
-      weekday: { total: 22270, rent: 'included in menu pricing', minGuests: '60 guests', welcomeDrinks: 'Included in menu pricing', canapes: 'Included in menu pricing', menu: {guests:100,price:124.2,total:12420,note:'10% discount on weekdays on F&B, starting price for seated menu'}, openBar: {guests:100,price:40.5,total:4050,note:'10% discount on weekdays on F&B'}, serviceTips: {guests:25,price:124,total:3100,note:'Estimation'}, soundLighting: {cost:1800}, dj: 'N/A', ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', rentExtension: 'no need- 11 hours based on ceremony starting time', waterStation: 'Included in menu pricing', earlySetup: 'N/A', partyLights: 'basic party lights are included in S&L pricing' },
-      friday: { total: 26900, rent: 'Included in menu pricing', minGuests: '50 guests (50×€56=€2800, 150 guests)', welcomeDrinks: 'Included in menu pricing', canapes: 'Included in menu pricing', menu: {guests:100,price:138,total:13800,note:'starting price for seated menu'}, openBar: {guests:100,price:45,total:4500}, serviceTips: {guests:25,price:124,total:3100,note:'Estimation'}, soundLighting: {cost:1800}, dj: 'N/A', ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', rentExtension: 'no need- 11 hours based on ceremony starting time', waterStation: 'Included in menu pricing', earlySetup: 'N/A', partyLights: 'basic party lights are included in S&L pricing' },
-      saturday: { total: 29700, rent: 'included in menu pricing', minGuests: '100 guests (100×€56=€5600, 200 guests)', welcomeDrinks: 'Included in menu pricing', canapes: 'Included in menu pricing', menu: {guests:100,price:138,total:13800,note:'starting price for seated menu'}, openBar: {guests:100,price:45,total:4500}, serviceTips: {guests:25,price:124,total:3100,note:'Estimation'}, soundLighting: {cost:1800}, dj: 'N/A', ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', rentExtension: 'no need- 11 hours based on ceremony starting time', waterStation: 'Included in menu pricing', earlySetup: 'N/A', partyLights: 'basic party lights are included in S&L pricing' },
-      sunday: { total: 24100, rent: 'included in menu pricing', minGuests: '100 guests', welcomeDrinks: 'Included in menu pricing', canapes: 'Included in menu pricing', menu: {guests:100,price:138,total:13800,note:'starting price for seated menu'}, openBar: {guests:100,price:45,total:4500}, serviceTips: {guests:25,price:124,total:3100,note:'Estimation'}, soundLighting: {cost:1800}, dj: 'N/A', ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', rentExtension: 'no need- 11 hours based on ceremony starting time', waterStation: 'Included in menu pricing', earlySetup: 'N/A', partyLights: 'basic party lights are included in S&L pricing' },
-    }
-  },
-  {
-    name: 'Pyrgos Melisourgou',
-    days: {
-      weekday: { total: 22500, rent: 4500, rentNote: 'Monday to Wednesday! For Thursdays the rent is 5500€, included in rent: vallet parking and basic sound system', menu: {guests:100,price:75,total:7500,note:'For served menu'}, openBar: {guests:100,price:30,total:3000,note:'Simple labels and 3 cocktails for the entire duration'}, serviceTips: {cost:2500,note:'Estimation for 1 maitre, 10-12 waiters, 2 Bartender, 6-8 Chef, 1-2 cleaning lady'}, soundLighting: {cost:2500,note:'Including basic sound package, DJ and ceremony sound'}, dj: 'N/A Included in S&L', ceremonySetup: {guests:100,price:9,total:900,note:'The use of the chapel area is free of charge, cost is for chairs'}, prepRoom: 'Available free of charge but not airconditioned!', waterStation: {guests:100,price:4,total:400}, partyLights: {cost:1200} },
-      friday: { total: 28000, rent: 10000, rentNote: 'included in rent: vallet parking and basic sound system', menu: {guests:100,price:75,total:7500,note:'For served menu'}, openBar: {guests:100,price:30,total:3000}, serviceTips: {cost:2500}, soundLighting: {cost:2500}, dj: 'Included in S&L', ceremonySetup: {guests:100,price:9,total:900,note:'free of charge, cost is for chairs'}, prepRoom: 'Available free of charge but not airconditioned!', waterStation: {guests:100,price:4,total:400}, partyLights: {cost:1200} },
-      saturday: { total: 32000, rent: 14000, rentNote: 'Included in rent: vallet parking and basic sound system', menu: {guests:100,price:75,total:7500,note:'For served menu'}, openBar: {guests:100,price:30,total:3000}, serviceTips: {cost:2500}, soundLighting: {cost:2500}, dj: 'Included in S&L', ceremonySetup: {guests:100,price:9,total:900,note:'free of charge, cost is for chairs'}, prepRoom: 'Available free of charge but not airconditioned!', waterStation: {guests:100,price:4,total:400}, partyLights: {cost:1200} },
-      sunday: { total: 26000, rent: 8000, rentNote: 'Included in rent: vallet parking and basic sound system', menu: {guests:100,price:75,total:7500,note:'For served menu'}, openBar: {guests:100,price:30,total:3000}, serviceTips: {cost:2500}, soundLighting: {cost:2500}, dj: 'Included in S&L', ceremonySetup: {guests:100,price:9,total:900,note:'free of charge, cost is for chairs'}, prepRoom: 'Available free of charge but not airconditioned!', waterStation: {guests:100,price:4,total:400}, partyLights: {cost:1200} },
-    }
-  },
-  {
-    name: 'En Thalatti Sea Soul',
-    days: {
-      weekday: { total: 12650, rent: 2500, rentNote: 'up to 180 guests', menu: {guests:100,price:66,total:6600}, openBar: {guests:100,price:20,total:2000,note:'Simple labels and 3 cocktails for 6 hours'}, serviceTips: {guests:1,price:110,total:110,note:'Included in menu pricing, cost is for bartender'}, soundLighting: {cost:900}, dj: 'Included in basic S&L cost', ceremonySetup: {guests:60,price:9,total:540,note:'Included in venue rent with 40 chairs'}, prepRoom: 'Included but for use during the event', waterStation: {guests:100,price:1,total:100,note:'Optional, infused water station'}, partyLights: '⚠️' },
-      friday: { total: 13650, rent: 3500, rentNote: 'up to 200 guests', menu: {guests:100,price:66,total:6600}, openBar: {guests:100,price:20,total:2000}, serviceTips: {guests:1,price:110,total:110}, soundLighting: {cost:900}, dj: 'Included in basic S&L cost', ceremonySetup: {guests:60,price:9,total:540}, prepRoom: 'Included but for use during the event', waterStation: {guests:100,price:1,total:100,note:'Optional'}, partyLights: '⚠️' },
-      saturday: { total: 14650, rent: 4500, rentNote: 'up to 200 guests', menu: {guests:100,price:66,total:6600}, openBar: {guests:100,price:20,total:2000}, serviceTips: {guests:1,price:110,total:110}, soundLighting: {cost:900}, dj: 'Included in basic S&L cost', ceremonySetup: {guests:60,price:9,total:540}, prepRoom: 'Included but for use during the event', waterStation: {guests:100,price:1,total:100}, partyLights: '⚠️' },
-      sunday: { total: 13650, rent: 4500, rentNote: 'up to 200 guests', menu: {guests:100,price:66,total:6600}, openBar: {guests:100,price:20,total:2000}, serviceTips: {guests:1,price:110,total:110}, soundLighting: {cost:900}, dj: 'Included in basic S&L cost', ceremonySetup: {guests:60,price:9,total:540}, prepRoom: 'Included but for use during the event', waterStation: {guests:100,price:1,total:100}, partyLights: '⚠️' },
-    }
-  },
-  {
-    name: 'Ble Pavillon',
-    days: {
-      weekday: { total: 16450, rent: 'N/A', minGuests: '50×€45=€2250, Minimum guests 150', welcomeDrinks: 'N/A', canapes: 'N/A', menu: {guests:100,price:85,total:8500}, openBar: {guests:100,price:32,total:3200,note:'Whisky Gordons Gin Rum Tequila + 2 cocktails'}, serviceTips: 'N/A', soundLighting: {cost:800}, dj: 'N/A, Included in basic S&L package', ceremonySetup: {cost:1700,note:'800€ cost for ceremony 9€ per chair'}, prepRoom: 'N/A', rentExtension: 'N/A', waterStation: 'N/A', earlySetup: 'N/A', partyLights: '⚠️' },
-      friday: { total: 16450, rent: 'N/A', minGuests: '50×€45=€2250, Minimum guests 150', menu: {guests:100,price:85,total:8500}, openBar: {guests:100,price:32,total:3200,note:'Whisky Gordons Gin Rum Tequila + 2 cocktails'}, soundLighting: {cost:930}, dj: 'Included in basic S&L package', ceremonySetup: {cost:1700,note:'800€ cost for ceremony 9€ per chair'}, partyLights: '⚠️' },
-      saturday: { total: 19200, rent: 'N/A', minGuests: '100×€45=€4500, Minimum guests 200', menu: {guests:100,price:90,total:9000}, openBar: {guests:100,price:32,total:3200}, soundLighting: {cost:800}, dj: 'Included in basic S&L package', ceremonySetup: {cost:1700,note:'800€ cost for ceremony 9€ per chair'}, partyLights: '⚠️' },
-      sunday: { total: 16450, rent: 'N/A', minGuests: '50×€45=€2250, Minimum guests 150', menu: {guests:100,price:85,total:8500}, openBar: {guests:100,price:32,total:3200}, soundLighting: {cost:800}, dj: 'Included in basic S&L package', ceremonySetup: {cost:1700,note:'800€ cost for ceremony 9€ per chair'}, partyLights: '⚠️' },
-    }
-  },
-  {
-    name: 'Pyrgos Petreza',
-    days: {
-      weekday: { total: 25400, rent: 9500, welcomeDrinks: {guests:100,price:3,total:300,note:'For two mocktails'}, canapes: {guests:100,price:5,total:500,note:'for 3 options'}, menu: {guests:100,price:85,total:8500,note:'Starting price'}, drinksDinner: {guests:100,price:5,total:500,note:'Pyrgos\' wines'}, openBar: {guests:100,price:35,total:3500,note:'Simple labels and beer, Cocktails are extra!'}, serviceTips: 'Service included in pricing, Tips not mandatory', soundLighting: 'Basic sound system included', dj: {cost:1000,note:'External vendor'}, ceremonySetup: {guests:60,price:5,total:300,note:'40 chairs are free of charge. The rest are charged'}, prepRoom: {cost:600,note:'Optional'}, rentExtension: {guests:1,price:700,total:700,note:'Staff overtime is 350€/hour, Bar overtime is 350€/hour'}, waterStation: 'Included, Still water & Water with mint – lemon & cucumber', partyLights: '⚠️' },
-      friday: { total: 26900, rent: 11300, welcomeDrinks: {guests:100,price:3,total:300}, canapes: {guests:100,price:5,total:500}, menu: {guests:100,price:85,total:8500}, drinksDinner: {guests:100,price:5,total:500}, openBar: {guests:100,price:35,total:3500}, serviceTips: 'Service included in pricing, Tips not mandatory', soundLighting: 'Basic sound system included', dj: {cost:1000}, ceremonySetup: {guests:60,price:5,total:300,note:'40 chairs are free of charge. The rest are charged'}, prepRoom: {cost:600}, rentExtension: {guests:1,price:700,total:700}, waterStation: 'Included', partyLights: '⚠️' },
-      saturday: { total: 15900, rent: 'N/A ⚠️', menu: {guests:100,price:85,total:8500}, openBar: {guests:100,price:35,total:3500}, soundLighting: 'Basic sound system included', dj: {cost:1000}, ceremonySetup: {guests:60,price:5,total:300}, prepRoom: {cost:600}, partyLights: '⚠️' },
-      sunday: { total: 25700, rent: 10000, welcomeDrinks: {guests:100,price:3,total:300}, canapes: {guests:100,price:5,total:500}, menu: {guests:100,price:85,total:8500}, drinksDinner: {guests:100,price:5,total:500}, openBar: {guests:100,price:35,total:3500}, soundLighting: 'Basic sound system included', dj: {cost:1000}, ceremonySetup: {guests:60,price:5,total:300}, prepRoom: {cost:600}, rentExtension: {guests:1,price:700,total:700}, partyLights: '⚠️' },
-    }
-  },
-  {
-    name: 'Private House (Island Resort)',
-    days: {
-      weekday: { total: 22270, rent: 'included in menu pricing', minGuests: '60 guests', menu: {guests:100,price:124.2,total:12420,note:'10% discount on weekdays on F&B'}, openBar: {guests:100,price:40.5,total:4050,note:'10% discount on weekdays on F&B'}, serviceTips: {guests:25,price:124,total:3100,note:'estimation'}, soundLighting: {cost:1800}, ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', partyLights: 'Included' },
-      friday: { total: 29700, rent: 'Included in menu pricing', minGuests: '100×€56=€5600, 200 guests', menu: {guests:100,price:138,total:13800}, openBar: {guests:100,price:45,total:4500}, serviceTips: {guests:25,price:124,total:3100}, soundLighting: {cost:1800}, ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', partyLights: 'Included' },
-      saturday: { total: 32500, rent: 'Included in menu pricing', minGuests: '150×€56=€8400, 250 guests', menu: {guests:100,price:138,total:13800}, openBar: {guests:100,price:45,total:4500}, serviceTips: {guests:25,price:124,total:3100}, soundLighting: {cost:1800}, ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', partyLights: 'Included' },
-      sunday: { total: 24100, rent: 'included in menu pricing', minGuests: '100 guests', menu: {guests:100,price:138,total:13800}, openBar: {guests:100,price:45,total:4500}, serviceTips: {guests:25,price:124,total:3100}, soundLighting: {cost:1800}, ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', partyLights: 'Included' },
-    }
-  },
-  {
-    name: 'Margi Farm',
-    days: {
-      weekday: { total: 17250, rent: 'No rental fee', minGuests: 'N/A', welcomeDrinks: 'Included in menu', canapes: 'Included in menu', menu: {guests:100,price:93,total:9300,note:'Buffet starting price'}, drinksDinner: {guests:100,price:20,total:2000,note:'Still Water, Beer, Soft Drinks and wines'}, openBar: {guests:100,price:29,total:2900,note:'Regular brands and 3 cocktails for 4 hours'}, serviceTips: 'Included in menu pricing', soundLighting: {cost:1200,note:'Basic sound system included in DJ pricing, Cost is for basic party lights'}, dj: {cost:950,note:'Exclusive vendor'}, ceremonySetup: {guests:100,price:9,total:900,note:'Cost is for chairs'}, prepRoom: 'N/A', waterStation: 'Included in menu pricing', partyLights: '⚠️' },
-      friday: { total: 17250, rent: 'No rental fee as long as the minimum number of guests is satisfied', minGuests: '100 guests', welcomeDrinks: 'Included in menu', canapes: 'Included in menu', menu: {guests:100,price:93,total:9300,note:'Buffet starting price'}, drinksDinner: {guests:100,price:20,total:2000}, openBar: {guests:100,price:29,total:2900}, serviceTips: 'Included in menu pricing', soundLighting: {cost:1200}, dj: {cost:950}, ceremonySetup: {guests:100,price:9,total:900}, waterStation: 'Included in menu pricing', partyLights: '⚠️' },
-      saturday: { total: 17250, rent: 'Rental fee will be specified by the venue for the guests we have less than the minimum', minGuests: '120 guests', welcomeDrinks: 'Included in menu', canapes: 'Included in menu', menu: {guests:100,price:93,total:9300}, drinksDinner: {guests:100,price:20,total:2000}, openBar: {guests:100,price:29,total:2900}, serviceTips: 'Included in menu pricing', soundLighting: {cost:1200}, dj: {cost:950}, ceremonySetup: {guests:100,price:9,total:900}, waterStation: 'Included in menu pricing', partyLights: '⚠️' },
-      sunday: { total: 17250, rent: 'No rental fee as long as minimum guests satisfied', minGuests: '100 guests', welcomeDrinks: 'Included in menu', canapes: 'Included in menu', menu: {guests:100,price:93,total:9300}, drinksDinner: {guests:100,price:20,total:2000}, openBar: {guests:100,price:29,total:2900}, serviceTips: 'Included in menu pricing', soundLighting: {cost:1200}, dj: {cost:950}, ceremonySetup: {guests:100,price:9,total:900}, waterStation: 'Included in menu pricing', partyLights: '⚠️' },
-    }
-  },
-  {
-    name: 'Ble Azure',
-    days: {
-      weekday: { total: 20500, rent: 'Included in menu pricing', minGuests: '100×€45=€4500, Minimum guests 200', welcomeDrinks: {guests:0,price:0,total:0,note:'Traditional recipe of ancient Greece or Berry Mocktail non alchoholic (cranberry juice & pink lemonade) or Pineapple Aperol Spitz'}, canapes: 'Included in menu pricing', menu: {guests:100,price:90,total:9000}, openBar: {guests:100,price:32,total:3200,note:'Whisky Gordons Gin Rum Tequila + 2 cocktails'}, serviceTips: 'Included in menu pricing', soundLighting: {cost:900}, dj: 'N/A', ceremonySetup: {cost:1700,note:'800€ ceremony cost + 9€ per chair'}, prepRoom: 'available free of charge', waterStation: 'including in menu pricing', partyLights: {cost:1200} },
-      friday: { total: 20500, rent: 'Included in menu pricing', minGuests: '100×€45=€4500, Minimum guests 200', menu: {guests:100,price:90,total:9000}, openBar: {guests:100,price:32,total:3200}, soundLighting: {cost:900}, ceremonySetup: {cost:1700}, prepRoom: 'available free of charge', waterStation: 'including in menu pricing', partyLights: {cost:1200} },
-      saturday: { total: 23250, rent: 'Included in menu pricing', minGuests: '150×€45=€6750, Minimum guests 250', menu: {guests:100,price:95,total:9500}, openBar: {guests:100,price:32,total:3200}, soundLighting: {cost:900}, ceremonySetup: {cost:1700}, prepRoom: 'available free of charge', waterStation: 'including in menu pricing', partyLights: {cost:1200} },
-      sunday: { total: 20500, rent: 'Included in menu pricing', minGuests: '100×€45=€4500, Minimum guests 200', menu: {guests:100,price:90,total:9000}, openBar: {guests:100,price:32,total:3200}, soundLighting: {cost:900}, ceremonySetup: {cost:1700}, prepRoom: 'available free of charge', waterStation: 'including in menu pricing', partyLights: {cost:1200} },
-    }
-  },
-  {
-    name: 'Reef',
-    days: {
-      weekday: { total: 16815, rent: 'N/A, Included in pricing', minGuests: 'N/A', welcomeDrinks: 'Included in pricing', canapes: 'Included in pricing', menu: {guests:100,price:120,total:12000}, openBar: {guests:100,price:25,total:2500}, serviceTips: {cost:315,note:'valet parking + 1 hostess'}, soundLighting: {cost:1100}, dj: 'Included in basic S&L', ceremonySetup: {guests:100,price:9,total:900,note:'Optional 500€ ceremony structure for shading. Also 9€/chair'}, prepRoom: 'Available free of charge', rentExtension: 'N/A, On Fridays and Saturdays, events can continue until 5:00 AM. On all other days, events must end by 3:00 AM', waterStation: 'N/A, Included in pricing', earlySetup: 'Set up starts at 17:00. If needed earlier we need to arrange extra fee based on availability!', partyLights: '⚠️' },
-      friday: { total: 18815, rent: 'N/A, Included in pricing', minGuests: '50×€70=€3500, 150 guests for Fridays', menu: {guests:100,price:105,total:10530}, openBar: {guests:100,price:25,total:2500}, serviceTips: {cost:315}, soundLighting: {cost:1100}, dj: 'Included in basic S&L', ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', partyLights: '⚠️' },
-      saturday: { total: 22815, rent: 'N/A, Included in pricing', minGuests: '100×€70=€7000, 200 guests for Saturdays', menu: {guests:100,price:110,total:11000}, openBar: {guests:100,price:25,total:2500}, serviceTips: {cost:315}, soundLighting: {cost:1100}, dj: 'Included in basic S&L', ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', partyLights: '⚠️' },
-      sunday: { total: 20315, rent: 'N/A, Included in pricing', minGuests: '50×€70=€3500, 150 guests for Sundays', menu: {guests:100,price:120,total:12000}, openBar: {guests:100,price:25,total:2500}, serviceTips: {cost:315}, soundLighting: {cost:1100}, dj: 'Included in basic S&L', ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', partyLights: '⚠️' },
-    }
-  },
-  {
-    name: 'Thymari con gusto',
-    days: {
-      weekday: { total: 20400, rent: 3800, canapes: {guests:100,price:10,total:1000,note:'Estimated price'}, menu: {guests:100,price:100,total:10000,note:'Estimated price'}, openBar: {guests:100,price:20,total:2000}, serviceTips: {guests:8,price:100,total:800,note:'Estimated price'}, soundLighting: {cost:500}, dj: {guests:0,price:0,total:0,note:'Including in basic sound & lighting pricing'}, ceremonySetup: {cost:1100,note:'200€ ceremony cost + 9€ per chair'}, partyLights: {cost:1200} },
-      friday: { total: 20900, rent: 4500, canapes: {guests:100,price:10,total:1000}, menu: {guests:100,price:100,total:10000}, openBar: {guests:100,price:20,total:2000}, serviceTips: {guests:8,price:100,total:800}, soundLighting: {cost:500}, dj: 'Including in basic sound & lighting pricing', ceremonySetup: {cost:1100}, partyLights: {cost:1200} },
-      saturday: { total: 21600, rent: 5000, canapes: {guests:100,price:13,total:1000}, menu: {guests:100,price:100,total:10000}, openBar: {guests:100,price:20,total:2000}, serviceTips: {guests:8,price:100,total:800}, soundLighting: {cost:500}, dj: 'Including in basic sound & lighting pricing', ceremonySetup: {cost:1100}, partyLights: {cost:1200} },
-      sunday: { total: 20900, rent: 4930, canapes: {guests:100,price:10,total:1000}, menu: {guests:100,price:100,total:10000}, openBar: {guests:100,price:20,total:2000}, serviceTips: {guests:8,price:100,total:800}, soundLighting: {cost:500}, dj: 'Including in basic sound & lighting pricing', ceremonySetup: {cost:1100}, partyLights: {cost:1200} },
-    }
-  },
-  {
-    name: 'Ktima Laas',
-    days: {
-      weekday: { total: 12960, rent: 'Included in menu pricing', minGuests: 'N/A', welcomeDrinks: '2 options included in menu pricing', canapes: 'included in menu pricing', menu: {guests:100,price:80,total:8000,note:'For buffet menu'}, openBar: {guests:100,price:16,total:1600,note:'full open bar with simple labels and 3 cocktail options'}, serviceTips: {cost:360,note:'service staff for dinner is included, only chefs for live stations are extra if those are added! The cost is for bartenders'}, soundLighting: {cost:1200,note:'Included sound systems, Cost is an estimation for party lights'}, dj: {cost:500,note:'Exclusive vendor'}, ceremonySetup: {guests:100,price:9,total:900,note:'Cost is for chairs'}, prepRoom: {cost:400,note:'Optional, Fully equipped suite available to stay the night too and breakfast included'}, waterStation: 'Water is included', partyLights: '⚠️' },
-      friday: { total: 13460, rent: 'Included in menu pricing', menu: {guests:100,price:85,total:8500,note:'For buffet menu'}, openBar: {guests:100,price:16,total:1600}, serviceTips: {cost:360}, soundLighting: {cost:1200}, dj: {cost:500}, ceremonySetup: {guests:100,price:9,total:900}, prepRoom: {cost:400}, waterStation: 'Water is included', partyLights: '⚠️' },
-      saturday: { total: 13460, rent: 'Included in menu pricing', menu: {guests:100,price:85,total:8500}, openBar: {guests:100,price:16,total:1600}, serviceTips: {cost:360}, soundLighting: {cost:1200}, dj: {cost:500}, ceremonySetup: {guests:100,price:9,total:900}, prepRoom: {cost:400}, waterStation: 'Water is included', partyLights: '⚠️' },
-      sunday: { total: 13460, rent: 'Included in menu pricing', menu: {guests:100,price:85,total:8500}, openBar: {guests:100,price:16,total:1600}, serviceTips: {cost:360}, soundLighting: {cost:1200}, dj: {cost:500}, ceremonySetup: {guests:100,price:9,total:900}, prepRoom: {cost:400}, waterStation: 'Water is included', partyLights: '⚠️' },
-    }
-  },
-];
-
-const DAY_LABELS = {weekday:'Weekday (Mon-Thu)', friday:'Friday', saturday:'Saturday', sunday:'Sunday'};
-const DAYS = ['weekday','friday','saturday','sunday'];
-const ROW_LABELS = [
-  {key:'rent', label:'Rent'},
-  {key:'minGuests', label:'Minimum Guests'},
-  {key:'welcomeDrinks', label:'Welcome Drinks'},
-  {key:'canapes', label:'Canapés'},
-  {key:'menu', label:'Menu'},
-  {key:'drinksDinner', label:'Drinks During Dinner'},
-  {key:'openBar', label:'Open Bar'},
-  {key:'serviceTips', label:'Service & Tips'},
-  {key:'soundLighting', label:'Basic Sound & Lighting'},
-  {key:'dj', label:'DJ'},
-  {key:'ceremonySetup', label:'Ceremony Set Up'},
-  {key:'prepRoom', label:'Preparation Room'},
-  {key:'rentExtension', label:'Rent Extension'},
-  {key:'waterStation', label:'Water & Lemonade Station'},
-  {key:'earlySetup', label:'Early Set Up Fee'},
-  {key:'partyLights', label:'Party Lights'},
-];
-
-function formatCell(val) {
-  if(val === undefined || val === null) return '<span style="color:var(--light)">—</span>';
-  if(typeof val === 'string') {
-    if(val === 'N/A') return '<span style="color:var(--light)">N/A</span>';
-    if(val === '⚠️') return '<span style="background:var(--rose-light);color:var(--rose);padding:2px 6px;border-radius:4px;font-size:0.72rem">⚠️</span>';
-    return `<span style="color:var(--mid);font-size:0.78rem">${val}</span>`;
-  }
-  if(typeof val === 'object') {
-    let parts = [];
-    if(val.guests && val.price) parts.push(`<span style="color:var(--light);font-size:0.72rem">${val.guests}×€${val.price} = </span><strong>€${(val.total||val.guests*val.price).toLocaleString()}</strong>`);
-    else if(val.cost !== undefined) parts.push(`<strong>€${Number(val.cost).toLocaleString()}</strong>`);
-    else if(val.total !== undefined) parts.push(`<strong>€${Number(val.total).toLocaleString()}</strong>`);
-    if(val.note) parts.push(`<div style="font-size:0.72rem;color:var(--light);margin-top:2px">${val.note}</div>`);
-    return parts.join('') || '<span style="color:var(--light)">—</span>';
-  }
-  return String(val);
-}
-
-function buildVenues() {
-  let h = `<div class="section-toolbar" style="margin-bottom:18px">
-    <h2>🏛 Athenian Venues 2025–26</h2>
-    <div style="font-size:0.78rem;color:var(--light)">${VENUES.length} venues · Budget comparison</div>
-  </div>`;
-
-  VENUES.forEach((venue, vi) => {
-    const totals = DAYS.map(d => venue.days[d]?.total || 0);
-    const minTotal = Math.min(...totals.filter(t=>t>0));
-    const maxTotal = Math.max(...totals);
-
-    h += `<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;overflow:hidden;">
-      <div style="padding:14px 18px;cursor:pointer;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)" onclick="toggleVenue(this)">
-        <span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.2rem;flex:1">${venue.name}</span>
-        <div style="display:flex;gap:8px">
-          ${DAYS.map(d=>{
-            const t = venue.days[d]?.total;
-            return t ? `<div style="text-align:center">
-              <div style="font-size:0.68rem;color:var(--light)">${d==='weekday'?'Mon-Thu':d.charAt(0).toUpperCase()+d.slice(1)}</div>
-              <div style="font-size:0.88rem;font-weight:500;color:${t===minTotal?'var(--green)':t===maxTotal?'var(--rose)':'var(--ink)'}">€${t.toLocaleString()}</div>
-            </div>` : '';
-          }).join('')}
-        </div>
-        <span style="color:var(--light);font-size:0.8rem;margin-left:8px">▾</span>
-      </div>
-      <div class="venue-body" style="display:none;overflow-x:auto;">
-        <table style="width:100%;border-collapse:collapse;min-width:700px">
-          <thead>
-            <tr style="background:var(--surface2)">
-              <th style="text-align:left;padding:10px 14px;font-size:0.72rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--mid);width:160px;border-bottom:2px solid var(--border-strong)">Item</th>
-              ${DAYS.map(d=>`<th style="text-align:left;padding:10px 14px;font-size:0.72rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--mid);border-bottom:2px solid var(--border-strong)">${DAY_LABELS[d]}</th>`).join('')}
-            </tr>
-            <tr style="background:var(--gold-light)">
-              <td style="padding:8px 14px;font-weight:600;font-size:0.82rem;border-bottom:1px solid var(--border-strong)">TOTAL</td>
-              ${DAYS.map(d=>{
-                const t = venue.days[d]?.total;
-                return `<td style="padding:8px 14px;font-weight:700;font-size:1rem;color:${t===minTotal?'var(--green)':t===maxTotal?'var(--rose)':'var(--gold-dark)'};border-bottom:1px solid var(--border-strong)">${t?'€'+t.toLocaleString():'—'}</td>`;
-              }).join('')}
-            </tr>
-          </thead>
-          <tbody>
-            ${ROW_LABELS.map((row,ri)=>`
-              <tr style="background:${ri%2===0?'var(--surface)':'var(--surface2)'}">
-                <td style="padding:8px 14px;font-size:0.78rem;font-weight:500;color:var(--mid);border-bottom:1px solid var(--border);vertical-align:top">${row.label}</td>
-                ${DAYS.map(d=>`<td style="padding:8px 14px;border-bottom:1px solid var(--border);vertical-align:top">${formatCell(venue.days[d]?.[row.key])}</td>`).join('')}
-              </tr>`).join('')}
-          </tbody>
-        </table>
-      </div>
-    </div>`;
-  });
-  return h;
-}
-
-function toggleVenue(header) {
-  const body = header.nextElementSibling;
-  const chev = header.querySelector('span:last-child');
-  const open = body.style.display === 'block';
-  body.style.display = open ? 'none' : 'block';
-  chev.style.transform = open ? '' : 'rotate(180deg)';
-}
+// ── INIT ──────────────────────────────────────────────────────────
 document.getElementById('pw-input').addEventListener('keydown',e=>{if(e.key==='Enter')checkPw();});
 </script>
 </body>
 </html>
-
