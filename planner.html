@@ -206,6 +206,7 @@ body{font-family:'Jost',sans-serif;font-weight:300;background:var(--bg);color:va
 <div id="app" style="display:none;flex-direction:column;height:100vh;">
   <div class="topbar">
     <div class="topbar-logo">🌸 My Greek Wedding</div>
+    <button class="topbar-btn outline" onclick="showVenuesPage()">🏛 Budget Comparison</button>
     <button class="topbar-btn outline" onclick="openModal('add-couple-modal')">+ New Couple</button>
     <button class="topbar-btn outline" onclick="loadCouples()">↻ Refresh</button>
   </div>
@@ -1547,6 +1548,27 @@ function toggleVenue(header) {
   body.style.display = open ? 'none' : 'block';
   chev.style.transform = open ? '' : 'rotate(180deg)';
 }
+function showVenuesPage() {
+  document.getElementById('couple-header-wrap').style.display='none';
+  document.getElementById('tab-nav').style.display='none';
+  const el = document.getElementById('tab-content');
+  el.innerHTML = `<div style="margin-bottom:16px;display:flex;align-items:center;gap:12px">
+    <button class="btn-sm" onclick="backFromVenues()">← Back</button>
+    <span style="font-size:0.78rem;color:var(--light)">Athenian Venues Budget Comparison 2025–26</span>
+  </div>` + buildVenues();
+}
+
+function backFromVenues() {
+  if(S.current) {
+    document.getElementById('couple-header-wrap').style.display='block';
+    document.getElementById('tab-nav').style.display='flex';
+    switchTabDirect(S.currentTab||'overview');
+  } else {
+    document.getElementById('tab-content').innerHTML = `<div class="no-couple"><div class="big">Select a couple to begin</div><p>Choose from the sidebar or create a new couple</p></div>`;
+  }
+}
+
+// ── INIT ──────────────────────────────────────────────────────────
 document.getElementById('pw-input').addEventListener('keydown',e=>{if(e.key==='Enter')checkPw();});
 </script>
 </body>
