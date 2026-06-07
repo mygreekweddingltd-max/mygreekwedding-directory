@@ -1305,22 +1305,124 @@ async function deleteTask(id) {
 
 // ── MEDIA ─────────────────────────────────────────────────────────
 function buildMedia() {
-  const icons={contract:'📄',invoice:'🧾',proof_of_payment:'✅',offer:'📋',other:'📎'};
+  const icons={contract:'📄',invoice:'🧾',proof_of_payment:'✅',offer:'📋',photo:'🖼',other:'📎'};
+  const cats=['contract','invoice','proof_of_payment','offer','photo','other'];
   let h=`<div class="section-toolbar"><h2>Media & Documents</h2></div>
-  <div class="media-upload-zone" onclick="toast('File upload coming soon — needs Supabase Storage setup')">
+  <div class="media-upload-zone" id="media-drop-zone"
+    ondragover="event.preventDefault();this.style.borderColor='var(--gold)';this.style.background='var(--gold-light)'"
+    ondragleave="this.style.borderColor='';this.style.background=''"
+    ondrop="handleFileDrop(event)"
+    onclick="document.getElementById('media-file-input').click()">
     <div style="font-size:2rem;margin-bottom:8px">☁️</div>
-    <div style="font-size:0.85rem;color:var(--mid)">Click to upload — contracts, invoices, offers, photos</div>
-    <div style="font-size:0.72rem;color:var(--light);margin-top:5px">PDF, DOCX, PPTX, JPG, PNG</div>
-  </div>`;
-  if(!S.mediaFiles.length) return h+`<div class="empty-state"><div class="icon">🖼</div><p>No files uploaded yet</p></div>`;
-  h+=`<div class="media-grid">${S.mediaFiles.map(f=>`
+    <div style="font-size:0.88rem;color:var(--mid);font-weight:500">Click or drag files to upload</div>
+    <div style="font-size:0.72rem;color:var(--light);margin-top:5px">PDF, DOCX, PPTX, JPG, PNG — max 10MB per file</div>
+    <input type="file" id="media-file-input" style="display:none" multiple accept=".pdf,.doc,.docx,.pptx,.jpg,.jpeg,.png,.gif" onchange="handleFileSelect(event)"/>
+  </div>
+  <div id="upload-progress" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px">
+    <div style="font-size:0.82rem;color:var(--mid);margin-bottom:8px" id="upload-status">Uploading…</div>
+    <div style="background:var(--surface2);border-radius:4px;height:6px;overflow:hidden">
+      <div id="upload-bar" style="background:var(--gold);height:100%;width:0%;transition:width 0.3s;border-radius:4px"></div>
+    </div>
+  </div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
+    <button class="region-btn active" onclick="filterMedia('all',this)">All (${S.mediaFiles.length})</button>
+    ${cats.map(c=>{const count=S.mediaFiles.filter(f=>f.file_type===c).length;return count>0?`<button class="region-btn" onclick="filterMedia('${c}',this)">${icons[c]} ${c.replace(/_/g,' ')} (${count})</button>`:''}).join('')}
+  </div>
+  <div id="media-files-grid">${buildMediaGrid('all')}</div>`;
+  return h;
+}
+
+function buildMediaGrid(filter) {
+  const icons={contract:'📄',invoice:'🧾',proof_of_payment:'✅',offer:'📋',photo:'🖼',other:'📎'};
+  const files = filter==='all' ? S.mediaFiles : S.mediaFiles.filter(f=>f.file_type===filter);
+  if(!files.length) return `<div class="empty-state"><div class="icon">🖼</div><p>${filter==='all'?'No files uploaded yet':'No files in this category'}</p></div>`;
+  return `<div class="media-grid">${files.map(f=>`
     <div class="media-card">
       <div style="font-size:1.8rem;margin-bottom:7px">${icons[f.file_type]||'📎'}</div>
-      <div style="font-size:0.78rem;font-weight:500;word-break:break-all">${f.file_name}</div>
-      <div style="font-size:0.7rem;color:var(--light);margin-top:3px">${f.file_type||'file'} · ${new Date(f.created_at).toLocaleDateString()}</div>
-      <div style="margin-top:5px;font-size:0.7rem;color:${f.visible_to_couple?'var(--green)':'var(--rose)'}">${f.visible_to_couple?'👁 Couple can see':'🔒 Planner only'}</div>
+      <div style="font-size:0.8rem;font-weight:500;word-break:break-all;margin-bottom:4px">${f.file_name}</div>
+      <div style="font-size:0.7rem;color:var(--light);margin-bottom:8px">${f.file_type?.replace(/_/g,' ')||'file'} · ${new Date(f.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+        <span style="font-size:0.7rem;padding:2px 7px;border-radius:10px;background:${f.visible_to_couple?'var(--green-light)':'var(--surface2)'};color:${f.visible_to_couple?'var(--green)':'var(--light)'}">
+          ${f.visible_to_couple?'👁 Visible':'🔒 Private'}
+        </span>
+        <button class="btn-sm" style="font-size:0.7rem;padding:3px 8px" onclick="toggleMediaVisibility('${f.id}',${f.visible_to_couple})">Toggle</button>
+        <a href="${f.file_url}" target="_blank" class="btn-sm" style="font-size:0.7rem;padding:3px 8px;text-decoration:none">⬇ View</a>
+        <button class="btn-sm" style="font-size:0.7rem;padding:3px 8px;color:var(--rose);border-color:rgba(201,122,122,0.3)" onclick="deleteMediaFile('${f.id}','${f.file_url}')">✕</button>
+      </div>
     </div>`).join('')}</div>`;
-  return h;
+}
+
+function filterMedia(type, btn) {
+  document.querySelectorAll('.region-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  const grid = document.getElementById('media-files-grid');
+  if(grid) grid.innerHTML = buildMediaGrid(type);
+}
+
+function handleFileDrop(event) {
+  event.preventDefault();
+  document.getElementById('media-drop-zone').style.borderColor='';
+  document.getElementById('media-drop-zone').style.background='';
+  uploadFiles([...event.dataTransfer.files]);
+}
+function handleFileSelect(event) {
+  uploadFiles([...event.target.files]);
+  event.target.value='';
+}
+
+async function uploadFiles(files) {
+  if(!files.length) return;
+  const progress=document.getElementById('upload-progress');
+  const bar=document.getElementById('upload-bar');
+  const status=document.getElementById('upload-status');
+  if(progress) progress.style.display='block';
+  for(let i=0;i<files.length;i++) {
+    const file=files[i];
+    if(status) status.textContent=`Uploading ${file.name} (${i+1}/${files.length})…`;
+    if(bar) bar.style.width=((i/files.length)*100)+'%';
+    if(file.size>10*1024*1024){toast(`${file.name} too large (max 10MB)`,true);continue;}
+    try {
+      const ext=file.name.split('.').pop().toLowerCase();
+      let fileType='other';
+      if(['pdf','doc','docx','pptx'].includes(ext)) fileType='contract';
+      if(['jpg','jpeg','png','gif','webp'].includes(ext)) fileType='photo';
+      const path=`${S.current.id}/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;
+      const r=await fetch(`${SB_URL}/storage/v1/object/media/${path}`,{
+        method:'POST',
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':file.type||'application/octet-stream','x-upsert':'true'},
+        body:file
+      });
+      if(!r.ok) throw new Error(await r.text());
+      const fileUrl=`${SB_URL}/storage/v1/object/public/media/${path}`;
+      const res=await sbPost('media_files',{couple_id:S.current.id,file_name:file.name,file_url:fileUrl,file_type:fileType,visible_to_couple:true,uploaded_by:'planner'});
+      S.mediaFiles.unshift(res[0]);
+      toast(`✓ ${file.name} uploaded!`);
+    } catch(e){toast(`Error: ${e.message}`,true);}
+  }
+  if(bar) bar.style.width='100%';
+  if(status) status.textContent='Upload complete!';
+  setTimeout(()=>{if(progress)progress.style.display='none';if(bar)bar.style.width='0%';},2000);
+  switchTabDirect('media');
+}
+
+async function toggleMediaVisibility(id, currentVisible) {
+  const f=S.mediaFiles.find(f=>f.id===id);
+  if(!f) return;
+  f.visible_to_couple=!currentVisible;
+  await sbPatch('media_files',`id=eq.${id}`,{visible_to_couple:!currentVisible}).catch(e=>toast('Error: '+e.message,true));
+  switchTabDirect('media');
+}
+
+async function deleteMediaFile(id, url) {
+  if(!confirm('Delete this file?')) return;
+  try {
+    const path=url.split('/media/')[1];
+    await fetch(`${SB_URL}/storage/v1/object/media/${path}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+  } catch(e){}
+  await sbDelete('media_files',`id=eq.${id}`).catch(()=>{});
+  S.mediaFiles=S.mediaFiles.filter(f=>f.id!==id);
+  toast('File deleted');
+  switchTabDirect('media');
 }
 
 // ── CHAT ──────────────────────────────────────────────────────────
