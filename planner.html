@@ -808,7 +808,7 @@ function buildBudget() {
     <div class="budget-card"><div class="val">€${goal.toLocaleString()}</div><div class="lbl">Goal</div></div>
     <div class="budget-card ${totActual>goal&&goal>0?'over':''}"><div class="val">€${Math.round(totActual).toLocaleString()}</div><div class="lbl">Actual</div></div>
   </div>
-  <div style="background:var(--green-light);border:1px solid rgba(90,138,90,0.2);border-radius:var(--radius-sm);padding:10px 16px;margin-bottom:14px;font-size:0.82rem;color:var(--green)">
+  <div class="budget-comm-banner" style="background:var(--green-light);border:1px solid rgba(90,138,90,0.2);border-radius:var(--radius-sm);padding:10px 16px;margin-bottom:14px;font-size:0.82rem;color:var(--green)">
     💰 Your total commission: <strong>€${Math.round(totComm).toLocaleString()}</strong>
   </div>
   <div class="budget-col-labels"><span>Category</span><span>Pending</span><span>Paid</span><span>Goal</span><span>Actual</span><span></span></div>`;
@@ -880,6 +880,16 @@ function buildBudget() {
               <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Item name *</div>
               <input id="bi-n-${cat.key}" class="form-input" placeholder="e.g. Planning fee"/>
             </div>
+            <div style="min-width:150px">
+              <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Vendor (opt)</div>
+              <select id="bi-vendor-${cat.key}" class="form-input">
+                <option value="">— No vendor —</option>
+                ${S.coupleVendors.filter(cv=>cv.category===cat.key).map(cv=>{
+                  const v=S.vendorCache[cv.vendor_id];
+                  return v?`<option value="${cv.vendor_id}">${v.name}</option>`:'';
+                }).join('')}
+              </select>
+            </div>
             <div>
               <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Type</div>
               <select id="bi-t-${cat.key}" class="form-input" style="width:110px">
@@ -927,16 +937,24 @@ function buildPaymentsList(catKey) {
     const vatAmt = Number(p.amount||0) * (Number(p.vat_rate||0)/100);
     const total = Number(p.amount||0) + vatAmt;
     const isPaid = p.status==='paid';
-    return `<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:0.8rem">
+    const vendorName = p.vendor_id ? (S.vendorCache[p.vendor_id]?.name||'') : '';
+    const paidDate = p.paid_date ? new Date(p.paid_date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '';
+    return `<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.8rem;flex-wrap:wrap">
       <span style="font-size:1rem">${p.method==='bank'?'🏦':'💵'}</span>
-      <span style="flex:1;color:var(--mid)">${p.description||'Payment'}</span>
-      <span style="color:var(--light);font-size:0.72rem">${p.due_date?new Date(p.due_date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):''}</span>
+      <div style="flex:1;min-width:120px">
+        <div style="font-weight:500">${p.description||'Payment'}${vendorName?` <span style="color:var(--light);font-weight:400;font-size:0.72rem">· ${vendorName}</span>`:''}</div>
+        ${p.due_date?`<div style="font-size:0.72rem;color:var(--light)">Due: ${new Date(p.due_date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</div>`:''}
+        ${isPaid&&paidDate?`<div style="font-size:0.72rem;color:var(--green)">✓ Paid: ${paidDate}</div>`:''}
+      </div>
       ${p.vat_rate?`<span style="color:var(--light);font-size:0.7rem">+${p.vat_rate}% VAT</span>`:''}
       <span style="font-weight:500;color:${isPaid?'var(--green)':'var(--gold-dark)'}">€${Math.round(total).toLocaleString()}</span>
-      <span style="font-size:0.7rem;padding:2px 7px;border-radius:10px;background:${isPaid?'var(--green-light)':'var(--gold-light)'};color:${isPaid?'var(--green)':'var(--gold-dark)'}">
+      <span style="font-size:0.7rem;padding:2px 8px;border-radius:10px;background:${isPaid?'var(--green-light)':'var(--gold-light)'};color:${isPaid?'var(--green)':'var(--gold-dark)'}">
         ${isPaid?'✓ Paid':'Pending'}
       </span>
-      <button class="cat-icon-btn" onmousedown="togglePaymentPaid('${p.id}','${catKey}')">✓</button>
+      ${!isPaid
+        ? `<button class="btn-sm" style="font-size:0.7rem;padding:3px 8px;color:var(--green);border-color:rgba(90,138,90,0.3)" onmousedown="markPaymentPaid('${p.id}','${catKey}')">Mark Paid</button>`
+        : `<button class="btn-sm" style="font-size:0.7rem;padding:3px 8px;color:var(--light)" onmousedown="markPaymentPending('${p.id}','${catKey}')">Undo</button>`
+      }
       <button class="cat-icon-btn" onmousedown="removePayment('${p.id}','${catKey}')">✕</button>
     </div>`;
   }).join('');
@@ -951,6 +969,16 @@ function addPaymentForm(catKey) {
       <div style="flex:2;min-width:120px">
         <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Description</div>
         <input id="pf-desc-${catKey}" class="form-input" placeholder="e.g. Deposit"/>
+      </div>
+      <div style="min-width:140px">
+        <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Vendor (opt)</div>
+        <select id="pf-vendor-${catKey}" class="form-input">
+          <option value="">— No vendor —</option>
+          ${S.coupleVendors.filter(cv=>cv.category===catKey).map(cv=>{
+            const v=S.vendorCache[cv.vendor_id];
+            return v?`<option value="${cv.vendor_id}">${v.name}</option>`:'';
+          }).join('')}
+        </select>
       </div>
       <div style="width:100px">
         <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Amount (€)</div>
@@ -983,28 +1011,92 @@ async function savePayment(catKey) {
   const vat = parseFloat(document.getElementById(`pf-vat-${catKey}`)?.value)||0;
   const method = document.getElementById(`pf-method-${catKey}`)?.value;
   const due = document.getElementById(`pf-due-${catKey}`)?.value;
+  const vendorId = document.getElementById(`pf-vendor-${catKey}`)?.value||null;
   if(!amt){ toast('Enter amount'); return; }
   try {
     const res = await sbPost('payments',{
       couple_id:S.current.id, category:catKey,
       description:desc||'Payment', amount:amt, vat_rate:vat,
-      method, due_date:due||null, status:'pending'
+      method, due_date:due||null, status:'pending',
+      vendor_id:vendorId||null
     });
     if(!S.payments) S.payments=[];
     S.payments.push(res[0]);
     document.getElementById(`payment-form-${catKey}`).style.display='none';
     document.getElementById(`payments-${catKey}`).innerHTML = buildPaymentsList(catKey);
+    refreshBudgetTotals();
     toast('Payment added!');
   } catch(e){ toast('Error: '+e.message, true); }
 }
 
-async function togglePaymentPaid(id, catKey) {
-  if(!S.payments) return;
-  const p = S.payments.find(p=>p.id===id);
+async function markPaymentPaid(id, catKey) {
+  showModal('modal-mark-paid','Mark as Paid',`
+    <div class="form-group">
+      <label class="form-label">Date Paid</label>
+      <input class="form-input" type="date" id="paid-date-input" value="${new Date().toISOString().slice(0,10)}"/>
+    </div>
+    <div class="modal-footer" style="padding:16px 0 0;border:none;display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn-sm" onclick="closeModal('dyn-modal-mark-paid')">Cancel</button>
+      <button class="btn-sm primary" onclick="confirmMarkPaid('${id}','${catKey}')">✓ Mark as Paid</button>
+    </div>
+  `);
+}
+
+async function confirmMarkPaid(id, catKey) {
+  const date = document.getElementById('paid-date-input')?.value;
+  const p = (S.payments||[]).find(p=>p.id===id);
   if(!p) return;
-  p.status = p.status==='paid'?'pending':'paid';
-  await sbPatch('payments',`id=eq.${id}`,{status:p.status}).catch(e=>toast('Error: '+e.message,true));
-  document.getElementById(`payments-${catKey}`).innerHTML = buildPaymentsList(catKey);
+  p.status = 'paid';
+  p.paid_date = date || new Date().toISOString().slice(0,10);
+  await sbPatch('payments',`id=eq.${id}`,{status:'paid', paid_date:p.paid_date}).catch(e=>toast('Error: '+e.message,true));
+  closeModal('dyn-modal-mark-paid');
+  toast('Payment marked as paid! ✓');
+  // Update payments list and top totals
+  const el = document.getElementById(`payments-${catKey}`);
+  if(el) el.innerHTML = buildPaymentsList(catKey);
+  refreshBudgetTotals();
+}
+
+async function markPaymentPending(id, catKey) {
+  const p = (S.payments||[]).find(p=>p.id===id);
+  if(!p) return;
+  p.status = 'pending';
+  p.paid_date = null;
+  await sbPatch('payments',`id=eq.${id}`,{status:'pending', paid_date:null}).catch(e=>toast('Error: '+e.message,true));
+  const el = document.getElementById(`payments-${catKey}`);
+  if(el) el.innerHTML = buildPaymentsList(catKey);
+  refreshBudgetTotals();
+}
+
+function refreshBudgetTotals() {
+  // Recalculate and update the top summary cards without full re-render
+  let totPaid=0, totActual=0, totComm=0;
+  CATS.forEach(cat=>{
+    S.budgetItems.filter(b=>b.category===cat.key).forEach(b=>{
+      const {total,comm} = calcItemTotal(b);
+      totActual += total;
+      totComm += comm;
+    });
+  });
+  // Paid comes from payments marked as paid
+  totPaid = (S.payments||[]).filter(p=>p.status==='paid').reduce((a,p)=>{
+    return a + Number(p.amount||0) * (1 + Number(p.vat_rate||0)/100);
+  },0);
+  const totPend = totActual - totPaid;
+  const goal = Number(S.current?.budget_goal||0);
+
+  // Update the 4 summary cards if they exist
+  const cards = document.querySelectorAll('.budget-card .val');
+  if(cards.length >= 4) {
+    cards[0].textContent = '€'+Math.round(totPend).toLocaleString();
+    cards[1].textContent = '€'+Math.round(totPaid).toLocaleString();
+    cards[2].textContent = '€'+goal.toLocaleString();
+    cards[3].textContent = '€'+Math.round(totActual).toLocaleString();
+    cards[3].parentElement.classList.toggle('over', totActual>goal&&goal>0);
+  }
+  // Update commission banner
+  const commEl = document.querySelector('.budget-comm-banner');
+  if(commEl) commEl.textContent = '💰 Your total commission: €'+Math.round(totComm).toLocaleString();
 }
 
 async function removePayment(id, catKey) {
@@ -1064,12 +1156,13 @@ async function addBudgetItem(catKey) {
   const vat = parseFloat(document.getElementById(`bi-v-${catKey}`)?.value)||0;
   const comm = parseFloat(document.getElementById(`bi-c-${catKey}`)?.value)||0;
   const type = document.getElementById(`bi-t-${catKey}`)?.value||'fixed';
+  const vendorId = document.getElementById(`bi-vendor-${catKey}`)?.value||null;
   if(!name){ toast('Enter item name'); return; }
   try {
     const res = await sbPost('budget_items',{
       couple_id:S.current.id, category:catKey, item_name:name,
       item_price:price, vat_amount:vat, commission_rate:comm,
-      pricing_type:type, sort_order:S.budgetItems.length
+      pricing_type:type, vendor_id:vendorId||null, sort_order:S.budgetItems.length
     });
     S.budgetItems.push(res[0]);
     toast('Item added!');
