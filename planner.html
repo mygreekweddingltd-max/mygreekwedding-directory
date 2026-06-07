@@ -194,7 +194,7 @@ body{font-family:'Jost',sans-serif;font-weight:300;background:var(--bg);color:va
 <body>
 
 <div id="pw-screen">
-  <div class="pw-logo">🌸 My Greek Wedding</div>
+  <div class="pw-logo">My Greek Wedding</div>
   <div class="pw-sub">Planner Dashboard</div>
   <div class="pw-box">
     <input type="password" id="pw-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkPw()"/>
@@ -205,7 +205,7 @@ body{font-family:'Jost',sans-serif;font-weight:300;background:var(--bg);color:va
 
 <div id="app" style="display:none;flex-direction:column;height:100vh;">
   <div class="topbar">
-    <div class="topbar-logo">🌸 My Greek Wedding</div>
+    <div class="topbar-logo">My Greek Wedding</div>
     <button class="topbar-btn outline" onclick="showVenuesPage()">🏛 Budget Comparison</button>
     <button class="topbar-btn outline" onclick="openModal('add-couple-modal')">+ New Couple</button>
     <button class="topbar-btn outline" onclick="refreshDashboard()">↻ Refresh</button>
@@ -467,9 +467,16 @@ function buildOverview() {
       ? cvs.map(cv=>{
           const v = S.vendorCache[cv.vendor_id];
           const name = v?v.name:cv.vendor_id;
-          return `<div class="vendor-chip" onclick="openVendorDetail('${cv.id}')">
-            <span class="chip-dot ${cv.status}"></span>${name}
+          const isLocked = cv.status==='booked';
+          const isRejected = cv.status==='rejected';
+          return `<div class="vendor-chip ${isRejected?'opacity:0.5':''}" style="${isRejected?'opacity:0.5;':''}" onclick="openVendorDetail('${cv.id}')">
+            <span class="chip-dot ${cv.status}"></span>
+            <span style="${isLocked?'font-weight:500':''}">${name}</span>
             <span style="font-size:0.68rem;color:var(--light)">${cv.status}</span>
+            ${isLocked
+              ? `<span style="font-size:0.75rem" title="Locked in">🔒</span>`
+              : `<button class="cat-icon-btn" style="width:22px;height:22px;font-size:0.7rem;background:var(--green-light);border-color:rgba(90,138,90,0.3);color:var(--green)" onmousedown="event.stopPropagation();lockInVendor('${cv.id}','${cat.key}')" title="Lock in this vendor">🔒</button>`
+            }
           </div>`;
         }).join('')
       : `<div class="cat-no-vendors">No vendors assigned yet</div>`;
@@ -744,7 +751,26 @@ async function updateCV(cvId, field, value) {
   await sbPatch('couple_vendors',`id=eq.${cvId}`,{[field]:value}).catch(e=>toast('Save error: '+e.message,true));
 }
 
-async function removeVendor(cvId) {
+async function lockInVendor(cvId, catKey) {
+  const cv = S.coupleVendors.find(c=>c.id===cvId);
+  if(!cv) return;
+  const v = S.vendorCache[cv.vendor_id];
+  const name = v?v.name:'this vendor';
+  if(!confirm(`Lock in ${name} as the chosen vendor for this category?\n\nOther vendors in this category will be marked as rejected.`)) return;
+  try {
+    // Lock in this vendor
+    cv.status = 'booked';
+    await sbPatch('couple_vendors',`id=eq.${cvId}`,{status:'booked'});
+    // Reject all others in same category
+    const others = S.coupleVendors.filter(c=>c.category===catKey && c.id!==cvId);
+    for(const other of others) {
+      other.status = 'rejected';
+      await sbPatch('couple_vendors',`id=eq.${other.id}`,{status:'rejected'}).catch(()=>{});
+    }
+    toast(`🔒 ${name} locked in!`);
+    switchTabDirect('overview');
+  } catch(e) { toast('Error: '+e.message, true); }
+}
   if(!confirm('Remove this vendor?')) return;
   await sbDelete('couple_vendors',`id=eq.${cvId}`).catch(e=>toast('Error: '+e.message,true));
   S.coupleVendors = S.coupleVendors.filter(c=>c.id!==cvId);
