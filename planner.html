@@ -208,7 +208,7 @@ body{font-family:'Jost',sans-serif;font-weight:300;background:var(--bg);color:va
     <div class="topbar-logo">🌸 My Greek Wedding</div>
     <button class="topbar-btn outline" onclick="showVenuesPage()">🏛 Budget Comparison</button>
     <button class="topbar-btn outline" onclick="openModal('add-couple-modal')">+ New Couple</button>
-    <button class="topbar-btn outline" onclick="loadCouples()">↻ Refresh</button>
+    <button class="topbar-btn outline" onclick="refreshDashboard()">↻ Refresh</button>
   </div>
   <div class="body-wrap">
     <div class="sidebar">
@@ -347,13 +347,18 @@ async function sbDelete(table, filter) {
 // ── PASSWORD ──────────────────────────────────────────────────────
 function checkPw() {
   if(document.getElementById('pw-input').value === 'Leenio') {
-    document.getElementById('pw-screen').style.display='none';
-    document.getElementById('app').style.display='flex';
-    loadCouples();
+    localStorage.setItem('mgw_auth','1');
+    enterApp();
   } else {
     const e=document.getElementById('pw-err'); e.style.display='block';
     setTimeout(()=>e.style.display='none',2000);
   }
+}
+
+function enterApp() {
+  document.getElementById('pw-screen').style.display='none';
+  document.getElementById('app').style.display='flex';
+  loadCouples();
 }
 
 // ── COUPLES ───────────────────────────────────────────────────────
@@ -1568,8 +1573,20 @@ function backFromVenues() {
   }
 }
 
+async function refreshDashboard() {
+  await loadCouples();
+  if(S.current) {
+    await loadCoupleData();
+    renderHeader();
+    switchTabDirect(S.currentTab||'overview');
+  }
+  toast('Refreshed! ✓');
+}
+
 // ── INIT ──────────────────────────────────────────────────────────
 document.getElementById('pw-input').addEventListener('keydown',e=>{if(e.key==='Enter')checkPw();});
+// Auto-login if already authenticated
+if(localStorage.getItem('mgw_auth')==='1') enterApp();
 </script>
 </body>
 </html>
