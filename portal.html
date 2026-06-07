@@ -3,739 +3,681 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>My Greek Wedding — Your Wedding Portal</title>
+<title>My Greek Wedding — Your Portal</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
-:root {
-  --bg: #FDFAF5;
-  --surface: #FFFFFF;
-  --surface2: #F5F0E8;
-  --ink: #1A1714;
-  --mid: #6B6052;
-  --light: #A09080;
-  --gold: #C9A96E;
-  --gold-light: #F0E6D3;
-  --gold-dark: #A8864A;
-  --rose: #C97A7A;
-  --rose-light: #F5E8E8;
-  --green: #5A8A5A;
-  --green-light: #E8F2E8;
-  --blue: #5A7A9A;
-  --blue-light: #E8EFF5;
-  --border: rgba(201,169,110,0.2);
-  --border-strong: rgba(201,169,110,0.35);
-  --shadow: 0 2px 20px rgba(26,23,20,0.08);
-  --shadow-lg: 0 8px 40px rgba(26,23,20,0.12);
-  --radius: 14px;
-  --radius-sm: 9px;
-}
+:root{--bg:#FDFAF5;--surface:#FFFFFF;--surface2:#F5F0E8;--ink:#1A1714;--mid:#6B6052;--light:#A09080;--gold:#C9A96E;--gold-light:#F0E6D3;--gold-dark:#A8864A;--rose:#C97A7A;--rose-light:#F5E8E8;--green:#5A8A5A;--green-light:#E8F2E8;--blue:#5A7A9A;--blue-light:#E8EFF5;--border:rgba(201,169,110,0.2);--border-strong:rgba(201,169,110,0.35);--shadow:0 2px 20px rgba(26,23,20,0.08);--shadow-lg:0 8px 40px rgba(26,23,20,0.12);--radius:14px;--radius-sm:9px;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Jost',sans-serif;font-weight:300;background:var(--bg);color:var(--ink);min-height:100vh;}
 
-/* ── LOGIN SCREEN ── */
-#loginScreen{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;padding:20px;}
-.login-logo{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-style:italic;color:var(--gold-dark);letter-spacing:0.02em;text-align:center;}
-.login-tagline{font-size:0.78rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--light);margin-top:-16px;text-align:center;}
-.login-box{background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius);padding:36px 40px;width:100%;max-width:360px;display:flex;flex-direction:column;gap:16px;box-shadow:var(--shadow);}
-.login-box h2{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:var(--ink);text-align:center;}
-.login-box label{font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid);display:block;margin-bottom:4px;}
-.login-box input{border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:11px 14px;font-family:'Jost',sans-serif;font-weight:300;font-size:0.95rem;background:var(--bg);color:var(--ink);outline:none;width:100%;}
+/* LOGIN */
+#login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:24px;}
+.login-logo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:2.6rem;color:var(--gold);letter-spacing:0.02em;}
+.login-sub{font-size:0.8rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--light);}
+.login-box{background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius);padding:36px 44px;display:flex;flex-direction:column;gap:16px;width:340px;box-shadow:var(--shadow-lg);}
+.login-box input{border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:11px 14px;font-family:'Jost',sans-serif;font-size:0.9rem;outline:none;background:var(--bg);width:100%;}
 .login-box input:focus{border-color:var(--gold);}
-.btn-gold{background:var(--gold);color:#fff;border:none;border-radius:var(--radius-sm);padding:12px 20px;font-family:'Jost',sans-serif;font-weight:500;font-size:0.9rem;cursor:pointer;transition:background 0.2s;width:100%;}
-.btn-gold:hover{background:var(--gold-dark);}
-.login-err{color:var(--rose);font-size:0.82rem;text-align:center;display:none;}
+.login-box button{background:var(--gold);color:#fff;border:none;border-radius:var(--radius-sm);padding:12px;font-family:'Jost',sans-serif;font-weight:500;font-size:0.92rem;cursor:pointer;transition:background 0.2s;}
+.login-box button:hover{background:var(--gold-dark);}
+.login-err{color:var(--rose);font-size:0.8rem;text-align:center;display:none;}
 
-/* ── MAIN APP ── */
+/* APP */
 #app{display:none;flex-direction:column;min-height:100vh;}
 
 /* HERO */
-.portal-hero{background:linear-gradient(135deg,var(--gold-dark) 0%,var(--gold) 50%,#E8C88A 100%);padding:40px 24px 32px;color:#fff;text-align:center;position:relative;overflow:hidden;}
-.portal-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
-.hero-names{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-style:italic;line-height:1.1;margin-bottom:4px;}
-.hero-date{font-size:0.88rem;letter-spacing:0.1em;opacity:0.85;text-transform:uppercase;}
-.hero-location{font-size:0.88rem;opacity:0.85;margin-top:2px;}
-.countdown-row{display:flex;gap:20px;justify-content:center;margin-top:20px;}
-.countdown-box{text-align:center;}
-.countdown-num{font-family:'Cormorant Garamond',serif;font-size:2rem;line-height:1;}
-.countdown-label{font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;opacity:0.75;margin-top:2px;}
-.countdown-sep{font-size:1.8rem;opacity:0.5;line-height:2.2rem;}
+.hero{background:linear-gradient(135deg,#1A1714 0%,#2D2520 50%,#1A1714 100%);padding:40px 32px 36px;color:#fff;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23C9A96E' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
+.hero-content{position:relative;z-index:1;max-width:700px;margin:0 auto;text-align:center;}
+.hero-names{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:2.8rem;color:var(--gold);margin-bottom:8px;}
+.hero-date{font-size:0.85rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:24px;}
+.hero-countdown{display:flex;gap:24px;justify-content:center;margin-top:4px;}
+.countdown-item{text-align:center;}
+.countdown-num{font-size:2.2rem;font-weight:500;color:var(--gold);line-height:1;}
+.countdown-label{font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-top:4px;}
+.hero-location{font-size:0.82rem;color:rgba(255,255,255,0.5);margin-top:16px;}
 
-/* TOP NAV */
-.portal-nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0 16px;display:flex;align-items:center;gap:0;overflow-x:auto;flex-shrink:0;position:sticky;top:0;z-index:100;}
-.pnav-btn{display:flex;flex-direction:column;align-items:center;gap:2px;padding:0 14px;height:52px;border:none;background:none;font-family:'Jost',sans-serif;font-weight:400;font-size:0.75rem;color:var(--light);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.15s;white-space:nowrap;flex-shrink:0;}
-.pnav-btn:hover{color:var(--ink);}
-.pnav-btn.active{color:var(--gold-dark);border-bottom-color:var(--gold);font-weight:500;}
-.pnav-icon{font-size:1.1rem;}
+/* TOP BAR */
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;height:52px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;}
+.topbar-logo{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);font-size:1.2rem;flex:1;}
+.topbar-user{font-size:0.8rem;color:var(--mid);}
+.topbar-logout{background:none;border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:5px 12px;font-family:'Jost',sans-serif;font-size:0.76rem;cursor:pointer;color:var(--mid);}
+.topbar-logout:hover{background:var(--surface2);}
+
+/* TABS */
+.tab-nav{background:var(--surface);border-bottom:1px solid var(--border);display:flex;padding:0 20px;gap:2px;overflow-x:auto;}
+.tab-btn{padding:12px 18px;font-family:'Jost',sans-serif;font-size:0.82rem;color:var(--mid);border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;white-space:nowrap;}
+.tab-btn:hover{color:var(--ink);}
+.tab-btn.active{color:var(--gold-dark);border-bottom-color:var(--gold);font-weight:500;}
 
 /* CONTENT */
-.portal-content{flex:1;padding:20px 16px;max-width:800px;margin:0 auto;width:100%;}
+.tab-content{max-width:900px;margin:0 auto;padding:24px 20px;}
 
-/* ── OVERVIEW TAB ── */
+/* OVERVIEW */
 .cat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;}
-.cat-card-header{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;}
-.cat-card-header:hover{background:var(--gold-light);}
-.cat-card-emoji{font-size:1.3rem;width:30px;text-align:center;}
-.cat-card-name{font-weight:500;flex:1;}
-.cat-card-status{font-size:0.72rem;padding:3px 9px;border-radius:20px;}
-.badge-decided{background:var(--green-light);color:var(--green);}
-.badge-draft{background:#F0EDE8;color:var(--mid);}
-.cat-card-body{display:none;border-top:1px solid var(--border);padding:12px 16px;}
-.cat-card-body.open{display:block;}
-.vendor-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;}
-.vc-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
-.vc-name{font-weight:500;font-size:0.95rem;}
-.vc-region{font-size:0.78rem;color:var(--light);}
-.vc-price{font-size:0.78rem;background:var(--gold-light);color:var(--gold-dark);padding:2px 8px;border-radius:10px;font-weight:500;flex-shrink:0;}
-.vc-rating{display:flex;gap:3px;margin-top:8px;}
-.heart-btn{background:none;border:none;cursor:pointer;font-size:1.2rem;padding:2px;transition:transform 0.15s;}
-.heart-btn:hover{transform:scale(1.2);}
-.heart-btn.filled{color:var(--rose);}
-.heart-btn.empty{color:var(--border-strong);}
-.vc-notes{margin-top:10px;}
-.vc-notes-input{width:100%;border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;font-family:'Jost',sans-serif;font-weight:300;font-size:0.85rem;background:var(--surface);color:var(--ink);outline:none;resize:vertical;min-height:48px;}
-.vc-notes-input:focus{border-color:var(--gold);}
-.vc-save-btn{margin-top:6px;background:var(--gold-light);color:var(--gold-dark);border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:6px 14px;font-family:'Jost',sans-serif;font-size:0.78rem;font-weight:500;cursor:pointer;}
-.vc-save-btn:hover{background:var(--gold);color:#fff;}
+.cat-card-header{padding:14px 18px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:background 0.15s;}
+.cat-card-header:hover{background:var(--surface2);}
+.cat-emoji{font-size:1.1rem;width:28px;text-align:center;}
+.cat-title{font-size:0.9rem;font-weight:500;flex:1;}
+.cat-badge{font-size:0.7rem;padding:3px 10px;border-radius:20px;font-weight:500;}
+.cat-badge.locked{background:var(--green-light);color:var(--green);}
+.cat-badge.draft{background:var(--surface2);color:var(--mid);}
+.cat-chevron{font-size:0.72rem;color:var(--light);transition:transform 0.2s;}
+.cat-chevron.open{transform:rotate(180deg);}
+.cat-body{display:none;border-top:1px solid var(--border);padding:14px 18px;background:var(--surface2);}
+.cat-body.open{display:block;}
 
-/* ── BUDGET TAB ── */
-.budget-summary{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-.bs-item{text-align:center;}
-.bs-label{font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--light);}
-.bs-val{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--gold-dark);margin-top:4px;}
-.bs-val.red{color:var(--rose);}
-.budget-progress{background:var(--border);border-radius:4px;height:8px;overflow:hidden;margin-top:16px;grid-column:1/-1;}
-.budget-progress-fill{height:100%;background:var(--gold);border-radius:4px;transition:width 0.5s;}
-.budget-cat-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;overflow:hidden;}
-.budget-cat-row{display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer;}
-.budget-cat-row:hover{background:var(--gold-light);}
-.bcr-name{font-weight:500;flex:1;}
-.bcr-goal{font-size:0.85rem;color:var(--mid);}
-.bcr-actual{font-size:0.85rem;font-weight:500;}
-.bcr-actual.red{color:var(--rose);}
-.budget-items-body{display:none;border-top:1px solid var(--border);padding:12px 16px;}
-.budget-items-body.open{display:block;}
-.bli-row{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg);border-radius:var(--radius-sm);margin-bottom:6px;border:1px solid var(--border);}
-.bli-row-name{flex:1;font-size:0.88rem;}
-.bli-row-formula{font-size:0.78rem;color:var(--mid);}
-.bli-row-cost{font-size:0.88rem;font-weight:500;}
+/* VENDOR CARDS */
+.vendor-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;}
+.vendor-card-name{font-weight:500;font-size:0.9rem;margin-bottom:4px;}
+.vendor-card-meta{font-size:0.75rem;color:var(--light);margin-bottom:10px;}
+.vendor-status{display:inline-block;font-size:0.7rem;padding:2px 9px;border-radius:20px;}
+.vendor-status.booked{background:var(--green-light);color:var(--green);}
+.vendor-status.suggested{background:var(--blue-light);color:var(--blue);}
+.vendor-status.shortlisted{background:var(--gold-light);color:var(--gold-dark);}
+.vendor-status.decided{background:var(--green-light);color:var(--green);}
 
-/* ── PLAN TAB ── */
-.plan-progress{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;gap:16px;}
-.pp-label{font-size:0.82rem;color:var(--mid);flex:1;}
-.pp-pct{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--gold-dark);}
-.task-group{margin-bottom:20px;}
-.task-group-header{font-family:'Cormorant Garamond',serif;font-size:0.95rem;font-style:italic;color:var(--mid);padding:6px 0;border-bottom:1px solid var(--border);margin-bottom:10px;}
-.task-item{display:flex;align-items:flex-start;gap:12px;padding:10px 12px;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border);margin-bottom:6px;}
-.task-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border-strong);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.7rem;transition:all 0.2s;margin-top:1px;}
-.task-check.done{background:var(--green);border-color:var(--green);color:#fff;}
-.task-title{flex:1;font-size:0.9rem;}
-.task-title.done{text-decoration:line-through;color:var(--light);}
-.task-due{font-size:0.75rem;color:var(--mid);}
+/* HEARTS RATING */
+.hearts{display:flex;gap:3px;margin-top:8px;}
+.heart{font-size:1.1rem;cursor:pointer;color:var(--border-strong);transition:color 0.15s;}
+.heart.filled{color:var(--rose);}
 
-/* ── CHAT TAB ── */
-.chat-layout-portal{display:flex;flex-direction:column;height:calc(100vh - 200px);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
-.chat-list{border-bottom:1px solid var(--border);overflow-y:auto;max-height:220px;}
-.chat-list-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s;}
-.chat-list-item:hover,.chat-list-item.active{background:var(--gold-light);}
-.chat-list-item.active{border-left:3px solid var(--gold);}
-.cli-name{font-size:0.9rem;flex:1;}
-.cli-preview{font-size:0.75rem;color:var(--light);}
-.cli-time{font-size:0.7rem;color:var(--light);}
-.chat-messages-portal{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;}
-.msg-niovi{align-self:flex-start;max-width:78%;}
-.msg-me{align-self:flex-end;max-width:78%;}
-.msg-niovi .msg-bubble{background:var(--surface2);border-radius:4px 12px 12px 12px;padding:10px 14px;font-size:0.88rem;line-height:1.5;}
-.msg-me .msg-bubble{background:var(--gold-light);border-radius:12px 4px 12px 12px;padding:10px 14px;font-size:0.88rem;line-height:1.5;}
-.msg-meta{font-size:0.7rem;color:var(--light);margin-top:3px;padding:0 4px;}
-.msg-me .msg-meta{text-align:right;}
-.chat-input-portal{padding:12px 14px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:flex-end;}
-.chat-input-portal textarea{flex:1;border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:9px 12px;font-family:'Jost',sans-serif;font-weight:300;font-size:0.88rem;background:var(--bg);outline:none;resize:none;min-height:38px;max-height:100px;}
-.chat-input-portal textarea:focus{border-color:var(--gold);}
-.chat-send-portal{background:var(--gold);color:#fff;border:none;border-radius:var(--radius-sm);width:36px;height:36px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.95rem;flex-shrink:0;}
-.chat-send-portal:hover{background:var(--gold-dark);}
-.chat-new-thread-btn{margin:10px 14px;background:var(--gold-light);color:var(--gold-dark);border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:8px 14px;font-family:'Jost',sans-serif;font-size:0.82rem;font-weight:500;cursor:pointer;width:calc(100% - 28px);}
+/* NOTES */
+.notes-area{width:100%;border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:9px 12px;font-family:'Jost',sans-serif;font-size:0.82rem;resize:vertical;background:var(--bg);outline:none;min-height:70px;margin-top:8px;}
+.notes-area:focus{border-color:var(--gold);}
+.save-note-btn{margin-top:6px;background:var(--gold);color:#fff;border:none;border-radius:var(--radius-sm);padding:6px 14px;font-family:'Jost',sans-serif;font-size:0.78rem;cursor:pointer;}
+.save-note-btn:hover{background:var(--gold-dark);}
 
-/* ── MEDIA TAB ── */
-.media-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;}
-.media-section-title{font-weight:500;font-size:0.9rem;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
-.media-file-row{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border);margin-bottom:6px;cursor:pointer;}
-.media-file-row:hover{background:var(--gold-light);}
-.mfr-icon{font-size:1.3rem;width:28px;text-align:center;}
-.mfr-name{flex:1;font-size:0.88rem;}
-.mfr-type{font-size:0.7rem;padding:2px 7px;border-radius:10px;background:var(--gold-light);color:var(--gold-dark);font-weight:500;}
+/* BUDGET */
+.budget-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
+.budget-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center;}
+.budget-card .val{font-size:1.4rem;font-weight:500;}
+.budget-card .lbl{font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--light);margin-top:2px;}
+.budget-card.pending .val{color:var(--gold-dark);}
+.budget-card.paid .val{color:var(--green);}
+.budget-cat-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:6px;overflow:hidden;}
+.budget-cat-header{padding:11px 14px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:background 0.15s;}
+.budget-cat-header:hover{background:var(--surface2);}
+.budget-cat-body{display:none;border-top:1px solid var(--border);background:var(--surface2);padding:10px 14px;}
+.budget-cat-body.open{display:block;}
+.budget-item-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:0.8rem;}
+.budget-item-row:last-child{border-bottom:none;}
 
-/* ── TOAST ── */
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:var(--radius-sm);font-size:0.85rem;z-index:999;opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap;}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-.toast.success{background:var(--green);}
-.toast.error{background:var(--rose);}
+/* PAYMENTS */
+.payment-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.8rem;}
+.payment-row:last-child{border-bottom:none;}
+.payment-status{font-size:0.7rem;padding:2px 8px;border-radius:10px;}
+.payment-status.paid{background:var(--green-light);color:var(--green);}
+.payment-status.pending{background:var(--gold-light);color:var(--gold-dark);}
 
-/* ── LOADING ── */
-.loading-screen{display:flex;align-items:center;justify-content:center;padding:60px;flex-direction:column;gap:12px;color:var(--light);}
-.spinner{width:28px;height:28px;border:2px solid var(--border-strong);border-top-color:var(--gold);border-radius:50%;animation:spin 0.7s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
+/* PLAN */
+.month-group{margin-bottom:22px;}
+.month-label{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;color:var(--gold-dark);margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--border);}
+.plan-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
+.plan-item:last-child{border-bottom:none;}
+.plan-check{width:19px;height:19px;border-radius:50%;border:2px solid var(--border-strong);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.65rem;}
+.plan-check.done{background:var(--green);border-color:var(--green);color:#fff;}
+.plan-title{font-size:0.84rem;flex:1;}
+.plan-title.done{text-decoration:line-through;color:var(--light);}
+.plan-date{font-size:0.73rem;color:var(--light);}
+.plan-date.overdue{color:var(--rose);}
 
-/* EMPTY STATE */
+/* MEDIA */
+.media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;}
+.media-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:13px;transition:all 0.15s;}
+.media-card:hover{border-color:var(--gold);box-shadow:var(--shadow);}
+
+/* CHAT */
+.chat-wrap{display:flex;height:calc(100vh - 300px);min-height:400px;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.chat-sidebar{width:230px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;flex-shrink:0;}
+.chat-area{flex:1;display:flex;flex-direction:column;background:var(--surface);}
+.chat-thread-item{padding:9px 13px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.15s;}
+.chat-thread-item:hover,.chat-thread-item.active{background:var(--gold-light);}
+.chat-thread-name{font-size:0.82rem;font-weight:500;}
+.chat-vendor-item{padding:7px 13px 7px 24px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.15s;}
+.chat-vendor-item:hover,.chat-vendor-item.active{background:var(--gold-light);}
+.chat-vendor-name{font-size:0.78rem;color:var(--mid);}
+.chat-header{padding:12px 16px;border-bottom:1px solid var(--border);font-weight:500;font-size:0.88rem;}
+.chat-messages{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
+.chat-msg{max-width:68%;padding:9px 13px;border-radius:12px;font-size:0.82rem;line-height:1.5;}
+.chat-msg.planner{background:var(--gold-light);border:1px solid var(--border);align-self:flex-start;}
+.chat-msg.couple{background:var(--blue-light);border:1px solid rgba(90,122,154,0.2);align-self:flex-end;}
+.chat-msg-meta{font-size:0.68rem;color:var(--light);margin-top:3px;}
+.chat-input-wrap{padding:10px 14px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:center;}
+.chat-input-wrap input{flex:1;border:1px solid var(--border-strong);border-radius:20px;padding:8px 15px;font-family:'Jost',sans-serif;font-size:0.82rem;background:var(--bg);outline:none;}
+.chat-input-wrap input:focus{border-color:var(--gold);}
+.chat-send{background:var(--gold);color:#fff;border:none;border-radius:50%;width:34px;height:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.chat-send:hover{background:var(--gold-dark);}
+
+/* MISC */
 .empty-state{text-align:center;padding:40px 20px;color:var(--light);}
-.empty-state-icon{font-size:2.2rem;margin-bottom:10px;}
-
-@media(max-width:500px){
-  .hero-names{font-size:1.8rem;}
-  .portal-content{padding:16px 12px;}
-  .login-box{padding:28px 24px;}
-  .budget-summary{grid-template-columns:1fr 1fr;}
-}
+.empty-state .icon{font-size:2.5rem;margin-bottom:10px;opacity:0.4;}
+#toast{position:fixed;bottom:22px;right:22px;background:var(--ink);color:#fff;border-radius:var(--radius-sm);padding:10px 17px;font-size:0.82rem;z-index:9999;transform:translateY(60px);opacity:0;transition:all 0.3s;max-width:320px;}
+#toast.show{transform:translateY(0);opacity:1;}
 </style>
 </head>
 <body>
 
-<!-- LOGIN SCREEN -->
-<div id="loginScreen">
+<!-- LOGIN -->
+<div id="login-screen">
   <div class="login-logo">My Greek Wedding</div>
-  <div class="login-tagline">Your Wedding Portal</div>
+  <div class="login-sub">Your Wedding Portal</div>
   <div class="login-box">
-    <h2>Welcome 🌸</h2>
-    <div>
-      <label>Email</label>
-      <input type="email" id="loginEmail" placeholder="your@email.com" autocomplete="email"/>
-    </div>
-    <div>
-      <label>Password</label>
-      <input type="password" id="loginPassword" placeholder="Your password" autocomplete="current-password"/>
-    </div>
-    <button class="btn-gold" onclick="doLogin()">Sign In</button>
-    <div class="login-err" id="loginErr">Incorrect email or password</div>
+    <input type="email" id="l-email" placeholder="Your email address" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <input type="password" id="l-pass" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <button onclick="doLogin()">Enter Your Portal</button>
+    <div class="login-err" id="l-err">Incorrect email or password</div>
   </div>
 </div>
 
-<!-- MAIN APP -->
+<!-- APP -->
 <div id="app">
   <!-- HERO -->
-  <div class="portal-hero" id="portalHero">
-    <div class="hero-names" id="heroNames">Loading...</div>
-    <div class="hero-date" id="heroDate"></div>
-    <div class="hero-location" id="heroLocation"></div>
-    <div class="countdown-row" id="countdownRow"></div>
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-names" id="hero-names">Sarah & James</div>
+      <div class="hero-date" id="hero-date">Your Wedding Day</div>
+      <div class="hero-countdown" id="hero-countdown"></div>
+      <div class="hero-location" id="hero-location"></div>
+    </div>
   </div>
 
-  <!-- NAV -->
-  <nav class="portal-nav">
-    <button class="pnav-btn active" data-tab="overview" onclick="switchTab('overview')"><span class="pnav-icon">♥</span>Overview</button>
-    <button class="pnav-btn" data-tab="budget" onclick="switchTab('budget')"><span class="pnav-icon">💰</span>Budget</button>
-    <button class="pnav-btn" data-tab="plan" onclick="switchTab('plan')"><span class="pnav-icon">📋</span>Plan</button>
-    <button class="pnav-btn" data-tab="media" onclick="switchTab('media')"><span class="pnav-icon">🖼</span>Documents</button>
-    <button class="pnav-btn" data-tab="chat" onclick="switchTab('chat')"><span class="pnav-icon">💬</span>Chat<span id="unreadDot" style="display:none;width:6px;height:6px;background:var(--rose);border-radius:50%;margin-left:3px;display:inline-block"></span></button>
-  </nav>
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-logo">My Greek Wedding</div>
+    <div class="topbar-user" id="topbar-user"></div>
+    <button class="topbar-logout" onclick="logout()">Log out</button>
+  </div>
 
-  <!-- CONTENT -->
-  <div class="portal-content">
-    <div id="tabOverview"></div>
-    <div id="tabBudget" style="display:none"></div>
-    <div id="tabPlan" style="display:none"></div>
-    <div id="tabMedia" style="display:none"></div>
-    <div id="tabChat" style="display:none"></div>
+  <!-- TABS -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('overview',this)">♥ Overview</button>
+    <button class="tab-btn" onclick="switchTab('budget',this)">💰 Budget</button>
+    <button class="tab-btn" onclick="switchTab('plan',this)">📋 Plan</button>
+    <button class="tab-btn" onclick="switchTab('media',this)">🖼 Media</button>
+    <button class="tab-btn" onclick="switchTab('chat',this)">💬 Chat</button>
+  </div>
+
+  <div class="tab-content" id="tab-content">
+    <div class="empty-state"><div class="icon">🌸</div><p>Loading your wedding portal…</p></div>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div id="toast"></div>
 
 <script>
 const SB_URL = 'https://bfslgaalktrgtbxwbdlv.supabase.co';
 const SB_KEY = 'sb_publishable_DZt4P67RcstQs7i7fktNeA_iuh9MXnJ';
 
-let couple = null;
-let coupleVendors = [];
-let vendors = [];
-let tasks = [];
-let budgetItems = [];
-let chatThreads = [];
-let threadMessages = [];
-let mediaFiles = [];
-let activeThread = null;
-let countdownInterval = null;
-
-const CATEGORIES = [
-  {id:'wedding_planning',label:'Wedding Planning',emoji:'📋'},
-  {id:'venue',label:'Venue',emoji:'🏛'},
-  {id:'photography',label:'Photography',emoji:'📷'},
-  {id:'videography',label:'Videography',emoji:'🎥'},
-  {id:'hair_makeup',label:'Hair & Makeup',emoji:'💄'},
-  {id:'hair',label:'Hair',emoji:'💇'},
-  {id:'makeup',label:'Makeup',emoji:'💋'},
-  {id:'flowers',label:'Florist',emoji:'🌸'},
-  {id:'officiants',label:'Officiants',emoji:'⛪'},
-  {id:'food',label:'Catering',emoji:'🍽'},
-  {id:'band',label:'Band',emoji:'🎸'},
-  {id:'dj',label:'DJ',emoji:'🎧'},
-  {id:'sound_light',label:'Sound & Lighting',emoji:'🔊'},
-  {id:'transportation',label:'Transportation',emoji:'🚌'},
-  {id:'accommodation',label:'Accommodation',emoji:'🏨'},
-  {id:'pastries',label:'Pastries',emoji:'🎂'},
-  {id:'rentals',label:'Rentals',emoji:'🪑'},
-  {id:'printing',label:'Printing',emoji:'🖨'},
-  {id:'fireworks',label:'Fireworks',emoji:'🎆'},
-  {id:'photo_booth',label:'Photo Booth',emoji:'📸'},
-  {id:'yacht',label:'Yacht',emoji:'⛵'},
-  {id:'live_entertainment',label:'Entertainment',emoji:'🎭'},
-  {id:'bar',label:'Bar',emoji:'🍸'},
+const CATS = [
+  {key:'wedding_planning',label:'Wedding Planning',emoji:'💍'},
+  {key:'venue',label:'Venue',emoji:'🏛'},
+  {key:'officiants',label:'Officiants / Celebrant',emoji:'📜'},
+  {key:'photography',label:'Photography',emoji:'📸'},
+  {key:'videography',label:'Videography',emoji:'🎬'},
+  {key:'hair',label:'Hair',emoji:'💇'},
+  {key:'makeup',label:'Makeup',emoji:'💄'},
+  {key:'flowers',label:'Florist',emoji:'🌸'},
+  {key:'sound_light',label:'Sound & Lighting',emoji:'🔊'},
+  {key:'dj',label:'DJ',emoji:'🎵'},
+  {key:'band',label:'Band',emoji:'🎸'},
+  {key:'photo_booth',label:'Photobooth',emoji:'📷'},
+  {key:'pastries',label:'Pastries & Cake',emoji:'🎂'},
+  {key:'rentals',label:'Rentals',emoji:'🪑'},
+  {key:'printing',label:'Printing / Stationery',emoji:'🖨'},
+  {key:'transportation',label:'Transportation',emoji:'🚗'},
+  {key:'fireworks',label:'Fireworks',emoji:'🎆'},
+  {key:'food',label:'Catering',emoji:'🍽'},
+  {key:'bar',label:'Bar',emoji:'🍷'},
+  {key:'yacht',label:'Yacht',emoji:'⛵'},
+  {key:'favors',label:'Favors',emoji:'🎁'},
 ];
 
-async function sbGet(table, query='') {
-  const res = await fetch(`${SB_URL}/rest/v1/${table}?${query}`, {
-    headers: {'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`, 'Range': '0-999'}
-  });
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
+const S = {couple:null, coupleVendors:[], tasks:[], budgetItems:[], mediaFiles:[], payments:[], vendorCache:{}, currentThread:null, chatExpanded:{}, currentTab:'overview'};
+
+async function sbGet(table, qs='') {
+  const r = await fetch(`${SB_URL}/rest/v1/${table}${qs?'?'+qs:''}`,{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Accept':'application/json'}});
+  const t = await r.text(); if(!r.ok) throw new Error(t); return JSON.parse(t);
 }
 async function sbPost(table, data) {
-  const res = await fetch(`${SB_URL}/rest/v1/${table}`, {
-    method: 'POST',
-    headers: {'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation'},
-    body: JSON.stringify(data)
-  });
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
+  const r = await fetch(`${SB_URL}/rest/v1/${table}`,{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify(data)});
+  const t = await r.text(); if(!r.ok) throw new Error(t); return JSON.parse(t);
 }
 async function sbPatch(table, filter, data) {
-  const res = await fetch(`${SB_URL}/rest/v1/${table}?${filter}`, {
-    method: 'PATCH',
-    headers: {'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation'},
-    body: JSON.stringify(data)
-  });
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
+  const r = await fetch(`${SB_URL}/rest/v1/${table}?${filter}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify(data)});
+  const t = await r.text(); if(!r.ok) throw new Error(t); return JSON.parse(t);
 }
 
-// ── LOGIN ──
+// ── LOGIN ─────────────────────────────────────────────────────────
 async function doLogin() {
-  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
-  const pw = document.getElementById('loginPassword').value;
-  if (!email || !pw) return;
+  const email = document.getElementById('l-email').value.trim().toLowerCase();
+  const pass = document.getElementById('l-pass').value;
+  if(!email||!pass){showErr('Enter email and password');return;}
   try {
-    const results = await sbGet('couples', `email=eq.${encodeURIComponent(email)}&select=*`);
-    if (!results.length) { showLoginError(); return; }
-    const c = results[0];
-    if (c.password_hash !== pw) { showLoginError(); return; }
-    couple = c;
-    localStorage.setItem('mgw_couple_id', c.id);
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('app').style.display = 'flex';
-    initPortal();
-  } catch(e) { showLoginError(); }
+    const res = await sbGet('couples',`email=eq.${encodeURIComponent(email)}&password_hash=eq.${encodeURIComponent(pass)}&select=*`);
+    if(!res.length){showErr('Incorrect email or password');return;}
+    S.couple = res[0];
+    localStorage.setItem('mgw_couple_id', S.couple.id);
+    enterPortal();
+  } catch(e){showErr('Error: '+e.message);}
 }
+function showErr(msg){const e=document.getElementById('l-err');e.textContent=msg;e.style.display='block';setTimeout(()=>e.style.display='none',3000);}
 
-function showLoginError() {
-  const el = document.getElementById('loginErr');
-  el.style.display = 'block';
-  setTimeout(() => { el.style.display = 'none'; }, 3000);
-}
-
-['loginEmail','loginPassword'].forEach(id => {
-  document.getElementById(id).addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
-});
-
-// Auto-login if stored
-window.addEventListener('DOMContentLoaded', async () => {
-  const stored = localStorage.getItem('mgw_couple_id');
-  if (stored) {
-    try {
-      const results = await sbGet('couples', `id=eq.${stored}&select=*`);
-      if (results.length) {
-        couple = results[0];
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('app').style.display = 'flex';
-        initPortal();
-        return;
-      }
-    } catch(e) {}
-    localStorage.removeItem('mgw_couple_id');
-  }
-});
-
-async function initPortal() {
+async function enterPortal() {
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app').style.display='flex';
+  document.getElementById('app').style.flexDirection='column';
   renderHero();
   await loadData();
-  switchTab('overview');
+  switchTabDirect('overview');
 }
 
 function renderHero() {
-  const c = couple;
-  document.getElementById('heroNames').textContent = `${c.partner1_name} & ${c.partner2_name}`;
-  if (c.wedding_date) {
-    const d = new Date(c.wedding_date);
-    document.getElementById('heroDate').textContent = d.toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+  const c = S.couple;
+  document.getElementById('hero-names').textContent = `${c.partner1_name} & ${c.partner2_name}`;
+  document.getElementById('topbar-user').textContent = `${c.partner1_name} & ${c.partner2_name}`;
+  if(c.wedding_date) {
+    const wd = new Date(c.wedding_date);
+    document.getElementById('hero-date').textContent = wd.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    updateCountdown(wd);
+    setInterval(()=>updateCountdown(wd), 60000);
   }
-  if (c.wedding_location) {
-    document.getElementById('heroLocation').textContent = '📍 ' + c.wedding_location;
-  }
-  startCountdown();
+  if(c.wedding_location) document.getElementById('hero-location').textContent = '📍 '+c.wedding_location;
 }
 
-function startCountdown() {
-  if (!couple.wedding_date) return;
-  const target = new Date(couple.wedding_date);
-  function update() {
-    const now = new Date();
-    const diff = target - now;
-    if (diff < 0) { document.getElementById('countdownRow').innerHTML = '🎉 Your wedding day has arrived!'; return; }
-    const d = Math.floor(diff / 86400000);
-    const h = Math.floor((diff % 86400000) / 3600000);
-    const m = Math.floor((diff % 3600000) / 60000);
-    const s = Math.floor((diff % 60000) / 1000);
-    document.getElementById('countdownRow').innerHTML = `
-      <div class="countdown-box"><div class="countdown-num">${d}</div><div class="countdown-label">Days</div></div>
-      <div class="countdown-sep">:</div>
-      <div class="countdown-box"><div class="countdown-num">${String(h).padStart(2,'0')}</div><div class="countdown-label">Hours</div></div>
-      <div class="countdown-sep">:</div>
-      <div class="countdown-box"><div class="countdown-num">${String(m).padStart(2,'0')}</div><div class="countdown-label">Mins</div></div>
-      <div class="countdown-sep">:</div>
-      <div class="countdown-box"><div class="countdown-num">${String(s).padStart(2,'0')}</div><div class="countdown-label">Secs</div></div>`;
-  }
-  update();
-  countdownInterval = setInterval(update, 1000);
+function updateCountdown(wd) {
+  const now = new Date();
+  const diff = wd - now;
+  if(diff <= 0) { document.getElementById('hero-countdown').innerHTML = `<div style="color:var(--gold);font-size:1.1rem;font-family:'Cormorant Garamond',serif;font-style:italic">Your wedding day has arrived! 🎉</div>`; return; }
+  const days = Math.floor(diff/86400000);
+  const hours = Math.floor((diff%86400000)/3600000);
+  const mins = Math.floor((diff%3600000)/60000);
+  document.getElementById('hero-countdown').innerHTML = `
+    <div class="countdown-item"><div class="countdown-num">${days}</div><div class="countdown-label">Days</div></div>
+    <div class="countdown-item"><div class="countdown-num">${hours}</div><div class="countdown-label">Hours</div></div>
+    <div class="countdown-item"><div class="countdown-num">${mins}</div><div class="countdown-label">Minutes</div></div>`;
 }
 
 async function loadData() {
-  const id = couple.id;
+  const id = S.couple.id;
   try {
-    [coupleVendors, tasks, budgetItems, chatThreads, threadMessages, mediaFiles] = await Promise.all([
-      sbGet('couple_vendors', `couple_id=eq.${id}&order=created_at.asc`),
-      sbGet('tasks', `couple_id=eq.${id}&order=due_date.asc`),
-      sbGet('budget_items', `couple_id=eq.${id}&visible_to_couple=eq.true&order=sort_order.asc`).catch(()=>[]),
-      sbGet('chat_threads', `couple_id=eq.${id}&order=sort_order.asc`).catch(()=>[]),
-      sbGet('thread_messages', `couple_id=eq.${id}&order=created_at.asc`).catch(()=>[]),
-      sbGet('media_files', `couple_id=eq.${id}&visible_to_couple=eq.true&order=created_at.desc`).catch(()=>[])
+    [S.coupleVendors, S.tasks, S.budgetItems, S.mediaFiles, S.payments] = await Promise.all([
+      sbGet('couple_vendors',`couple_id=eq.${id}&order=created_at.asc`).catch(()=>[]),
+      sbGet('tasks',`couple_id=eq.${id}&order=due_date.asc`).catch(()=>[]),
+      sbGet('budget_items',`couple_id=eq.${id}&order=sort_order.asc`).catch(()=>[]),
+      sbGet('media_files',`couple_id=eq.${id}&visible_to_couple=eq.true&order=created_at.desc`).catch(()=>[]),
+      sbGet('payments',`couple_id=eq.${id}&order=due_date.asc`).catch(()=>[]),
     ]);
-    // Load visible vendors only
-    const shownVendors = coupleVendors.filter(cv => cv.show_to_couple !== false);
-    if (shownVendors.length) {
-      const ids = shownVendors.map(cv => `"${cv.vendor_id}"`).join(',');
-      vendors = await sbGet('vendors', `id=in.(${ids})`).catch(()=>[]);
+    // Resolve vendor names
+    const ids = [...new Set(S.coupleVendors.map(v=>v.vendor_id).filter(v=>v&&!S.vendorCache[v]))];
+    for(const vid of ids) {
+      try {
+        const res = await sbGet('vendors',`id=eq.${encodeURIComponent(vid)}&select=id,name,category,region,price_range,contact`);
+        if(res&&res[0]) S.vendorCache[vid]=res[0];
+      } catch(e){}
     }
-  } catch(e) { showToast('Error loading data', 'error'); }
+  } catch(e){toast('Error loading data: '+e.message);}
 }
 
-// ── TABS ──
-function switchTab(tab) {
-  ['overview','budget','plan','media','chat'].forEach(t => {
-    document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).style.display = 'none';
-    document.querySelector(`[data-tab="${t}"]`)?.classList.remove('active');
-  });
-  document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).style.display = 'block';
-  document.querySelector(`[data-tab="${tab}"]`)?.classList.add('active');
-  if (tab === 'overview') renderOverview();
-  if (tab === 'budget') renderBudget();
-  if (tab === 'plan') renderPlan();
-  if (tab === 'media') renderMediaTab();
-  if (tab === 'chat') renderChatTab();
+function logout() {
+  localStorage.removeItem('mgw_couple_id');
+  location.reload();
 }
 
-// ── OVERVIEW ──
-function renderOverview() {
-  const el = document.getElementById('tabOverview');
-  const shownVendors = coupleVendors.filter(cv => cv.show_to_couple !== false);
-  const usedCats = [...new Set(shownVendors.map(v => v.category))];
-  if (!usedCats.length) {
-    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🌸</div><div>Niovi is setting up your wedding plan.<br/>Check back soon!</div></div>`;
-    return;
+// ── TABS ──────────────────────────────────────────────────────────
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  switchTabDirect(tab);
+}
+function switchTabDirect(tab) {
+  S.currentTab = tab;
+  const el = document.getElementById('tab-content');
+  if(tab==='overview') el.innerHTML = buildOverview();
+  else if(tab==='budget') el.innerHTML = buildBudget();
+  else if(tab==='plan') el.innerHTML = buildPlan();
+  else if(tab==='media') el.innerHTML = buildMedia();
+  else if(tab==='chat') { el.innerHTML = buildChat(); initChat(); }
+}
+
+// ── OVERVIEW ──────────────────────────────────────────────────────
+function buildOverview() {
+  let h = `<div style="margin-bottom:20px"><div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.6rem;margin-bottom:4px">Your Wedding Overview</div>
+    <div style="font-size:0.82rem;color:var(--light)">Review your vendors and share your thoughts with Niovi</div></div>`;
+
+  // Only show categories that have visible vendors
+  const activeCats = CATS.filter(cat =>
+    S.coupleVendors.some(cv => cv.category===cat.key && cv.visible_to_couple!==false)
+  );
+
+  if(!activeCats.length) {
+    return h + `<div class="empty-state"><div class="icon">💍</div><p>Niovi hasn't added any vendors yet — check back soon!</p></div>`;
   }
-  el.innerHTML = CATEGORIES.filter(c => usedCats.includes(c.id)).map(cat => {
-    const cvs = shownVendors.filter(v => v.category === cat.id);
-    const decided = cvs.some(v => v.status === 'decided' || v.status === 'booked');
-    return `<div class="cat-card">
-      <div class="cat-card-header" onclick="toggleCatCard('${cat.id}')">
-        <span class="cat-card-emoji">${cat.emoji}</span>
-        <span class="cat-card-name">${cat.label}</span>
-        <span class="cat-card-status badge-${decided?'decided':'draft'}">${decided?'✓ Decided':'In progress'}</span>
-        <span>▼</span>
+
+  activeCats.forEach(cat => {
+    const cvs = S.coupleVendors.filter(cv=>cv.category===cat.key && cv.visible_to_couple!==false);
+    const locked = cvs.find(cv=>cv.status==='booked');
+
+    h += `<div class="cat-card">
+      <div class="cat-card-header" onclick="toggleCat(this)">
+        <span class="cat-emoji">${cat.emoji}</span>
+        <span class="cat-title">${cat.label}</span>
+        <span class="cat-badge ${locked?'locked':'draft'}">${locked?'🔒 Confirmed':'In Progress'}</span>
+        <span class="cat-chevron">▾</span>
       </div>
-      <div class="cat-card-body" id="catcard_${cat.id}">
-        ${cvs.map(cv => renderVendorCard(cv)).join('')}
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function renderVendorCard(cv) {
-  const v = vendors.find(a => a.id === cv.vendor_id);
-  const name = v ? v.name : cv.vendor_id;
-  const region = v ? v.region || '' : '';
-  const price = v ? v.price_range || '' : '';
-  const rating = cv.rating || 0;
-  const hearts = [1,2,3,4,5].map(i => `<button class="heart-btn ${i<=rating?'filled':'empty'}" onclick="rateVendor('${cv.id}',${i})">${i<=rating?'♥':'♡'}</button>`).join('');
-  return `<div class="vendor-card">
-    <div class="vc-header">
-      <div><div class="vc-name">${name}</div><div class="vc-region">${region}</div></div>
-      ${price ? `<span class="vc-price">${price}</span>` : ''}
-    </div>
-    <div class="vc-rating">${hearts}</div>
-    <div class="vc-notes">
-      <textarea class="vc-notes-input" id="notes_${cv.id}" placeholder="Add your notes about this vendor..." rows="2">${cv.couple_notes || ''}</textarea>
-      <button class="vc-save-btn" onclick="saveNotes('${cv.id}')">Save notes</button>
-    </div>
-  </div>`;
-}
-
-function toggleCatCard(catId) {
-  const el = document.getElementById('catcard_' + catId);
-  if (el) el.classList.toggle('open');
-}
-
-async function rateVendor(cvId, rating) {
-  try {
-    await sbPatch('couple_vendors', `id=eq.${cvId}`, {rating, updated_at: new Date().toISOString()});
-    const cv = coupleVendors.find(v => v.id === cvId);
-    if (cv) cv.rating = rating;
-    renderOverview();
-    showToast('Rating saved!', 'success');
-  } catch(e) { showToast('Error saving rating', 'error'); }
-}
-
-async function saveNotes(cvId) {
-  const notes = document.getElementById('notes_' + cvId).value;
-  try {
-    await sbPatch('couple_vendors', `id=eq.${cvId}`, {couple_notes: notes, updated_at: new Date().toISOString()});
-    const cv = coupleVendors.find(v => v.id === cvId);
-    if (cv) cv.couple_notes = notes;
-    showToast('Notes saved!', 'success');
-  } catch(e) { showToast('Error saving notes', 'error'); }
-}
-
-// ── BUDGET ──
-function renderBudget() {
-  const el = document.getElementById('tabBudget');
-  const goal = couple.budget_goal || 0;
-  let actual = 0;
-  budgetItems.forEach(b => { actual += (b.guests||0)*(b.item_price||0); });
-  const pct = goal > 0 ? Math.min(100, (actual/goal)*100) : 0;
-
-  let html = `<div class="budget-summary">
-    <div class="bs-item"><div class="bs-label">Your Goal</div><div class="bs-val">€${Math.round(goal).toLocaleString()}</div></div>
-    <div class="bs-item"><div class="bs-label">Actual Total</div><div class="bs-val ${actual>goal?'red':''}">€${Math.round(actual).toLocaleString()}</div></div>
-    <div class="budget-progress" style="grid-column:1/-1"><div class="budget-progress-fill" style="width:${pct}%;background:${actual>goal?'var(--rose)':'var(--gold)'}"></div></div>
-  </div>`;
-
-  const cats = [...new Set(budgetItems.map(b => b.category))];
-  if (!cats.length) {
-    el.innerHTML = html + `<div class="empty-state"><div class="empty-state-icon">💰</div><div>Budget breakdown coming soon!</div></div>`;
-    return;
-  }
-  html += cats.map(catId => {
-    const cat = CATEGORIES.find(c => c.id === catId) || {emoji:'📦', label: catId};
-    const items = budgetItems.filter(b => b.category === catId);
-    let catActual = 0;
-    items.forEach(b => { catActual += (b.guests||0)*(b.item_price||0); });
-    const cvs = coupleVendors.filter(v => v.category === catId);
-    const catGoal = cvs.reduce((s,v) => s+(v.price_quoted||0), 0);
-    return `<div class="budget-cat-section">
-      <div class="budget-cat-row" onclick="toggleBudgetSection('${catId}')">
-        <span>${cat.emoji}</span>
-        <span class="bcr-name">${cat.label}</span>
-        ${catGoal ? `<span class="bcr-goal">Goal: €${Math.round(catGoal).toLocaleString()}</span>` : ''}
-        <span class="bcr-actual ${catActual>catGoal&&catGoal>0?'red':''}">€${Math.round(catActual).toLocaleString()}</span>
-        <span>▼</span>
-      </div>
-      <div class="budget-items-body" id="budgetsec_${catId}">
-        ${items.map(item => {
-          const cost = (item.guests||0)*(item.item_price||0);
-          return `<div class="bli-row">
-            <span class="bli-row-name">${item.item_name}</span>
-            ${item.guests && item.item_price ? `<span class="bli-row-formula">${item.guests} × €${item.item_price}</span>` : ''}
-            <span class="bli-row-cost">€${Math.round(cost).toLocaleString()}</span>
+      <div class="cat-body">
+        ${cvs.map(cv=>{
+          const v = S.vendorCache[cv.vendor_id];
+          const name = v?v.name:'Vendor';
+          const region = v?.region||'';
+          const isLocked = cv.status==='booked';
+          return `<div class="vendor-card">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between">
+              <div>
+                <div class="vendor-card-name">${name}${isLocked?' 🔒':''}</div>
+                <div class="vendor-card-meta">${region}</div>
+                <span class="vendor-status ${cv.status}">${isLocked?'Confirmed':cv.status}</span>
+              </div>
+            </div>
+            <div style="margin-top:10px">
+              <div style="font-size:0.72rem;color:var(--light);margin-bottom:4px;letter-spacing:0.06em;text-transform:uppercase">Your Rating</div>
+              <div class="hearts" id="hearts-${cv.id}">
+                ${[1,2,3,4,5].map(i=>`<span class="heart ${i<=(cv.rating||0)?'filled':''}" onmousedown="rateVendor('${cv.id}',${i})">♥</span>`).join('')}
+              </div>
+            </div>
+            <div style="margin-top:10px">
+              <div style="font-size:0.72rem;color:var(--light);margin-bottom:4px;letter-spacing:0.06em;text-transform:uppercase">Your Notes</div>
+              <textarea class="notes-area" id="notes-${cv.id}" placeholder="Add your thoughts about this vendor…">${cv.couple_notes||''}</textarea>
+              <button class="save-note-btn" onclick="saveNote('${cv.id}')">Save Note</button>
+            </div>
           </div>`;
         }).join('')}
       </div>
     </div>`;
-  }).join('');
-  el.innerHTML = html;
+  });
+  return h;
 }
 
-function toggleBudgetSection(catId) {
-  const el = document.getElementById('budgetsec_' + catId);
-  if (el) el.classList.toggle('open');
+function toggleCat(header) {
+  const body = header.nextElementSibling;
+  const chev = header.querySelector('.cat-chevron');
+  body.classList.toggle('open');
+  chev.classList.toggle('open');
 }
 
-// ── PLAN ──
-function renderPlan() {
-  const el = document.getElementById('tabPlan');
-  const total = tasks.length;
-  const done = tasks.filter(t => t.completed).length;
-  const pct = total > 0 ? Math.round((done/total)*100) : 0;
+async function rateVendor(cvId, rating) {
+  const cv = S.coupleVendors.find(c=>c.id===cvId);
+  if(!cv) return;
+  cv.rating = rating;
+  await sbPatch('couple_vendors',`id=eq.${cvId}`,{rating}).catch(e=>toast('Error: '+e.message));
+  const el = document.getElementById('hearts-'+cvId);
+  if(el) el.innerHTML = [1,2,3,4,5].map(i=>`<span class="heart ${i<=rating?'filled':''}" onmousedown="rateVendor('${cvId}',${i})">♥</span>`).join('');
+  toast('Rating saved! ✓');
+}
 
-  let html = `<div class="plan-progress">
-    <div class="pp-label">${done} of ${total} tasks completed</div>
-    <div class="pp-pct">${pct}%</div>
+async function saveNote(cvId) {
+  const note = document.getElementById('notes-'+cvId)?.value;
+  const cv = S.coupleVendors.find(c=>c.id===cvId);
+  if(!cv) return;
+  cv.couple_notes = note;
+  await sbPatch('couple_vendors',`id=eq.${cvId}`,{couple_notes:note}).catch(e=>toast('Error: '+e.message));
+  toast('Note saved! ✓');
+}
+
+// ── BUDGET ────────────────────────────────────────────────────────
+function calcItemTotal(b) {
+  const guests = Number(S.couple.guest_count||0);
+  const price = Number(b.item_price||0);
+  const perHead = b.pricing_type==='per_head';
+  const base = perHead ? (Number(b.guests||0)||guests) * price : price;
+  const vat = base * (Number(b.vat_amount||0)/100);
+  return {base, vat, total: base+vat};
+}
+
+function buildBudget() {
+  let totPaid=0, totActual=0;
+  S.budgetItems.forEach(b=>{ const {total}=calcItemTotal(b); totActual+=total; });
+  totPaid = (S.payments||[]).filter(p=>p.status==='paid').reduce((a,p)=>a+Number(p.amount||0)*(1+Number(p.vat_rate||0)/100),0);
+  const totPend = totActual - totPaid;
+  const goal = Number(S.couple.budget_goal||0);
+
+  let h = `<div style="margin-bottom:20px"><div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.6rem;margin-bottom:4px">Your Wedding Budget</div></div>
+  <div class="budget-summary">
+    <div class="budget-card pending"><div class="val">€${Math.round(totPend).toLocaleString()}</div><div class="lbl">Pending</div></div>
+    <div class="budget-card paid"><div class="val">€${Math.round(totPaid).toLocaleString()}</div><div class="lbl">Paid</div></div>
+    <div class="budget-card"><div class="val">€${goal.toLocaleString()}</div><div class="lbl">Goal</div></div>
   </div>`;
 
-  if (!tasks.length) {
-    el.innerHTML = html + `<div class="empty-state"><div class="empty-state-icon">📋</div><div>Your wedding checklist will appear here!</div></div>`;
-    return;
-  }
+  // Categories with items
+  CATS.forEach(cat=>{
+    const items = S.budgetItems.filter(b=>b.category===cat.key);
+    if(!items.length) return;
+    let catTotal=0;
+    items.forEach(b=>{ catTotal+=calcItemTotal(b).total; });
 
-  const byMonth = {};
-  tasks.forEach(t => {
-    const key = t.due_date ? t.due_date.slice(0,7) : 'no-date';
-    if (!byMonth[key]) byMonth[key] = [];
-    byMonth[key].push(t);
-  });
-
-  html += Object.entries(byMonth).sort().map(([month, items]) => {
-    const label = month === 'no-date' ? 'Upcoming' : new Date(month+'-01').toLocaleDateString('en-GB',{month:'long',year:'numeric'});
-    return `<div class="task-group">
-      <div class="task-group-header">${label}</div>
-      ${items.map(t => {
-        const dateStr = t.due_date ? new Date(t.due_date).toLocaleDateString('en-GB',{day:'numeric',month:'short'}) : '';
-        return `<div class="task-item">
-          <div class="task-check ${t.completed?'done':''}" onclick="checkTask('${t.id}',${!t.completed})">${t.completed?'✓':''}</div>
-          <div class="task-title ${t.completed?'done':''}">${t.title}</div>
-          ${dateStr ? `<div class="task-due">${dateStr}</div>` : ''}
-        </div>`;
-      }).join('')}
-    </div>`;
-  }).join('');
-  el.innerHTML = html;
-}
-
-async function checkTask(id, completed) {
-  try {
-    await sbPatch('tasks', `id=eq.${id}`, {completed, completed_at: completed ? new Date().toISOString() : null});
-    const t = tasks.find(t => t.id === id);
-    if (t) { t.completed = completed; }
-    renderPlan();
-    if (completed) showToast('✓ Task completed!', 'success');
-  } catch(e) { showToast('Error', 'error'); }
-}
-
-// ── MEDIA ──
-function renderMediaTab() {
-  const el = document.getElementById('tabMedia');
-  if (!mediaFiles.length) {
-    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📄</div><div>No documents shared yet.<br/>Niovi will share contracts and documents here.</div></div>`;
-    return;
-  }
-  const icons = {contract:'📄', invoice:'🧾', proof_of_payment:'✅', offer:'📝', other:'📎'};
-  const byType = {};
-  mediaFiles.forEach(f => {
-    const t = f.file_type || 'other';
-    if (!byType[t]) byType[t] = [];
-    byType[t].push(f);
-  });
-  el.innerHTML = Object.entries(byType).map(([type, files]) => {
-    const labels = {contract:'Contracts',invoice:'Invoices',proof_of_payment:'Payment Proofs',offer:'Offers',other:'Documents'};
-    return `<div class="media-section">
-      <div class="media-section-title">${icons[type]} ${labels[type]||type}</div>
-      ${files.map(f => `<div class="media-file-row" onclick="window.open('${f.file_url}','_blank')">
-        <span class="mfr-icon">${icons[type]||'📎'}</span>
-        <span class="mfr-name">${f.file_name}</span>
-        <span class="mfr-type">${type}</span>
-      </div>`).join('')}
-    </div>`;
-  }).join('');
-}
-
-// ── CHAT ──
-function renderChatTab() {
-  const el = document.getElementById('tabChat');
-  if (!chatThreads.length) {
-    el.innerHTML = `<div class="chat-layout-portal" style="align-items:center;justify-content:center;flex-direction:column;gap:8px;color:var(--light)">
-      <div style="font-size:2rem">💬</div>
-      <div style="font-size:0.9rem">No conversations yet</div>
-      <button class="chat-new-thread-btn" style="margin:0;width:auto" onclick="startGeneralChat()">Message Niovi</button>
-    </div>`;
-    return;
-  }
-  renderChatLayout(el);
-}
-
-function renderChatLayout(el) {
-  const threads = [...chatThreads].sort((a,b) => {
-    const aMsg = threadMessages.filter(m=>m.thread_id===a.id);
-    const bMsg = threadMessages.filter(m=>m.thread_id===b.id);
-    const aLast = aMsg[aMsg.length-1]?.created_at || a.created_at;
-    const bLast = bMsg[bMsg.length-1]?.created_at || b.created_at;
-    return new Date(bLast) - new Date(aLast);
-  });
-
-  const listHtml = threads.map(t => {
-    const msgs = threadMessages.filter(m => m.thread_id === t.id);
-    const last = msgs[msgs.length-1];
-    const unread = msgs.filter(m => m.sender !== 'couple' && !m.read_by_couple).length;
-    return `<div class="chat-list-item ${activeThread?.id===t.id?'active':''}" onclick="openPortalThread(${JSON.stringify(t).replace(/"/g,'&quot;')})">
-      <div style="flex:1">
-        <div class="cli-name">${t.thread_name} ${unread ? `<span style="background:var(--rose);color:#fff;font-size:0.65rem;padding:1px 5px;border-radius:8px">${unread}</span>` : ''}</div>
-        ${last ? `<div class="cli-preview">${last.sender_name||last.sender}: ${last.content.slice(0,40)}${last.content.length>40?'…':''}</div>` : ''}
+    h+=`<div class="budget-cat-row">
+      <div class="budget-cat-header" onclick="this.nextElementSibling.classList.toggle('open')">
+        <span style="font-size:1rem">${cat.emoji}</span>
+        <span style="font-size:0.86rem;font-weight:500;flex:1">${cat.label}</span>
+        <span style="font-size:0.84rem;font-weight:500;color:var(--gold-dark)">€${Math.round(catTotal).toLocaleString()}</span>
+        <span style="color:var(--light);font-size:0.72rem;margin-left:8px">▾</span>
       </div>
-      <div class="cli-time">${last ? timeAgo(new Date(last.created_at)) : ''}</div>
+      <div class="budget-cat-body">
+        ${items.map(b=>{
+          const {base,vat,total}=calcItemTotal(b);
+          const perHead=b.pricing_type==='per_head';
+          const guests=Number(b.guests||S.couple.guest_count||0);
+          return `<div class="budget-item-row">
+            <span style="flex:1;color:var(--mid)">${b.item_name}</span>
+            <span style="font-size:0.72rem;color:var(--light)">${perHead?`${guests}×€${Number(b.item_price).toLocaleString()}`:'Fixed'}</span>
+            ${vat?`<span style="font-size:0.72rem;color:var(--light)">+${b.vat_amount}% VAT</span>`:''}
+            <span style="font-weight:500">€${Math.round(total).toLocaleString()}</span>
+          </div>`;
+        }).join('')}
+      </div>
     </div>`;
-  }).join('');
+  });
 
-  const msgs = activeThread ? threadMessages.filter(m => m.thread_id === activeThread.id) : [];
-  const msgsHtml = !activeThread ? '<div style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--light);font-size:0.88rem">Select a conversation</div>' :
-    msgs.length ? msgs.map(m => `<div class="msg-${m.sender==='couple'?'me':'niovi'}">
-      <div class="msg-bubble">${m.content}</div>
-      <div class="msg-meta">${m.sender_name||m.sender} · ${timeAgo(new Date(m.created_at))}</div>
-    </div>`).join('') : '<div style="text-align:center;color:var(--light);font-size:0.84rem;margin:auto">Start the conversation! 👋</div>';
+  // Payments section
+  const payments = S.payments||[];
+  if(payments.length) {
+    h+=`<div style="margin-top:20px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.3rem;margin-bottom:12px">Payment Schedule</div>`;
+    const pending = payments.filter(p=>p.status!=='paid');
+    const paid = payments.filter(p=>p.status==='paid');
 
-  el.innerHTML = `<div class="chat-layout-portal">
-    <div class="chat-list">${listHtml}</div>
-    <div class="chat-messages-portal" id="portalMsgs">${msgsHtml}</div>
-    <div class="chat-input-portal">
-      <textarea id="portalInput" placeholder="Message Niovi..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendPortalMessage();}"></textarea>
-      <button class="chat-send-portal" onclick="sendPortalMessage()">➤</button>
+    if(pending.length) {
+      h+=`<div style="font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid);margin-bottom:8px">Upcoming Payments</div>`;
+      h+=`<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px">`;
+      pending.forEach(p=>{
+        const total = Number(p.amount||0)*(1+Number(p.vat_rate||0)/100);
+        h+=`<div class="payment-row">
+          <span>${p.method==='bank'?'🏦':'💵'}</span>
+          <span style="flex:1">${p.description||'Payment'}</span>
+          ${p.due_date?`<span style="font-size:0.72rem;color:var(--light)">Due ${new Date(p.due_date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</span>`:''}
+          <span style="font-weight:500;color:var(--gold-dark)">€${Math.round(total).toLocaleString()}</span>
+          <span class="payment-status pending">Pending</span>
+        </div>`;
+      });
+      h+=`</div>`;
+    }
+    if(paid.length) {
+      h+=`<div style="font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid);margin-bottom:8px">Paid</div>`;
+      h+=`<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;">`;
+      paid.forEach(p=>{
+        const total = Number(p.amount||0)*(1+Number(p.vat_rate||0)/100);
+        h+=`<div class="payment-row">
+          <span>${p.method==='bank'?'🏦':'💵'}</span>
+          <span style="flex:1">${p.description||'Payment'}</span>
+          ${p.paid_date?`<span style="font-size:0.72rem;color:var(--green)">Paid ${new Date(p.paid_date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</span>`:''}
+          <span style="font-weight:500;color:var(--green)">€${Math.round(total).toLocaleString()}</span>
+          <span class="payment-status paid">✓ Paid</span>
+        </div>`;
+      });
+      h+=`</div>`;
+    }
+  }
+  return h;
+}
+
+// ── PLAN ──────────────────────────────────────────────────────────
+function buildPlan() {
+  let h=`<div style="margin-bottom:20px"><div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.6rem;margin-bottom:4px">Your Wedding Plan</div>
+    <div style="font-size:0.82rem;color:var(--light)">Tasks and milestones for your big day</div></div>`;
+  const tasks=[...S.tasks].sort((a,b)=>(a.due_date||'9999')>(b.due_date||'9999')?1:-1);
+  if(!tasks.length) return h+`<div class="empty-state"><div class="icon">📋</div><p>No tasks yet — Niovi will add them soon!</p></div>`;
+  const groups={};
+  tasks.forEach(t=>{const k=t.due_date?t.due_date.slice(0,7):'no-date';(groups[k]=groups[k]||[]).push(t);});
+  Object.entries(groups).forEach(([k,gt])=>{
+    const label=k==='no-date'?'No Date':new Date(k+'-01').toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+    h+=`<div class="month-group"><div class="month-label">${label}</div>`;
+    gt.forEach(t=>{
+      const od=t.due_date&&!t.completed&&new Date(t.due_date)<new Date();
+      h+=`<div class="plan-item">
+        <div class="plan-check ${t.completed?'done':''}" onclick="toggleTask('${t.id}',${!!t.completed})">${t.completed?'✓':''}</div>
+        <div class="plan-title ${t.completed?'done':''}">${t.title}</div>
+        <div class="plan-date ${od?'overdue':''}">${t.due_date?new Date(t.due_date).toLocaleDateString('en-GB',{day:'numeric',month:'short'}):''} ${od?'⚠️':''}</div>
+      </div>`;
+    });
+    h+=`</div>`;
+  });
+  return h;
+}
+
+async function toggleTask(id, done) {
+  const t=S.tasks.find(t=>t.id===id);
+  if(!t)return;
+  t.completed=!done;
+  await sbPatch('tasks',`id=eq.${id}`,{completed:!done,completed_at:!done?new Date().toISOString():null}).catch(e=>toast('Error: '+e.message));
+  switchTabDirect('plan');
+}
+
+// ── MEDIA ──────────────────────────────────────────────────────────
+function buildMedia() {
+  const icons={contract:'📄',invoice:'🧾',proof_of_payment:'✅',offer:'📋',photo:'🖼',other:'📎'};
+  let h=`<div style="margin-bottom:20px"><div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.6rem;margin-bottom:4px">Documents & Media</div>
+    <div style="font-size:0.82rem;color:var(--light)">Files shared with you by Niovi</div></div>`;
+  if(!S.mediaFiles.length) return h+`<div class="empty-state"><div class="icon">🖼</div><p>No files shared yet</p></div>`;
+  h+=`<div class="media-grid">${S.mediaFiles.map(f=>`
+    <div class="media-card">
+      <div style="font-size:1.8rem;margin-bottom:7px">${icons[f.file_type]||'📎'}</div>
+      <div style="font-size:0.8rem;font-weight:500;word-break:break-all;margin-bottom:4px">${f.file_name}</div>
+      <div style="font-size:0.7rem;color:var(--light);margin-bottom:8px">${f.file_type?.replace(/_/g,' ')||'file'} · ${new Date(f.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</div>
+      <a href="${f.file_url}" target="_blank" style="font-size:0.75rem;color:var(--gold-dark);text-decoration:none;border:1px solid var(--border-strong);padding:4px 10px;border-radius:var(--radius-sm)">⬇ View / Download</a>
+    </div>`).join('')}</div>`;
+  return h;
+}
+
+// ── CHAT ──────────────────────────────────────────────────────────
+function buildChat() {
+  return `<div class="chat-wrap">
+    <div class="chat-sidebar">
+      <div style="padding:10px 12px;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--light);border-bottom:1px solid var(--border)">Messages</div>
+      <div id="thread-list"></div>
+    </div>
+    <div class="chat-area">
+      <div class="chat-header" id="chat-hd">Select a thread</div>
+      <div class="chat-messages" id="chat-msgs"><div style="margin:auto;color:var(--light);font-size:0.82rem">Select a thread to start chatting</div></div>
+      <div class="chat-input-wrap" id="chat-input-wrap" style="display:none">
+        <input id="chat-in" placeholder="Type a message to Niovi…" onkeydown="if(event.key==='Enter')sendMsg()"/>
+        <button class="chat-send" onclick="sendMsg()">➤</button>
+      </div>
     </div>
   </div>`;
-  setTimeout(() => { const m = document.getElementById('portalMsgs'); if(m) m.scrollTop = m.scrollHeight; }, 50);
 }
 
-function openPortalThread(t) {
-  activeThread = t;
-  renderChatTab();
-}
-
-async function startGeneralChat() {
-  try {
-    const res = await sbPost('chat_threads', {couple_id: couple.id, category: 'general', thread_name: 'General Chat'});
-    chatThreads.push(res[0]);
-    activeThread = res[0];
-    renderChatTab();
-  } catch(e) { showToast('Error starting chat', 'error'); }
-}
-
-async function sendPortalMessage() {
-  if (!activeThread) return;
-  const input = document.getElementById('portalInput');
-  const content = input.value.trim();
-  if (!content) return;
-  try {
-    const res = await sbPost('thread_messages', {
-      thread_id: activeThread.id,
-      couple_id: couple.id,
-      sender: 'couple',
-      sender_name: couple.partner1_name,
-      content,
-      read_by_couple: true,
-      read_by_planner: false
+function initChat() {
+  const el=document.getElementById('thread-list');
+  if(!el) return;
+  let h=`<div class="chat-thread-item" onclick="selectThread('general',null,'💬 General Chat')">
+    <div class="chat-thread-name">💬 General Chat</div>
+  </div>`;
+  CATS.forEach(cat=>{
+    const cvs=S.coupleVendors.filter(cv=>cv.category===cat.key&&cv.visible_to_couple!==false);
+    if(!cvs.length) return;
+    const isExp=S.chatExpanded[cat.key];
+    const isCatActive=S.currentThread?.catKey===cat.key&&!S.currentThread?.vendorId;
+    h+=`<div class="chat-thread-item ${isCatActive?'active':''}" style="display:flex;align-items:center;padding:0">
+      <div style="flex:1;padding:9px 13px;cursor:pointer" onclick="selectThread('${cat.key}',null,'${cat.emoji} ${cat.label}')">
+        <div class="chat-thread-name">${cat.emoji} ${cat.label}</div>
+      </div>
+      <div style="padding:9px 10px;cursor:pointer;color:var(--light);font-size:0.72rem;transform:${isExp?'rotate(90deg)':'rotate(0)'}" onclick="toggleChatCat('${cat.key}')">▶</div>
+    </div>`;
+    if(isExp) cvs.forEach(cv=>{
+      const v=S.vendorCache[cv.vendor_id];
+      if(!v) return;
+      const isVA=S.currentThread?.vendorId===cv.vendor_id;
+      h+=`<div class="chat-vendor-item ${isVA?'active':''}" onclick="selectThread('${cat.key}','${cv.vendor_id}','${v.name.replace(/'/g,"\\'")}')">
+        <div class="chat-vendor-name">› ${v.name}</div>
+      </div>`;
     });
-    threadMessages.push(res[0]);
-    input.value = '';
-    renderChatTab();
-  } catch(e) { showToast('Error sending message', 'error'); }
+  });
+  el.innerHTML=h;
 }
 
-function timeAgo(date) {
-  const diff = (new Date() - date) / 1000;
-  if (diff < 60) return 'just now';
-  if (diff < 3600) return Math.floor(diff/60) + 'm ago';
-  if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
-  if (diff < 2592000) return Math.floor(diff/86400) + 'd ago';
-  return Math.floor(diff/2592000) + 'mo ago';
+function toggleChatCat(k){S.chatExpanded[k]=!S.chatExpanded[k];initChat();}
+
+async function selectThread(catKey,vendorId,title){
+  S.currentThread={catKey,vendorId};
+  document.getElementById('chat-hd').textContent=title||catKey;
+  document.getElementById('chat-input-wrap').style.display='flex';
+  initChat();
+  try {
+    const cat=vendorId?`${catKey}_${vendorId}`:catKey;
+    const msgs=await sbGet('messages',`couple_id=eq.${S.couple.id}&category=eq.${encodeURIComponent(cat)}&order=created_at.asc`);
+    // Mark as read
+    if(msgs.some(m=>!m.read_by_couple)) {
+      await fetch(`${SB_URL}/rest/v1/messages?couple_id=eq.${S.couple.id}&category=eq.${encodeURIComponent(cat)}&read_by_couple=eq.false`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},body:JSON.stringify({read_by_couple:true})}).catch(()=>{});
+    }
+    renderMsgs(msgs);
+  } catch(e){toast('Error: '+e.message);}
 }
 
-function showToast(msg, type='') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast show' + (type?' '+type:'');
-  setTimeout(() => { t.className = 'toast'; }, 3000);
+function renderMsgs(msgs){
+  const el=document.getElementById('chat-msgs');
+  if(!el)return;
+  if(!msgs.length){el.innerHTML='<div style="margin:auto;color:var(--light);font-size:0.82rem">No messages yet — start the conversation!</div>';return;}
+  el.innerHTML=msgs.map(m=>{
+    const isCouple=m.sender==='couple';
+    const time=new Date(m.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+    return `<div style="display:flex;flex-direction:column;align-items:${isCouple?'flex-end':'flex-start'}">
+      <div class="chat-msg ${m.sender}">${m.content}</div>
+      <div class="chat-msg-meta" style="text-align:${isCouple?'right':'left'}">${m.sender_name||m.sender} · ${time}</div>
+    </div>`;
+  }).join('');
+  el.scrollTop=el.scrollHeight;
+}
+
+async function sendMsg(){
+  const inp=document.getElementById('chat-in');
+  const content=inp.value.trim();
+  if(!content||!S.currentThread)return;
+  const {catKey,vendorId}=S.currentThread;
+  const category=vendorId?`${catKey}_${vendorId}`:catKey;
+  const name=`${S.couple.partner1_name} & ${S.couple.partner2_name}`;
+  try {
+    await sbPost('messages',{couple_id:S.couple.id,sender:'couple',sender_name:name,content,category,read_by_couple:true,read_by_planner:false});
+    inp.value='';
+    const msgs=await sbGet('messages',`couple_id=eq.${S.couple.id}&category=eq.${encodeURIComponent(category)}&order=created_at.asc`);
+    renderMsgs(msgs);
+  } catch(e){toast('Error: '+e.message);}
+}
+
+// ── TOAST ──────────────────────────────────────────────────────────
+function toast(msg,dur=2500){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.className='show';
+  clearTimeout(el._t); el._t=setTimeout(()=>el.className='',dur);
+}
+
+// ── INIT ──────────────────────────────────────────────────────────
+// Auto-login if session exists
+const savedId = localStorage.getItem('mgw_couple_id');
+if(savedId) {
+  (async()=>{
+    try {
+      const res = await sbGet('couples',`id=eq.${savedId}&select=*`);
+      if(res&&res[0]){S.couple=res[0];enterPortal();}
+    } catch(e){}
+  })();
 }
 </script>
 </body>
