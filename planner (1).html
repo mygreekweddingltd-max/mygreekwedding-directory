@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MGW Planner — My Greek Wedding</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:#FDFAF5;--surface:#FFFFFF;--surface2:#F5F0E8;--ink:#1A1714;--mid:#6B6052;--light:#A09080;
+  --gold:#C9A96E;--gold-light:#F0E6D3;--gold-dark:#A8864A;--rose:#C97A7A;--rose-light:#F5E8E8;
+  --green:#5A8A5A;--green-light:#E8F2E8;--blue:#5A7A9A;--blue-light:#E8EFF5;
+  --border:rgba(201,169,110,0.2);--border-strong:rgba(201,169,110,0.35);
+  --shadow:0 2px 20px rgba(26,23,20,0.08);--shadow-lg:0 8px 40px rgba(26,23,20,0.12);
+  --radius:14px;--radius-sm:9px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Jost',sans-serif;font-weight:300;background:var(--bg);color:var(--ink);min-height:100vh;}
+#pw-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:24px;}
+.pw-logo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:2.4rem;color:var(--gold);}
+.pw-sub{font-size:0.8rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--light);}
+.pw-box{background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius);padding:32px 40px;display:flex;flex-direction:column;gap:16px;width:320px;box-shadow:var(--shadow);}
+.pw-box input{border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:10px 14px;font-family:'Jost',sans-serif;font-size:0.9rem;outline:none;background:var(--bg);width:100%;}
+.pw-box input:focus{border-color:var(--gold);}
+.pw-box button{background:var(--gold);color:#fff;border:none;border-radius:var(--radius-sm);padding:11px;font-family:'Jost',sans-serif;font-weight:500;font-size:0.9rem;cursor:pointer;}
+.pw-box button:hover{background:var(--gold-dark);}
+.pw-err{color:var(--rose);font-size:0.8rem;text-align:center;display:none;}
+#app{display:none;height:100vh;overflow:hidden;flex-direction:column;}
+.topbar{height:56px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0;}
+.topbar-logo{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);font-size:1.4rem;flex:1;}
+.topbar-btn{background:var(--gold);color:#fff;border:none;border-radius:var(--radius-sm);padding:7px 14px;font-family:'Jost',sans-serif;font-size:0.8rem;font-weight:500;cursor:pointer;}
+.topbar-btn:hover{background:var(--gold-dark);}
+.topbar-btn.outline{background:transparent;color:var(--gold);border:1px solid var(--border-strong);}
+.topbar-btn.outline:hover{background:var(--gold-light);}
+.body-wrap{display:flex;flex:1;overflow:hidden;}
+.sidebar{width:220px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;}
+.sidebar-header{padding:14px 16px;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--light);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.couple-item{padding:11px 16px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.15s;}
+.couple-item:hover{background:var(--gold-light);}
+.couple-item.active{background:var(--gold-light);border-left:3px solid var(--gold);}
+.couple-name{font-weight:500;font-size:0.86rem;}
+.couple-date{font-size:0.73rem;color:var(--light);margin-top:2px;}
+.couple-add{padding:12px 16px;color:var(--gold);font-size:0.82rem;cursor:pointer;display:flex;align-items:center;gap:6px;border-top:1px solid var(--border);}
+.couple-add:hover{background:var(--gold-light);}
+.main-panel{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.tab-nav{background:var(--surface);border-bottom:1px solid var(--border);display:flex;padding:0 20px;gap:2px;flex-shrink:0;}
+.tab-btn{padding:13px 18px;font-family:'Jost',sans-serif;font-size:0.82rem;color:var(--mid);border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;}
+.tab-btn:hover{color:var(--ink);}
+.tab-btn.active{color:var(--gold-dark);border-bottom-color:var(--gold);font-weight:500;}
+.tab-content{flex:1;overflow-y:auto;padding:20px 24px;}
+.couple-header{background:var(--surface);border-radius:var(--radius);padding:18px 22px;border:1px solid var(--border);margin-bottom:18px;display:flex;align-items:center;gap:20px;}
+.couple-header-name{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-style:italic;}
+.couple-header-detail{font-size:0.8rem;color:var(--light);margin-top:3px;}
+.couple-header-stats{margin-left:auto;display:flex;gap:20px;}
+.stat-item{text-align:center;}
+.stat-val{font-size:1.2rem;font-weight:500;color:var(--gold-dark);}
+.stat-label{font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--light);}
+/* overview */
+.section-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.section-toolbar h2{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-style:italic;flex:1;}
+.btn-sm{border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:6px 13px;font-family:'Jost',sans-serif;font-size:0.78rem;cursor:pointer;background:transparent;color:var(--mid);transition:all 0.15s;}
+.btn-sm:hover{background:var(--gold-light);color:var(--gold-dark);border-color:var(--gold);}
+.btn-sm.primary{background:var(--gold);color:#fff;border-color:var(--gold);}
+.btn-sm.primary:hover{background:var(--gold-dark);}
+.category-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:7px;overflow:hidden;}
+.cat-row-header{display:flex;align-items:center;padding:11px 14px;cursor:pointer;gap:8px;transition:background 0.15s;}
+.cat-row-header:hover{background:var(--surface2);}
+.cat-emoji{width:26px;text-align:center;font-size:1rem;}
+.cat-name{font-size:0.86rem;font-weight:500;flex:1;}
+.cat-status{font-size:0.68rem;padding:2px 8px;border-radius:20px;font-weight:500;}
+.cat-status.draft{background:#F0EDEA;color:var(--mid);}
+.cat-status.decided{background:var(--green-light);color:var(--green);}
+.cat-actions{display:flex;align-items:center;gap:6px;margin-left:auto;}
+.cat-icon-btn{width:26px;height:26px;border-radius:6px;border:1px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.8rem;color:var(--mid);transition:all 0.15s;}
+.cat-icon-btn:hover{background:var(--gold-light);border-color:var(--gold);}
+.cat-chevron{font-size:0.72rem;color:var(--light);transition:transform 0.2s;margin-left:4px;}
+.cat-chevron.open{transform:rotate(180deg);}
+.cat-body{display:none;padding:10px 14px 14px;background:var(--surface2);border-top:1px solid var(--border);}
+.cat-body.open{display:block;}
+.vendor-chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px;}
+.vendor-chip{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:4px 11px;font-size:0.76rem;display:flex;align-items:center;gap:5px;cursor:pointer;}
+.vendor-chip:hover{border-color:var(--gold);background:var(--gold-light);}
+.chip-dot{width:6px;height:6px;border-radius:50%;display:inline-block;flex-shrink:0;}
+.chip-dot.suggested{background:var(--blue);}
+.chip-dot.shortlisted{background:var(--gold);}
+.chip-dot.decided{background:var(--green);}
+.chip-dot.booked{background:var(--green);}
+.chip-dot.rejected{background:var(--rose);}
+.cat-no-vendors{font-size:0.78rem;color:var(--light);padding:4px 0 8px;}
+/* vendor search dropdown */
+.vendor-search-wrap{position:relative;}
+.vendor-search-wrap input{width:100%;border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:7px 11px;font-family:'Jost',sans-serif;font-size:0.8rem;background:var(--surface);outline:none;}
+.vendor-search-wrap input:focus{border-color:var(--gold);}
+.vendor-dropdown{position:absolute;top:calc(100% + 2px);left:0;right:0;background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius-sm);max-height:200px;overflow-y:auto;z-index:200;box-shadow:var(--shadow);}
+.vendor-dd-item{padding:8px 12px;font-size:0.8rem;cursor:pointer;border-bottom:1px solid var(--border);}
+.vendor-dd-item:hover{background:var(--gold-light);}
+.vendor-dd-item:last-child{border-bottom:none;}
+.vendor-dd-cat{font-size:0.68rem;color:var(--light);margin-left:6px;}
+/* budget */
+.budget-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px;}
+.budget-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 18px;text-align:center;}
+.budget-card .val{font-size:1.3rem;font-weight:500;}
+.budget-card .lbl{font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--light);margin-top:2px;}
+.budget-card.over .val{color:var(--rose);}
+.budget-card.paid .val{color:var(--green);}
+.budget-card.pending .val{color:var(--gold-dark);}
+.budget-col-labels{display:grid;grid-template-columns:1fr 100px 100px 100px 100px 30px;gap:6px;padding:5px 14px;font-size:0.68rem;letter-spacing:0.07em;text-transform:uppercase;color:var(--light);}
+.budget-col-labels span:not(:first-child){text-align:right;}
+.budget-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:5px;overflow:hidden;}
+.budget-row-header{display:grid;grid-template-columns:1fr 100px 100px 100px 100px 30px;align-items:center;padding:10px 14px;gap:6px;cursor:pointer;transition:background 0.15s;}
+.budget-row-header:hover{background:var(--surface2);}
+.bcol{text-align:right;font-size:0.8rem;}
+.bcol.name{text-align:left;font-size:0.84rem;font-weight:500;display:flex;align-items:center;gap:7px;}
+.bcol.over{color:var(--rose);font-weight:500;}
+.budget-body{display:none;border-top:1px solid var(--border);background:var(--surface2);padding:10px 14px;}
+.budget-body.open{display:block;}
+.bi-row{display:grid;grid-template-columns:1fr auto auto auto;gap:8px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);font-size:0.78rem;}
+.bi-row:last-child{border-bottom:none;}
+.bi-comm{color:var(--green);font-size:0.72rem;}
+.budget-add-row{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap;}
+.budget-add-row input{border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:6px 10px;font-family:'Jost',sans-serif;font-size:0.78rem;background:var(--surface);outline:none;min-width:0;}
+.budget-add-row input:focus{border-color:var(--gold);}
+/* plan */
+.month-group{margin-bottom:22px;}
+.month-label{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;color:var(--gold-dark);margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--border);}
+.plan-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
+.plan-item:last-child{border-bottom:none;}
+.plan-check{width:19px;height:19px;border-radius:50%;border:2px solid var(--border-strong);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:1px;font-size:0.65rem;}
+.plan-check.done{background:var(--green);border-color:var(--green);color:#fff;}
+.plan-title{font-size:0.84rem;flex:1;}
+.plan-title.done{text-decoration:line-through;color:var(--light);}
+.plan-cat{font-size:0.7rem;color:var(--light);margin-left:5px;}
+.plan-date{font-size:0.73rem;color:var(--light);white-space:nowrap;}
+.plan-date.overdue{color:var(--rose);}
+.task-form-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:18px;}
+.task-form{display:flex;gap:8px;flex-wrap:wrap;}
+.task-form input,.task-form select{border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:7px 10px;font-family:'Jost',sans-serif;font-size:0.8rem;background:var(--bg);outline:none;flex:1;min-width:130px;}
+.task-form input:focus,.task-form select:focus{border-color:var(--gold);}
+/* media */
+.media-upload-zone{border:2px dashed var(--border-strong);border-radius:var(--radius);padding:28px;text-align:center;cursor:pointer;margin-bottom:18px;transition:all 0.2s;}
+.media-upload-zone:hover{border-color:var(--gold);background:var(--gold-light);}
+.media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;}
+.media-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:13px;transition:all 0.15s;}
+.media-card:hover{border-color:var(--gold);box-shadow:var(--shadow);}
+/* chat */
+.chat-wrap{display:flex;height:calc(100vh - 230px);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.chat-sidebar{width:250px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;flex-shrink:0;}
+.chat-area{flex:1;display:flex;flex-direction:column;background:var(--surface);}
+.chat-thread-item{padding:9px 13px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.15s;}
+.chat-thread-item:hover,.chat-thread-item.active{background:var(--gold-light);}
+.chat-thread-name{font-size:0.82rem;font-weight:500;}
+.chat-thread-preview{font-size:0.72rem;color:var(--light);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;}
+.chat-vendor-item{padding:7px 13px 7px 26px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.15s;}
+.chat-vendor-item:hover,.chat-vendor-item.active{background:var(--gold-light);}
+.chat-vendor-name{font-size:0.78rem;color:var(--mid);}
+.chat-header{padding:12px 16px;border-bottom:1px solid var(--border);font-weight:500;font-size:0.88rem;}
+.chat-messages{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
+.chat-msg{max-width:68%;padding:9px 13px;border-radius:12px;font-size:0.82rem;line-height:1.5;}
+.chat-msg.planner{background:var(--gold-light);border:1px solid var(--border);align-self:flex-start;}
+.chat-msg.couple{background:var(--blue-light);border:1px solid rgba(90,122,154,0.2);align-self:flex-end;}
+.chat-msg-meta{font-size:0.68rem;color:var(--light);margin-top:3px;}
+.chat-input-wrap{padding:10px 14px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:center;}
+.chat-input-wrap input{flex:1;border:1px solid var(--border-strong);border-radius:20px;padding:8px 15px;font-family:'Jost',sans-serif;font-size:0.82rem;background:var(--bg);outline:none;}
+.chat-input-wrap input:focus{border-color:var(--gold);}
+.chat-send{background:var(--gold);color:#fff;border:none;border-radius:50%;width:34px;height:34px;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.chat-send:hover{background:var(--gold-dark);}
+/* modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(26,23,20,0.5);z-index:1000;display:none;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--surface);border-radius:var(--radius);width:480px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg);}
+.modal-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-style:italic;}
+.modal-close{background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--mid);}
+.modal-body{padding:22px;}
+.form-group{margin-bottom:13px;}
+.form-label{font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid);margin-bottom:4px;display:block;}
+.form-input{width:100%;border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:8px 11px;font-family:'Jost',sans-serif;font-size:0.86rem;background:var(--bg);outline:none;}
+.form-input:focus{border-color:var(--gold);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+.modal-footer{padding:14px 22px;border-top:1px solid var(--border);display:flex;gap:9px;justify-content:flex-end;}
+.empty-state{text-align:center;padding:50px 20px;color:var(--light);}
+.empty-state .icon{font-size:2.5rem;margin-bottom:10px;opacity:0.5;}
+#toast{position:fixed;bottom:22px;right:22px;background:var(--ink);color:#fff;border-radius:var(--radius-sm);padding:10px 17px;font-size:0.82rem;z-index:9999;transform:translateY(60px);opacity:0;transition:all 0.3s;max-width:340px;}
+#toast.show{transform:translateY(0);opacity:1;}
+#toast.err{background:var(--rose);}
+.no-couple{display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;color:var(--light);gap:10px;}
+.no-couple .big{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-style:italic;color:var(--gold);}
+.loading{padding:30px;text-align:center;color:var(--light);font-size:0.85rem;}
+</style>
+</head>
+<body>
+
+<div id="pw-screen">
+  <div class="pw-logo">🌸 My Greek Wedding</div>
+  <div class="pw-sub">Planner Dashboard</div>
+  <div class="pw-box">
+    <input type="password" id="pw-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkPw()"/>
+    <button onclick="checkPw()">Enter</button>
+    <div class="pw-err" id="pw-err">Incorrect password</div>
+  </div>
+</div>
+
+<div id="app" style="display:none;flex-direction:column;height:100vh;">
+  <div class="topbar">
+    <div class="topbar-logo">🌸 My Greek Wedding</div>
+    <button class="topbar-btn outline" onclick="openModal('add-couple-modal')">+ New Couple</button>
+    <button class="topbar-btn outline" onclick="loadCouples()">↻ Refresh</button>
+  </div>
+  <div class="body-wrap">
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <span id="couples-count">Couples</span>
+      </div>
+      <div id="couples-list"><div class="loading">Loading…</div></div>
+      <div class="couple-add" onclick="openModal('add-couple-modal')">＋ Add couple</div>
+    </div>
+    <div class="main-panel">
+      <div id="couple-header-wrap" style="padding:16px 24px 0;display:none;"></div>
+      <div class="tab-nav" id="tab-nav" style="display:none;">
+        <button class="tab-btn active" onclick="switchTab('overview',this)">♥ Overview</button>
+        <button class="tab-btn" onclick="switchTab('budget',this)">🐷 Budget</button>
+        <button class="tab-btn" onclick="switchTab('plan',this)">📋 Plan</button>
+        <button class="tab-btn" onclick="switchTab('media',this)">🖼 Media</button>
+        <button class="tab-btn" onclick="switchTab('chat',this)">💬 Chat</button>
+      </div>
+      <div class="tab-content" id="tab-content">
+        <div class="no-couple">
+          <div class="big">Select a couple to begin</div>
+          <p>Choose from the sidebar or create a new couple</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD COUPLE MODAL -->
+<div class="modal-overlay" id="add-couple-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">New Couple</div>
+      <button class="modal-close" onclick="closeModal('add-couple-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Partner 1 *</label><input class="form-input" id="f-p1" placeholder="e.g. Sarah"/></div>
+        <div class="form-group"><label class="form-label">Partner 2 *</label><input class="form-input" id="f-p2" placeholder="e.g. James"/></div>
+      </div>
+      <div class="form-group"><label class="form-label">Login Email *</label><input class="form-input" id="f-email" type="email" placeholder="couple@email.com"/></div>
+      <div class="form-group"><label class="form-label">Portal Password</label><input class="form-input" id="f-pass" placeholder="They'll use this to log in"/></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Wedding Date</label><input class="form-input" id="f-date" type="date"/></div>
+        <div class="form-group"><label class="form-label">Location</label><input class="form-input" id="f-loc" placeholder="e.g. Santorini"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Guests</label><input class="form-input" id="f-guests" type="number" placeholder="80"/></div>
+        <div class="form-group"><label class="form-label">Budget Goal (€)</label><input class="form-input" id="f-budget" type="number" placeholder="25000"/></div>
+      </div>
+      <div class="form-group"><label class="form-label">Internal Notes</label><textarea class="form-input" id="f-notes" rows="2" placeholder="Private planner notes…"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sm" onclick="closeModal('add-couple-modal')">Cancel</button>
+      <button class="btn-sm primary" onclick="createCouple()">Create Couple</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────
+const SB_URL = 'https://bfslgaalktrgtbxwbdlv.supabase.co';
+const SB_KEY = 'sb_publishable_DZt4P67RcstQs7i7fktNeA_iuh9MXnJ';
+
+const CATS = [
+  {key:'wedding_planning',label:'Wedding Planning',emoji:'💍'},
+  {key:'venue',label:'Venue',emoji:'🏛'},
+  {key:'officiants',label:'Officiants / Celebrant',emoji:'📜'},
+  {key:'photography',label:'Photography',emoji:'📸'},
+  {key:'videography',label:'Videography',emoji:'🎬'},
+  {key:'hair',label:'Hair',emoji:'💇'},
+  {key:'makeup',label:'Makeup',emoji:'💄'},
+  {key:'flowers',label:'Florist',emoji:'🌸'},
+  {key:'sound_light',label:'Sound & Lighting',emoji:'🔊'},
+  {key:'dj',label:'DJ',emoji:'🎵'},
+  {key:'band',label:'Band',emoji:'🎸'},
+  {key:'photo_booth',label:'Photobooth',emoji:'📷'},
+  {key:'pastries',label:'Pastries & Cake',emoji:'🎂'},
+  {key:'rentals',label:'Rentals',emoji:'🪑'},
+  {key:'printing',label:'Printing / Stationery',emoji:'🖨'},
+  {key:'transportation',label:'Transportation',emoji:'🚗'},
+  {key:'fireworks',label:'Fireworks',emoji:'🎆'},
+  {key:'food',label:'Catering',emoji:'🍽'},
+  {key:'bar',label:'Bar',emoji:'🍷'},
+  {key:'yacht',label:'Yacht',emoji:'⛵'},
+  {key:'favors',label:'Favors',emoji:'🎁'},
+];
+
+// ── STATE ─────────────────────────────────────────────────────────
+const S = {
+  couples:[], current:null,
+  coupleVendors:[], tasks:[], budgetItems:[], mediaFiles:[],
+  vendorCache:{}, currentThread:null, currentTab:'overview'
+};
+
+// ── SUPABASE HELPERS ──────────────────────────────────────────────
+async function sbGet(table, qs='') {
+  const r = await fetch(`${SB_URL}/rest/v1/${table}${qs?'?'+qs:''}`, {
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Accept':'application/json'}
+  });
+  const txt = await r.text();
+  if(!r.ok) throw new Error(`GET ${table}: ${txt}`);
+  return JSON.parse(txt);
+}
+async function sbPost(table, data) {
+  const r = await fetch(`${SB_URL}/rest/v1/${table}`, {
+    method:'POST',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'},
+    body:JSON.stringify(data)
+  });
+  const txt = await r.text();
+  if(!r.ok) throw new Error(`POST ${table}: ${txt}`);
+  return JSON.parse(txt);
+}
+async function sbPatch(table, filter, data) {
+  const r = await fetch(`${SB_URL}/rest/v1/${table}?${filter}`, {
+    method:'PATCH',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'},
+    body:JSON.stringify(data)
+  });
+  const txt = await r.text();
+  if(!r.ok) throw new Error(`PATCH ${table}: ${txt}`);
+  return JSON.parse(txt);
+}
+async function sbDelete(table, filter) {
+  const r = await fetch(`${SB_URL}/rest/v1/${table}?${filter}`, {
+    method:'DELETE',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
+  });
+  if(!r.ok) throw new Error(`DELETE ${table}: ${await r.text()}`);
+}
+
+// ── PASSWORD ──────────────────────────────────────────────────────
+function checkPw() {
+  if(document.getElementById('pw-input').value === 'Leenio') {
+    document.getElementById('pw-screen').style.display='none';
+    document.getElementById('app').style.display='flex';
+    loadCouples();
+  } else {
+    const e=document.getElementById('pw-err'); e.style.display='block';
+    setTimeout(()=>e.style.display='none',2000);
+  }
+}
+
+// ── COUPLES ───────────────────────────────────────────────────────
+async function loadCouples() {
+  try {
+    S.couples = await sbGet('couples','order=wedding_date.asc');
+    document.getElementById('couples-count').textContent = `Couples (${S.couples.length})`;
+    renderCoupleList();
+  } catch(e) { toast('Error loading couples: '+e.message, true); }
+}
+
+function renderCoupleList() {
+  const el = document.getElementById('couples-list');
+  if(!S.couples.length) { el.innerHTML='<div class="loading">No couples yet</div>'; return; }
+  el.innerHTML = S.couples.map(c=>{
+    const wd = c.wedding_date ? new Date(c.wedding_date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : 'TBD';
+    return `<div class="couple-item ${S.current?.id===c.id?'active':''}" onclick="selectCouple('${c.id}')">
+      <div class="couple-name">${c.partner1_name} & ${c.partner2_name}</div>
+      <div class="couple-date">${wd} · ${c.wedding_location||'—'}</div>
+    </div>`;
+  }).join('');
+}
+
+async function selectCouple(id) {
+  S.current = S.couples.find(c=>c.id===id);
+  renderCoupleList();
+  document.getElementById('tab-nav').style.display='flex';
+  document.getElementById('couple-header-wrap').style.display='block';
+  await loadCoupleData();
+  renderHeader();
+  switchTabDirect('overview');
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+}
+
+async function loadCoupleData() {
+  if(!S.current) return;
+  const id = S.current.id;
+  try {
+    [S.coupleVendors, S.tasks, S.budgetItems, S.mediaFiles] = await Promise.all([
+      sbGet('couple_vendors',`couple_id=eq.${id}&order=created_at.asc`).catch(()=>[]),
+      sbGet('tasks',`couple_id=eq.${id}&order=due_date.asc`).catch(()=>[]),
+      sbGet('budget_items',`couple_id=eq.${id}&order=sort_order.asc`).catch(()=>[]),
+      sbGet('media_files',`couple_id=eq.${id}&order=created_at.desc`).catch(()=>[]),
+    ]);
+    // resolve vendor names
+    const ids = [...new Set(S.coupleVendors.map(v=>v.vendor_id).filter(v=>!S.vendorCache[v]))];
+    if(ids.length) {
+      const vlist = await sbGet('vendors',`id=in.(${ids.map(i=>`"${i}"`).join(',')})&select=id,name,category,region,price_range`).catch(()=>[]);
+      vlist.forEach(v=>S.vendorCache[v.id]=v);
+    }
+  } catch(e) { toast('Error loading data: '+e.message, true); }
+}
+
+function renderHeader() {
+  const c = S.current;
+  const wd = c.wedding_date ? new Date(c.wedding_date) : null;
+  const days = wd ? Math.ceil((wd-new Date())/86400000) : null;
+  const booked = S.coupleVendors.filter(v=>v.status==='booked').length;
+  const pending = S.tasks.filter(t=>!t.completed).length;
+  document.getElementById('couple-header-wrap').innerHTML = `
+    <div class="couple-header">
+      <div>
+        <div class="couple-header-name">${c.partner1_name} & ${c.partner2_name}</div>
+        <div class="couple-header-detail">
+          ${c.wedding_location||''} · ${wd?wd.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}):'Date TBD'}
+          · ${c.guest_count||'?'} guests${days!==null?' · '+(days>0?days+' days to go':'Wedding passed'):''}
+        </div>
+      </div>
+      <div class="couple-header-stats">
+        <div class="stat-item"><div class="stat-val">${booked}</div><div class="stat-label">Booked</div></div>
+        <div class="stat-item"><div class="stat-val">${S.coupleVendors.length}</div><div class="stat-label">Vendors</div></div>
+        <div class="stat-item"><div class="stat-val">${pending}</div><div class="stat-label">Tasks</div></div>
+        <div class="stat-item"><div class="stat-val">€${(c.budget_goal||0).toLocaleString()}</div><div class="stat-label">Budget</div></div>
+      </div>
+    </div>`;
+}
+
+// ── TABS ──────────────────────────────────────────────────────────
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  switchTabDirect(tab);
+}
+function switchTabDirect(tab) {
+  S.currentTab = tab;
+  const el = document.getElementById('tab-content');
+  if(tab==='overview') el.innerHTML = buildOverview();
+  else if(tab==='budget') el.innerHTML = buildBudget();
+  else if(tab==='plan') el.innerHTML = buildPlan();
+  else if(tab==='media') el.innerHTML = buildMedia();
+  else if(tab==='chat') { el.innerHTML = buildChat(); initChat(); }
+}
+
+// ── OVERVIEW ──────────────────────────────────────────────────────
+function buildOverview() {
+  let h = `<div class="section-toolbar"><h2>Wedding Overview</h2></div>`;
+  CATS.forEach(cat=>{
+    const cvs = S.coupleVendors.filter(cv=>cv.category===cat.key);
+    const decided = cvs.some(cv=>cv.status==='booked'||cv.status==='decided');
+    const chips = cvs.length
+      ? cvs.map(cv=>{
+          const v = S.vendorCache[cv.vendor_id];
+          const name = v?v.name:cv.vendor_id;
+          return `<div class="vendor-chip" onclick="openVendorDetail('${cv.id}')">
+            <span class="chip-dot ${cv.status}"></span>${name}
+            <span style="font-size:0.68rem;color:var(--light)">${cv.status}</span>
+          </div>`;
+        }).join('')
+      : `<div class="cat-no-vendors">No vendors assigned yet</div>`;
+
+    h += `<div class="category-row">
+      <div class="cat-row-header" onclick="toggleCat(this)">
+        <span class="cat-emoji">${cat.emoji}</span>
+        <span class="cat-name">${cat.label}</span>
+        <span class="cat-status ${decided?'decided':'draft'}">${decided?'✓ Decided':'DRAFT'}</span>
+        <div class="cat-actions" onclick="event.stopPropagation()">
+          <button class="cat-icon-btn" title="Compare" onclick="openCompare('${cat.key}','${cat.label}')">⊞</button>
+          <button class="cat-icon-btn" title="Chat" onclick="goToChat('${cat.key}')">💬</button>
+        </div>
+        <span class="cat-chevron">▾</span>
+      </div>
+      <div class="cat-body">
+        <div class="vendor-chips">${chips}</div>
+        <div class="vendor-search-wrap" style="max-width:360px">
+          <input type="text" placeholder="🔍 Search & assign vendor…"
+            oninput="searchVendors(this,'${cat.key}')"
+            onfocus="showDd('${cat.key}')"
+            onblur="setTimeout(()=>hideDd('${cat.key}'),220)"/>
+          <div class="vendor-dropdown" id="dd-${cat.key}" style="display:none"></div>
+        </div>
+      </div>
+    </div>`;
+  });
+  return h;
+}
+
+function toggleCat(header) {
+  header.nextElementSibling.classList.toggle('open');
+  header.querySelector('.cat-chevron').classList.toggle('open');
+}
+function showDd(k){const d=document.getElementById('dd-'+k);if(d)d.style.display='block';}
+function hideDd(k){const d=document.getElementById('dd-'+k);if(d)d.style.display='none';}
+
+async function searchVendors(input, catKey) {
+  const q = input.value.trim();
+  const dd = document.getElementById('dd-'+catKey);
+  if(!dd) return;
+  if(q.length < 2) { dd.innerHTML=''; return; }
+  try {
+    // Search across ALL vendors (not filtering by category so user can find any vendor)
+    const res = await sbGet('vendors',`name=ilike.*${encodeURIComponent(q)}*&select=id,name,category,region&limit=10`);
+    if(!res.length) { dd.innerHTML='<div class="vendor-dd-item" style="color:var(--light)">No results</div>'; return; }
+    dd.innerHTML = res.map(v=>{
+      const safeId = v.id.replace(/'/g,"\\'");
+      const safeName = v.name.replace(/'/g,"\\'");
+      return `<div class="vendor-dd-item" onmousedown="assignVendor('${safeId}','${catKey}','${safeName}')">
+        ${v.name}<span class="vendor-dd-cat">${v.category||''} ${v.region?'· '+v.region:''}</span>
+      </div>`;
+    }).join('');
+  } catch(e) { dd.innerHTML=`<div class="vendor-dd-item" style="color:var(--rose)">Error: ${e.message}</div>`; }
+}
+
+async function assignVendor(vendorId, category, vendorName) {
+  if(S.coupleVendors.find(cv=>cv.vendor_id===vendorId)) { toast('Already assigned'); return; }
+  try {
+    const res = await sbPost('couple_vendors',{
+      couple_id:S.current.id, vendor_id:vendorId, category, status:'suggested'
+    });
+    S.coupleVendors.push(res[0]);
+    if(!S.vendorCache[vendorId]) S.vendorCache[vendorId]={id:vendorId,name:vendorName,category};
+    toast(`${vendorName} assigned! ✓`);
+    switchTabDirect('overview');
+  } catch(e) { toast('Error assigning vendor: '+e.message, true); }
+}
+
+async function openVendorDetail(cvId) {
+  const cv = S.coupleVendors.find(c=>c.id===cvId);
+  if(!cv) return;
+  const v = S.vendorCache[cv.vendor_id];
+  const name = v?v.name:cv.vendor_id;
+  const statuses = ['suggested','shortlisted','decided','booked','rejected'];
+  const opts = statuses.map(s=>`<option value="${s}"${cv.status===s?' selected':''}>${s.charAt(0).toUpperCase()+s.slice(1)}</option>`).join('');
+  const hearts = n=>[1,2,3,4,5].map(i=>`<span style="cursor:pointer;font-size:1.1rem;color:${i<=n?'var(--rose)':'var(--border-strong)'}" onmousedown="setRating('${cvId}',${i})">♥</span>`).join('');
+  showModal('modal-vendor',`${name}`,`
+    <div class="form-group">
+      <label class="form-label">Status</label>
+      <select class="form-input" onchange="updateCV('${cvId}','status',this.value)">${opts}</select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Rating</label>
+      <div id="hearts-${cvId}">${hearts(cv.rating||0)}</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Price Quoted (€)</label>
+      <input class="form-input" type="number" value="${cv.price_quoted||''}" placeholder="0" onchange="updateCV('${cvId}','price_quoted',this.value)"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Admin Notes <span style="color:var(--rose);font-size:0.7rem">(hidden from couple)</span></label>
+      <textarea class="form-input" rows="2" onchange="updateCV('${cvId}','admin_notes',this.value)">${cv.admin_notes||''}</textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Couple Notes</label>
+      <textarea class="form-input" rows="2" onchange="updateCV('${cvId}','couple_notes',this.value)">${cv.couple_notes||''}</textarea>
+    </div>
+    <div style="margin-top:14px;display:flex;justify-content:space-between">
+      <button class="btn-sm" style="color:var(--rose);border-color:rgba(201,122,122,0.4)" onclick="removeVendor('${cvId}')">Remove Vendor</button>
+      <button class="btn-sm primary" onclick="closeModal('modal-vendor')">Done</button>
+    </div>
+  `);
+}
+
+async function setRating(cvId, r) {
+  await updateCV(cvId,'rating',r);
+  const el = document.getElementById('hearts-'+cvId);
+  if(el) el.innerHTML=[1,2,3,4,5].map(i=>`<span style="cursor:pointer;font-size:1.1rem;color:${i<=r?'var(--rose)':'var(--border-strong)'}" onmousedown="setRating('${cvId}',${i})">♥</span>`).join('');
+}
+
+async function updateCV(cvId, field, value) {
+  const cv = S.coupleVendors.find(c=>c.id===cvId);
+  if(!cv) return;
+  cv[field] = value;
+  await sbPatch('couple_vendors',`id=eq.${cvId}`,{[field]:value}).catch(e=>toast('Save error: '+e.message,true));
+}
+
+async function removeVendor(cvId) {
+  if(!confirm('Remove this vendor?')) return;
+  await sbDelete('couple_vendors',`id=eq.${cvId}`).catch(e=>toast('Error: '+e.message,true));
+  S.coupleVendors = S.coupleVendors.filter(c=>c.id!==cvId);
+  closeModal('modal-vendor');
+  toast('Vendor removed');
+  switchTabDirect('overview');
+}
+
+function openCompare(catKey, catLabel) {
+  const cvs = S.coupleVendors.filter(cv=>cv.category===catKey);
+  if(!cvs.length) { toast('No vendors in this category yet'); return; }
+  const cards = cvs.map(cv=>{
+    const v = S.vendorCache[cv.vendor_id];
+    return `<div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;min-width:160px;flex:1">
+      <div style="font-weight:500;margin-bottom:4px">${v?v.name:cv.vendor_id}</div>
+      <div style="font-size:0.73rem;color:var(--mid);margin-bottom:6px">${cv.status}</div>
+      <div>${[1,2,3,4,5].map(i=>`<span style="color:${i<=(cv.rating||0)?'var(--rose)':'var(--border-strong)'}">♥</span>`).join('')}</div>
+      ${cv.price_quoted?`<div style="margin-top:7px;font-weight:500;color:var(--gold-dark)">€${Number(cv.price_quoted).toLocaleString()}</div>`:''}
+      ${cv.admin_notes?`<div style="font-size:0.72rem;color:var(--mid);margin-top:5px">${cv.admin_notes}</div>`:''}
+    </div>`;
+  }).join('');
+  showModal('modal-compare',`Compare — ${catLabel}`,`<div style="display:flex;gap:10px;flex-wrap:wrap">${cards}</div>`);
+}
+
+function goToChat(catKey) {
+  switchTab('chat', document.querySelectorAll('.tab-btn')[4]);
+  setTimeout(()=>selectThread(catKey),300);
+}
+
+// ── BUDGET ────────────────────────────────────────────────────────
+function buildBudget() {
+  let totPend=0,totPaid=0,totActual=0;
+  CATS.forEach(cat=>{
+    S.budgetItems.filter(b=>b.category===cat.key).forEach(b=>{
+      totPaid+=Number(b.amount_paid||0);
+      totActual+=Number(b.item_price||0);
+    });
+  });
+  totPend=totActual-totPaid;
+  const goal=Number(S.current.budget_goal||0);
+
+  let h=`<div class="section-toolbar"><h2>Budget</h2></div>
+  <div class="budget-summary">
+    <div class="budget-card pending"><div class="val">€${totPend.toLocaleString()}</div><div class="lbl">Pending</div></div>
+    <div class="budget-card paid"><div class="val">€${totPaid.toLocaleString()}</div><div class="lbl">Paid</div></div>
+    <div class="budget-card"><div class="val">€${goal.toLocaleString()}</div><div class="lbl">Goal</div></div>
+    <div class="budget-card ${totActual>goal&&goal>0?'over':''}"><div class="val">€${totActual.toLocaleString()}</div><div class="lbl">Actual</div></div>
+  </div>
+  <div class="budget-col-labels"><span>Category</span><span>Pending</span><span>Paid</span><span>Goal</span><span>Actual</span><span></span></div>`;
+
+  CATS.forEach(cat=>{
+    const items=S.budgetItems.filter(b=>b.category===cat.key);
+    let catPaid=0,catAct=0;
+    items.forEach(b=>{catPaid+=Number(b.amount_paid||0);catAct+=Number(b.item_price||0);});
+    const catPend=catAct-catPaid;
+    const decided=items.some(b=>b.status==='decided');
+    h+=`<div class="budget-row">
+      <div class="budget-row-header" onclick="this.nextElementSibling.classList.toggle('open')">
+        <span class="bcol name">${cat.emoji} ${cat.label} <span class="cat-status ${decided?'decided':'draft'}">${decided?'✓':'DRAFT'}</span></span>
+        <span class="bcol">€${catPend.toLocaleString()}</span>
+        <span class="bcol" style="color:var(--green)">€${catPaid.toLocaleString()}</span>
+        <span class="bcol">€${catAct.toLocaleString()}</span>
+        <span class="bcol ${catAct>catPaid&&catAct>0&&catAct>catAct?'over':''}">€${catAct.toLocaleString()}</span>
+        <span style="color:var(--light);font-size:0.75rem">▾</span>
+      </div>
+      <div class="budget-body">
+        ${items.map(b=>`<div class="bi-row">
+          <span style="color:var(--mid)">${b.item_name}</span>
+          <span class="bi-comm">(+${b.commission_rate||0}%)</span>
+          <span>€${Number(b.item_price||0).toLocaleString()}</span>
+          <button class="cat-icon-btn" onmousedown="removeBudgetItem('${b.id}')">✕</button>
+        </div>`).join('')}
+        <div class="budget-add-row" style="margin-top:10px">
+          <input id="bi-n-${cat.key}" placeholder="Item name" style="flex:2;min-width:120px"/>
+          <input id="bi-p-${cat.key}" type="number" placeholder="Price €" style="width:90px"/>
+          <input id="bi-c-${cat.key}" type="number" placeholder="Comm %" style="width:80px"/>
+          <button class="btn-sm primary" onclick="addBudgetItem('${cat.key}')">＋ Add</button>
+        </div>
+      </div>
+    </div>`;
+  });
+  return h;
+}
+
+async function addBudgetItem(catKey) {
+  const name=document.getElementById(`bi-n-${catKey}`)?.value.trim();
+  const price=parseFloat(document.getElementById(`bi-p-${catKey}`)?.value)||0;
+  const comm=parseFloat(document.getElementById(`bi-c-${catKey}`)?.value)||0;
+  if(!name){toast('Enter item name');return;}
+  try {
+    const res=await sbPost('budget_items',{couple_id:S.current.id,category:catKey,item_name:name,item_price:price,commission_rate:comm,sort_order:S.budgetItems.length});
+    S.budgetItems.push(res[0]);
+    toast('Item added!');
+    switchTabDirect('budget');
+  } catch(e){toast('Error: '+e.message,true);}
+}
+async function removeBudgetItem(id) {
+  await sbDelete('budget_items',`id=eq.${id}`).catch(e=>toast('Error: '+e.message,true));
+  S.budgetItems=S.budgetItems.filter(b=>b.id!==id);
+  switchTabDirect('budget');
+}
+
+// ── PLAN ──────────────────────────────────────────────────────────
+function buildPlan() {
+  let h=`<div class="section-toolbar">
+    <h2>Timeline & Tasks</h2>
+    <button class="btn-sm primary" onclick="document.getElementById('task-form-wrap').style.display='block'">＋ Add Task</button>
+  </div>
+  <div class="task-form-wrap" id="task-form-wrap" style="display:none">
+    <div class="task-form">
+      <input id="t-title" placeholder="Task title…"/>
+      <select id="t-cat"><option value="">Category…</option>${CATS.map(c=>`<option value="${c.key}">${c.label}</option>`).join('')}</select>
+      <input id="t-due" type="date"/>
+      <button class="btn-sm primary" onclick="addTask()">Save</button>
+      <button class="btn-sm" onclick="document.getElementById('task-form-wrap').style.display='none'">Cancel</button>
+    </div>
+  </div>`;
+
+  const tasks=[...S.tasks].sort((a,b)=>(a.due_date||'9999')>(b.due_date||'9999')?1:-1);
+  if(!tasks.length) return h+`<div class="empty-state"><div class="icon">📋</div><p>No tasks yet</p></div>`;
+
+  const groups={};
+  tasks.forEach(t=>{
+    const k=t.due_date?t.due_date.slice(0,7):'no-date';
+    (groups[k]=groups[k]||[]).push(t);
+  });
+
+  Object.entries(groups).forEach(([k,gt])=>{
+    const label=k==='no-date'?'No Date':new Date(k+'-01').toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+    h+=`<div class="month-group"><div class="month-label">${label}</div>`;
+    gt.forEach(t=>{
+      const od=t.due_date&&!t.completed&&new Date(t.due_date)<new Date();
+      h+=`<div class="plan-item">
+        <div class="plan-check ${t.completed?'done':''}" onclick="toggleTask('${t.id}',${!!t.completed})">${t.completed?'✓':''}</div>
+        <div class="plan-title ${t.completed?'done':''}">${t.title}
+          ${t.category?`<span class="plan-cat">${CATS.find(c=>c.key===t.category)?.label||t.category}</span>`:''}
+        </div>
+        <div class="plan-date ${od?'overdue':''}">${t.due_date?new Date(t.due_date).toLocaleDateString('en-GB',{day:'numeric',month:'short'}):''} ${od?'⚠️':''}</div>
+        <button class="cat-icon-btn" onclick="deleteTask('${t.id}')" style="margin-left:6px;flex-shrink:0">✕</button>
+      </div>`;
+    });
+    h+=`</div>`;
+  });
+  return h;
+}
+
+async function addTask() {
+  const title=document.getElementById('t-title').value.trim();
+  const cat=document.getElementById('t-cat').value;
+  const due=document.getElementById('t-due').value;
+  if(!title){toast('Enter task title');return;}
+  try {
+    const res=await sbPost('tasks',{couple_id:S.current.id,title,category:cat||null,due_date:due||null});
+    S.tasks.push(res[0]);
+    toast('Task added!');
+    switchTabDirect('plan');
+  } catch(e){toast('Error: '+e.message,true);}
+}
+async function toggleTask(id, done) {
+  const t=S.tasks.find(t=>t.id===id);
+  if(!t)return;
+  t.completed=!done;
+  await sbPatch('tasks',`id=eq.${id}`,{completed:!done,completed_at:!done?new Date().toISOString():null}).catch(e=>toast('Error: '+e.message,true));
+  switchTabDirect('plan');
+}
+async function deleteTask(id) {
+  if(!confirm('Delete task?'))return;
+  await sbDelete('tasks',`id=eq.${id}`).catch(e=>toast('Error: '+e.message,true));
+  S.tasks=S.tasks.filter(t=>t.id!==id);
+  switchTabDirect('plan');
+}
+
+// ── MEDIA ─────────────────────────────────────────────────────────
+function buildMedia() {
+  const icons={contract:'📄',invoice:'🧾',proof_of_payment:'✅',offer:'📋',other:'📎'};
+  let h=`<div class="section-toolbar"><h2>Media & Documents</h2></div>
+  <div class="media-upload-zone" onclick="toast('File upload coming soon — needs Supabase Storage setup')">
+    <div style="font-size:2rem;margin-bottom:8px">☁️</div>
+    <div style="font-size:0.85rem;color:var(--mid)">Click to upload — contracts, invoices, offers, photos</div>
+    <div style="font-size:0.72rem;color:var(--light);margin-top:5px">PDF, DOCX, PPTX, JPG, PNG</div>
+  </div>`;
+  if(!S.mediaFiles.length) return h+`<div class="empty-state"><div class="icon">🖼</div><p>No files uploaded yet</p></div>`;
+  h+=`<div class="media-grid">${S.mediaFiles.map(f=>`
+    <div class="media-card">
+      <div style="font-size:1.8rem;margin-bottom:7px">${icons[f.file_type]||'📎'}</div>
+      <div style="font-size:0.78rem;font-weight:500;word-break:break-all">${f.file_name}</div>
+      <div style="font-size:0.7rem;color:var(--light);margin-top:3px">${f.file_type||'file'} · ${new Date(f.created_at).toLocaleDateString()}</div>
+      <div style="margin-top:5px;font-size:0.7rem;color:${f.visible_to_couple?'var(--green)':'var(--rose)'}">${f.visible_to_couple?'👁 Couple can see':'🔒 Planner only'}</div>
+    </div>`).join('')}</div>`;
+  return h;
+}
+
+// ── CHAT ──────────────────────────────────────────────────────────
+function buildChat() {
+  return `<div class="chat-wrap">
+    <div class="chat-sidebar">
+      <div style="padding:10px 12px;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--light);border-bottom:1px solid var(--border)">Threads</div>
+      <div id="thread-list"></div>
+    </div>
+    <div class="chat-area">
+      <div class="chat-header" id="chat-hd">Select a thread</div>
+      <div class="chat-messages" id="chat-msgs"><div style="margin:auto;color:var(--light);font-size:0.82rem">Pick a category to start</div></div>
+      <div class="chat-input-wrap" id="chat-input-wrap" style="display:none">
+        <input id="chat-in" placeholder="Type a message…" onkeydown="if(event.key==='Enter')sendMsg()"/>
+        <button class="chat-send" onclick="sendMsg()">➤</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function initChat() {
+  const el=document.getElementById('thread-list');
+  if(!el) return;
+  let h=`<div class="chat-thread-item" onclick="selectThread('general',null,'💬 General Chat')">
+    <div class="chat-thread-name">💬 General Chat</div>
+  </div>`;
+  CATS.forEach(cat=>{
+    const cvs=S.coupleVendors.filter(cv=>cv.category===cat.key);
+    h+=`<div class="chat-thread-item" onclick="selectThread('${cat.key}',null,'${cat.emoji} ${cat.label}')">
+      <div class="chat-thread-name">${cat.emoji} ${cat.label}</div>
+    </div>`;
+    cvs.forEach(cv=>{
+      const v=S.vendorCache[cv.vendor_id];
+      if(v) h+=`<div class="chat-vendor-item" onclick="selectThread('${cat.key}','${cv.vendor_id}','${v.name}')">
+        <div class="chat-vendor-name">› ${v.name}</div>
+      </div>`;
+    });
+  });
+  el.innerHTML=h;
+}
+
+async function selectThread(catKey, vendorId, title) {
+  S.currentThread={catKey,vendorId};
+  document.getElementById('chat-hd').textContent=title||catKey;
+  document.getElementById('chat-input-wrap').style.display='flex';
+  document.querySelectorAll('.chat-thread-item,.chat-vendor-item').forEach(e=>e.classList.remove('active'));
+  try {
+    const cat = vendorId ? `${catKey}_${vendorId}` : catKey;
+    const msgs=await sbGet('messages',`couple_id=eq.${S.current.id}&category=eq.${cat}&order=created_at.asc`);
+    const el=document.getElementById('chat-msgs');
+    if(!msgs.length){el.innerHTML='<div style="margin:auto;color:var(--light);font-size:0.82rem">No messages yet</div>';return;}
+    el.innerHTML=msgs.map(m=>`<div class="chat-msg ${m.sender}">
+      <div>${m.content}</div>
+      <div class="chat-msg-meta">${m.sender_name||m.sender} · ${new Date(m.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</div>
+    </div>`).join('');
+    el.scrollTop=el.scrollHeight;
+  } catch(e){toast('Error loading messages: '+e.message,true);}
+}
+
+async function sendMsg() {
+  const inp=document.getElementById('chat-in');
+  const content=inp.value.trim();
+  if(!content||!S.currentThread)return;
+  const {catKey,vendorId}=S.currentThread;
+  const category=vendorId?`${catKey}_${vendorId}`:catKey;
+  try {
+    await sbPost('messages',{couple_id:S.current.id,sender:'planner',sender_name:'Niovi',content,category,read_by_couple:false,read_by_planner:true});
+    inp.value='';
+    await selectThread(catKey,vendorId,document.getElementById('chat-hd').textContent);
+  } catch(e){toast('Error: '+e.message,true);}
+}
+
+// ── CREATE COUPLE ─────────────────────────────────────────────────
+async function createCouple() {
+  const p1=document.getElementById('f-p1').value.trim();
+  const p2=document.getElementById('f-p2').value.trim();
+  const email=document.getElementById('f-email').value.trim();
+  if(!p1||!p2||!email){toast('Fill required fields');return;}
+  try {
+    const res=await sbPost('couples',{
+      partner1_name:p1,partner2_name:p2,name:`${p1} & ${p2}`,email,
+      password_hash:document.getElementById('f-pass').value||'',
+      wedding_date:document.getElementById('f-date').value||null,
+      wedding_location:document.getElementById('f-loc').value||null,
+      guest_count:parseInt(document.getElementById('f-guests').value)||null,
+      budget_goal:parseFloat(document.getElementById('f-budget').value)||null,
+      notes:document.getElementById('f-notes').value||null,
+    });
+    S.couples.push(res[0]);
+    closeModal('add-couple-modal');
+    renderCoupleList();
+    toast('Couple created! 🌸');
+    selectCouple(res[0].id);
+  } catch(e){toast('Error: '+e.message,true);}
+}
+
+// ── MODALS ────────────────────────────────────────────────────────
+const _modals={};
+function showModal(id,title,body){
+  let el=document.getElementById('dyn-'+id);
+  if(!el){
+    el=document.createElement('div');
+    el.id='dyn-'+id;
+    el.className='modal-overlay';
+    el.addEventListener('click',e=>{if(e.target===el)el.classList.remove('open');});
+    document.body.appendChild(el);
+  }
+  el.innerHTML=`<div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">${title}</div>
+      <button class="modal-close" onclick="closeModal('dyn-${id}')">✕</button>
+    </div>
+    <div class="modal-body">${body}</div>
+  </div>`;
+  el.classList.add('open');
+}
+function openModal(id){document.getElementById(id)?.classList.add('open');}
+function closeModal(id){document.getElementById(id)?.classList.remove('open');}
+document.addEventListener('click',e=>{if(e.target.classList.contains('modal-overlay'))e.target.classList.remove('open');});
+
+// ── TOAST ─────────────────────────────────────────────────────────
+function toast(msg,err=false,dur=3000){
+  const el=document.getElementById('toast');
+  el.textContent=msg;
+  el.className=err?'show err':'show';
+  clearTimeout(el._t);
+  el._t=setTimeout(()=>el.className='',dur);
+}
+
+// ── INIT ──────────────────────────────────────────────────────────
+document.getElementById('pw-input').addEventListener('keydown',e=>{if(e.key==='Enter')checkPw();});
+</script>
+</body>
+</html>
