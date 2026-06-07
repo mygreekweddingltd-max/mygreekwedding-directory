@@ -771,6 +771,8 @@ async function lockInVendor(cvId, catKey) {
     switchTabDirect('overview');
   } catch(e) { toast('Error: '+e.message, true); }
 }
+
+async function removeVendor(cvId) {
   if(!confirm('Remove this vendor?')) return;
   await sbDelete('couple_vendors',`id=eq.${cvId}`).catch(e=>toast('Error: '+e.message,true));
   S.coupleVendors = S.coupleVendors.filter(c=>c.id!==cvId);
