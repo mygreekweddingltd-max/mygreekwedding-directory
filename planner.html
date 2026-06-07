@@ -7,192 +7,262 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root {
-  --bg:#FDFAF5;--surface:#FFFFFF;--surface2:#F5F0E8;--ink:#1A1714;--mid:#6B6052;--light:#A09080;
-  --gold:#C9A96E;--gold-light:#F0E6D3;--gold-dark:#A8864A;--rose:#C97A7A;--rose-light:#F5E8E8;
-  --green:#5A8A5A;--green-light:#E8F2E8;--blue:#5A7A9A;--blue-light:#E8EFF5;
-  --border:rgba(201,169,110,0.2);--border-strong:rgba(201,169,110,0.35);
-  --shadow:0 2px 20px rgba(26,23,20,0.08);--shadow-lg:0 8px 40px rgba(26,23,20,0.12);
-  --radius:14px;--radius-sm:9px;
+  --bg: #FDFAF5;
+  --surface: #FFFFFF;
+  --surface2: #F5F0E8;
+  --ink: #1A1714;
+  --mid: #6B6052;
+  --light: #A09080;
+  --gold: #C9A96E;
+  --gold-light: #F0E6D3;
+  --gold-dark: #A8864A;
+  --rose: #C97A7A;
+  --rose-light: #F5E8E8;
+  --green: #5A8A5A;
+  --green-light: #E8F2E8;
+  --blue: #5A7A9A;
+  --blue-light: #E8EFF5;
+  --border: rgba(201,169,110,0.2);
+  --border-strong: rgba(201,169,110,0.35);
+  --shadow: 0 2px 20px rgba(26,23,20,0.08);
+  --shadow-lg: 0 8px 40px rgba(26,23,20,0.12);
+  --radius: 14px;
+  --radius-sm: 9px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Jost',sans-serif;font-weight:300;background:var(--bg);color:var(--ink);min-height:100vh;}
+
+/* ── PASSWORD SCREEN ── */
 #pw-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:24px;}
-.pw-logo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:2.4rem;color:var(--gold);}
+.pw-logo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:2.4rem;color:var(--gold);letter-spacing:0.02em;}
 .pw-sub{font-size:0.8rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--light);}
 .pw-box{background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius);padding:32px 40px;display:flex;flex-direction:column;gap:16px;width:320px;box-shadow:var(--shadow);}
 .pw-box input{border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:10px 14px;font-family:'Jost',sans-serif;font-size:0.9rem;outline:none;background:var(--bg);width:100%;}
 .pw-box input:focus{border-color:var(--gold);}
-.pw-box button{background:var(--gold);color:#fff;border:none;border-radius:var(--radius-sm);padding:11px;font-family:'Jost',sans-serif;font-weight:500;font-size:0.9rem;cursor:pointer;}
+.pw-box button{background:var(--gold);color:#fff;border:none;border-radius:var(--radius-sm);padding:11px;font-family:'Jost',sans-serif;font-weight:500;font-size:0.9rem;cursor:pointer;transition:background 0.2s;}
 .pw-box button:hover{background:var(--gold-dark);}
 .pw-err{color:var(--rose);font-size:0.8rem;text-align:center;display:none;}
+
+/* ── MAIN LAYOUT ── */
 #app{display:none;height:100vh;overflow:hidden;flex-direction:column;}
-.topbar{height:56px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0;}
+
+/* ── TOP BAR ── */
+.topbar{height:56px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:16px;flex-shrink:0;}
 .topbar-logo{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);font-size:1.4rem;flex:1;}
-.topbar-btn{background:var(--gold);color:#fff;border:none;border-radius:var(--radius-sm);padding:7px 14px;font-family:'Jost',sans-serif;font-size:0.8rem;font-weight:500;cursor:pointer;}
+.topbar-couple-selector{position:relative;}
+.topbar-couple-selector select{border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:7px 32px 7px 12px;font-family:'Jost',sans-serif;font-size:0.85rem;background:var(--bg);color:var(--ink);cursor:pointer;outline:none;appearance:none;}
+.topbar-couple-selector::after{content:'▾';position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--mid);pointer-events:none;font-size:0.75rem;}
+.topbar-badge{background:var(--rose-light);color:var(--rose);border-radius:20px;padding:3px 10px;font-size:0.75rem;}
+.topbar-btn{background:var(--gold);color:#fff;border:none;border-radius:var(--radius-sm);padding:7px 14px;font-family:'Jost',sans-serif;font-size:0.8rem;font-weight:500;cursor:pointer;transition:background 0.2s;}
 .topbar-btn:hover{background:var(--gold-dark);}
 .topbar-btn.outline{background:transparent;color:var(--gold);border:1px solid var(--border-strong);}
 .topbar-btn.outline:hover{background:var(--gold-light);}
+
+/* ── BODY LAYOUT ── */
 .body-wrap{display:flex;flex:1;overflow:hidden;}
+
+/* ── LEFT SIDEBAR: couples list ── */
 .sidebar{width:220px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;}
-.sidebar-header{padding:14px 16px;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--light);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-.couple-item{padding:11px 16px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.15s;}
+.sidebar-header{padding:16px;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--light);border-bottom:1px solid var(--border);}
+.couple-item{padding:12px 16px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.15s;}
 .couple-item:hover{background:var(--gold-light);}
 .couple-item.active{background:var(--gold-light);border-left:3px solid var(--gold);}
-.couple-name{font-weight:500;font-size:0.86rem;}
-.couple-date{font-size:0.73rem;color:var(--light);margin-top:2px;}
-.couple-add{padding:12px 16px;color:var(--gold);font-size:0.82rem;cursor:pointer;display:flex;align-items:center;gap:6px;border-top:1px solid var(--border);}
+.couple-name{font-weight:500;font-size:0.88rem;color:var(--ink);}
+.couple-date{font-size:0.75rem;color:var(--light);margin-top:2px;}
+.couple-add{padding:12px 16px;color:var(--gold);font-size:0.82rem;cursor:pointer;display:flex;align-items:center;gap:6px;}
 .couple-add:hover{background:var(--gold-light);}
+
+/* ── MAIN PANEL ── */
 .main-panel{flex:1;display:flex;flex-direction:column;overflow:hidden;}
-.tab-nav{background:var(--surface);border-bottom:1px solid var(--border);display:flex;padding:0 20px;gap:2px;flex-shrink:0;}
-.tab-btn{padding:13px 18px;font-family:'Jost',sans-serif;font-size:0.82rem;color:var(--mid);border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;}
+
+/* ── TAB NAV ── */
+.tab-nav{background:var(--surface);border-bottom:1px solid var(--border);display:flex;padding:0 24px;gap:4px;flex-shrink:0;}
+.tab-btn{padding:14px 20px;font-family:'Jost',sans-serif;font-size:0.82rem;font-weight:400;color:var(--mid);border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;display:flex;align-items:center;gap:6px;}
 .tab-btn:hover{color:var(--ink);}
 .tab-btn.active{color:var(--gold-dark);border-bottom-color:var(--gold);font-weight:500;}
-.tab-content{flex:1;overflow-y:auto;padding:20px 24px;overflow-x:visible;}
-.couple-header{background:var(--surface);border-radius:var(--radius);padding:18px 22px;border:1px solid var(--border);margin-bottom:18px;display:flex;align-items:center;gap:20px;}
-.couple-header-name{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-style:italic;}
-.couple-header-detail{font-size:0.8rem;color:var(--light);margin-top:3px;}
-.couple-header-stats{margin-left:auto;display:flex;gap:20px;}
+
+/* ── TAB CONTENT ── */
+.tab-content{flex:1;overflow-y:auto;padding:24px;}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+
+/* ── COUPLE HEADER ── */
+.couple-header{background:var(--surface);border-radius:var(--radius);padding:20px 24px;border:1px solid var(--border);margin-bottom:20px;display:flex;align-items:center;gap:24px;}
+.couple-header-name{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-style:italic;color:var(--ink);}
+.couple-header-detail{font-size:0.82rem;color:var(--light);margin-top:2px;}
+.couple-header-stats{margin-left:auto;display:flex;gap:24px;}
 .stat-item{text-align:center;}
-.stat-val{font-size:1.2rem;font-weight:500;color:var(--gold-dark);}
-.stat-label{font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--light);}
-/* overview */
-.section-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
-.section-toolbar h2{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-style:italic;flex:1;}
-.btn-sm{border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:6px 13px;font-family:'Jost',sans-serif;font-size:0.78rem;cursor:pointer;background:transparent;color:var(--mid);transition:all 0.15s;}
+.stat-val{font-size:1.3rem;font-weight:500;color:var(--gold-dark);}
+.stat-label{font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--light);}
+
+/* ── OVERVIEW TAB ── */
+.overview-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.overview-toolbar h2{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-style:italic;flex:1;}
+.btn-sm{border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:6px 14px;font-family:'Jost',sans-serif;font-size:0.78rem;cursor:pointer;background:transparent;color:var(--mid);transition:all 0.15s;}
 .btn-sm:hover{background:var(--gold-light);color:var(--gold-dark);border-color:var(--gold);}
 .btn-sm.primary{background:var(--gold);color:#fff;border-color:var(--gold);}
 .btn-sm.primary:hover{background:var(--gold-dark);}
-.category-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:7px;}
-.cat-row-header{display:flex;align-items:center;padding:11px 14px;cursor:pointer;gap:8px;transition:background 0.15s;}
+
+.category-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;overflow:hidden;}
+.cat-row-header{display:flex;align-items:center;padding:12px 16px;cursor:pointer;gap:10px;transition:background 0.15s;}
 .cat-row-header:hover{background:var(--surface2);}
-.cat-emoji{width:26px;text-align:center;font-size:1rem;}
-.cat-name{font-size:0.86rem;font-weight:500;flex:1;}
-.cat-status{font-size:0.68rem;padding:2px 8px;border-radius:20px;font-weight:500;}
+.cat-emoji{width:28px;text-align:center;font-size:1.1rem;}
+.cat-name{font-size:0.88rem;font-weight:500;flex:1;}
+.cat-status{font-size:0.7rem;padding:2px 9px;border-radius:20px;font-weight:500;}
 .cat-status.draft{background:#F0EDEA;color:var(--mid);}
 .cat-status.decided{background:var(--green-light);color:var(--green);}
-.cat-actions{display:flex;align-items:center;gap:6px;margin-left:auto;}
-.cat-icon-btn{width:26px;height:26px;border-radius:6px;border:1px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.8rem;color:var(--mid);transition:all 0.15s;}
-.cat-icon-btn:hover{background:var(--gold-light);border-color:var(--gold);}
-.cat-chevron{font-size:0.72rem;color:var(--light);transition:transform 0.2s;margin-left:4px;}
+.cat-actions{display:flex;align-items:center;gap:8px;margin-left:auto;}
+.cat-icon-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.85rem;transition:all 0.15s;color:var(--mid);}
+.cat-icon-btn:hover{background:var(--gold-light);border-color:var(--gold);color:var(--gold-dark);}
+.cat-chevron{font-size:0.75rem;color:var(--light);transition:transform 0.2s;}
 .cat-chevron.open{transform:rotate(180deg);}
-.cat-body{display:none;padding:10px 14px 14px;background:var(--surface2);border-top:1px solid var(--border);border-radius:0 0 var(--radius-sm) var(--radius-sm);}
+.cat-body{display:none;padding:0 16px 16px;background:var(--surface2);}
 .cat-body.open{display:block;}
-.vendor-chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px;}
-.vendor-chip{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:4px 11px;font-size:0.76rem;display:flex;align-items:center;gap:5px;cursor:pointer;}
+
+/* vendor chips in overview */
+.vendor-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+.vendor-chip{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:0.78rem;display:flex;align-items:center;gap:6px;cursor:pointer;}
 .vendor-chip:hover{border-color:var(--gold);background:var(--gold-light);}
-.chip-dot{width:6px;height:6px;border-radius:50%;display:inline-block;flex-shrink:0;}
-.chip-dot.suggested{background:var(--blue);}
-.chip-dot.shortlisted{background:var(--gold);}
-.chip-dot.decided{background:var(--green);}
-.chip-dot.booked{background:var(--green);}
-.chip-dot.rejected{background:var(--rose);}
-.cat-no-vendors{font-size:0.78rem;color:var(--light);padding:4px 0 8px;}
-/* vendor search dropdown */
+.chip-status{width:7px;height:7px;border-radius:50%;display:inline-block;}
+.chip-status.suggested{background:var(--blue);}
+.chip-status.shortlisted{background:var(--gold);}
+.chip-status.decided{background:var(--green);}
+.chip-status.booked{background:var(--green);}
+.chip-status.rejected{background:var(--rose);}
+.cat-no-vendors{font-size:0.8rem;color:var(--light);padding:12px 0;}
+
+/* add vendor in overview */
+.cat-add-vendor{margin-top:10px;}
 .vendor-search-wrap{position:relative;}
-.vendor-search-wrap input{width:100%;border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:7px 11px;font-family:'Jost',sans-serif;font-size:0.8rem;background:var(--surface);outline:none;}
+.vendor-search-wrap input{width:100%;border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:8px 12px;font-family:'Jost',sans-serif;font-size:0.82rem;background:var(--surface);outline:none;}
 .vendor-search-wrap input:focus{border-color:var(--gold);}
-.vendor-dropdown{position:fixed;background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius-sm);max-height:220px;overflow-y:auto;z-index:9999;box-shadow:0 8px 24px rgba(26,23,20,0.15);min-width:300px;}
-.vendor-dd-item{padding:8px 12px;font-size:0.8rem;cursor:pointer;border-bottom:1px solid var(--border);}
+.vendor-dropdown{position:absolute;top:100%;left:0;right:0;background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius-sm);max-height:200px;overflow-y:auto;z-index:100;box-shadow:var(--shadow);}
+.vendor-dd-item{padding:8px 12px;font-size:0.82rem;cursor:pointer;border-bottom:1px solid var(--border);}
 .vendor-dd-item:hover{background:var(--gold-light);}
 .vendor-dd-item:last-child{border-bottom:none;}
-.vendor-dd-cat{font-size:0.68rem;color:var(--light);margin-left:6px;}
-/* budget */
-.budget-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px;}
-.budget-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 18px;text-align:center;}
-.budget-card .val{font-size:1.3rem;font-weight:500;}
-.budget-card .lbl{font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--light);margin-top:2px;}
+
+/* ── BUDGET TAB ── */
+.budget-summary{display:flex;gap:12px;margin-bottom:20px;}
+.budget-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px 20px;flex:1;text-align:center;}
+.budget-card .val{font-size:1.4rem;font-weight:500;}
+.budget-card .lbl{font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--light);margin-top:2px;}
 .budget-card.over .val{color:var(--rose);}
 .budget-card.paid .val{color:var(--green);}
 .budget-card.pending .val{color:var(--gold-dark);}
-.budget-col-labels{display:grid;grid-template-columns:1fr 100px 100px 100px 100px 30px;gap:6px;padding:5px 14px;font-size:0.68rem;letter-spacing:0.07em;text-transform:uppercase;color:var(--light);}
-.budget-col-labels span:not(:first-child){text-align:right;}
-.budget-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:5px;overflow:hidden;}
-.budget-row-header{display:grid;grid-template-columns:1fr 100px 100px 100px 100px 30px;align-items:center;padding:10px 14px;gap:6px;cursor:pointer;transition:background 0.15s;}
+
+.budget-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:6px;overflow:hidden;}
+.budget-row-header{display:grid;grid-template-columns:1fr 100px 100px 100px 100px 36px;align-items:center;padding:12px 16px;gap:8px;cursor:pointer;}
 .budget-row-header:hover{background:var(--surface2);}
-.bcol{text-align:right;font-size:0.8rem;}
-.bcol.name{text-align:left;font-size:0.84rem;font-weight:500;display:flex;align-items:center;gap:7px;}
-.bcol.over{color:var(--rose);font-weight:500;}
-.budget-body{display:none;border-top:1px solid var(--border);background:var(--surface2);padding:10px 14px;}
+.budget-col{text-align:right;font-size:0.82rem;}
+.budget-col.name{text-align:left;font-weight:500;font-size:0.85rem;}
+.budget-col.over{color:var(--rose);font-weight:500;}
+.budget-col-label{text-align:right;font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--light);padding:6px 16px;display:grid;grid-template-columns:1fr 100px 100px 100px 100px 36px;}
+.budget-body{display:none;border-top:1px solid var(--border);background:var(--surface2);padding:12px 16px;}
 .budget-body.open{display:block;}
-.bi-row{display:grid;grid-template-columns:1fr auto auto auto;gap:8px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);font-size:0.78rem;}
-.bi-row:last-child{border-bottom:none;}
-.bi-comm{color:var(--green);font-size:0.72rem;}
-.budget-add-row{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap;}
-.budget-add-row input{border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:6px 10px;font-family:'Jost',sans-serif;font-size:0.78rem;background:var(--surface);outline:none;min-width:0;}
-.budget-add-row input:focus{border-color:var(--gold);}
-/* plan */
-.month-group{margin-bottom:22px;}
-.month-label{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;color:var(--gold-dark);margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--border);}
-.plan-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
+.budget-item-row{display:grid;grid-template-columns:1fr auto auto auto;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:0.8rem;}
+.budget-item-row:last-child{border-bottom:none;}
+.budget-item-name{color:var(--mid);}
+.budget-item-val{text-align:right;font-size:0.82rem;}
+.budget-commission{color:var(--green);font-size:0.75rem;}
+.budget-add-item{display:flex;gap:8px;margin-top:12px;}
+.budget-add-item input{flex:1;border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:7px 10px;font-family:'Jost',sans-serif;font-size:0.8rem;background:var(--surface);outline:none;}
+.budget-add-item input:focus{border-color:var(--gold);}
+
+/* ── PLAN TAB ── */
+.plan-toolbar{display:flex;gap:8px;margin-bottom:20px;align-items:center;}
+.plan-subtab{padding:7px 16px;border-radius:var(--radius-sm);border:1px solid var(--border);font-size:0.8rem;cursor:pointer;background:transparent;color:var(--mid);}
+.plan-subtab.active{background:var(--gold);color:#fff;border-color:var(--gold);}
+.month-group{margin-bottom:24px;}
+.month-label{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;color:var(--gold-dark);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.plan-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);}
 .plan-item:last-child{border-bottom:none;}
-.plan-check{width:19px;height:19px;border-radius:50%;border:2px solid var(--border-strong);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:1px;font-size:0.65rem;}
-.plan-check.done{background:var(--green);border-color:var(--green);color:#fff;}
-.plan-title{font-size:0.84rem;flex:1;}
+.plan-check{width:20px;height:20px;border-radius:50%;border:2px solid var(--border-strong);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+.plan-check.done{background:var(--green);border-color:var(--green);color:#fff;font-size:0.7rem;}
+.plan-check.payment{background:var(--gold-light);border-color:var(--gold);}
+.plan-title{font-size:0.85rem;flex:1;}
 .plan-title.done{text-decoration:line-through;color:var(--light);}
-.plan-cat{font-size:0.7rem;color:var(--light);margin-left:5px;}
-.plan-date{font-size:0.73rem;color:var(--light);white-space:nowrap;}
+.plan-date{font-size:0.75rem;color:var(--light);}
 .plan-date.overdue{color:var(--rose);}
-.task-form-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:18px;}
-.task-form{display:flex;gap:8px;flex-wrap:wrap;}
-.task-form input,.task-form select{border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:7px 10px;font-family:'Jost',sans-serif;font-size:0.8rem;background:var(--bg);outline:none;flex:1;min-width:130px;}
-.task-form input:focus,.task-form select:focus{border-color:var(--gold);}
-/* media */
-.media-upload-zone{border:2px dashed var(--border-strong);border-radius:var(--radius);padding:28px;text-align:center;cursor:pointer;margin-bottom:18px;transition:all 0.2s;}
-.media-upload-zone:hover{border-color:var(--gold);background:var(--gold-light);}
-.media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;}
-.media-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:13px;transition:all 0.15s;}
+.plan-amount{font-size:0.78rem;color:var(--gold-dark);margin-left:4px;}
+.plan-bank{font-size:0.8rem;color:var(--mid);margin-left:4px;opacity:0.7;}
+
+/* task form */
+.task-form{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap;}
+.task-form input, .task-form select{border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:8px 12px;font-family:'Jost',sans-serif;font-size:0.82rem;background:var(--bg);outline:none;flex:1;min-width:140px;}
+.task-form input:focus, .task-form select:focus{border-color:var(--gold);}
+
+/* ── MEDIA TAB ── */
+.media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;}
+.media-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;cursor:pointer;transition:all 0.15s;}
 .media-card:hover{border-color:var(--gold);box-shadow:var(--shadow);}
-/* chat */
-.chat-wrap{display:flex;height:calc(100vh - 230px);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
-.chat-sidebar{width:250px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;flex-shrink:0;}
-.chat-area{flex:1;display:flex;flex-direction:column;background:var(--surface);}
-.chat-thread-item{padding:9px 13px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.15s;}
-.chat-thread-item:hover,.chat-thread-item.active{background:var(--gold-light);}
-.chat-thread-name{font-size:0.82rem;font-weight:500;}
-.chat-thread-preview{font-size:0.72rem;color:var(--light);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;}
-.chat-vendor-item{padding:7px 13px 7px 26px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.15s;}
-.chat-vendor-item:hover,.chat-vendor-item.active{background:var(--gold-light);}
-.chat-vendor-name{font-size:0.78rem;color:var(--mid);}
-.chat-header{padding:12px 16px;border-bottom:1px solid var(--border);font-weight:500;font-size:0.88rem;}
-.chat-messages{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
-.chat-msg{max-width:68%;padding:9px 13px;border-radius:12px;font-size:0.82rem;line-height:1.5;}
+.media-icon{font-size:2rem;margin-bottom:8px;}
+.media-name{font-size:0.8rem;font-weight:500;word-break:break-all;}
+.media-meta{font-size:0.72rem;color:var(--light);margin-top:4px;}
+.media-upload{border:2px dashed var(--border-strong);border-radius:var(--radius);padding:32px;text-align:center;cursor:pointer;margin-bottom:20px;transition:all 0.2s;}
+.media-upload:hover{border-color:var(--gold);background:var(--gold-light);}
+.media-upload-icon{font-size:2rem;margin-bottom:8px;color:var(--light);}
+.media-upload-text{font-size:0.85rem;color:var(--mid);}
+
+/* ── CHAT TAB ── */
+.chat-wrap{display:flex;height:calc(100vh - 220px);gap:0;}
+.chat-sidebar{width:260px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius) 0 0 var(--radius);overflow-y:auto;flex-shrink:0;}
+.chat-area{flex:1;background:var(--surface);border:1px solid var(--border);border-left:none;border-radius:0 var(--radius) var(--radius) 0;display:flex;flex-direction:column;}
+
+.chat-thread-item{padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.15s;}
+.chat-thread-item:hover{background:var(--surface2);}
+.chat-thread-item.active{background:var(--gold-light);}
+.chat-thread-name{font-size:0.83rem;font-weight:500;}
+.chat-thread-preview{font-size:0.75rem;color:var(--light);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.chat-thread-time{font-size:0.7rem;color:var(--light);float:right;}
+.chat-vendor-item{padding:8px 14px 8px 28px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.15s;}
+.chat-vendor-item:hover{background:var(--surface2);}
+.chat-vendor-item.active{background:var(--gold-light);}
+.chat-vendor-name{font-size:0.8rem;color:var(--mid);}
+
+.chat-header{padding:14px 18px;border-bottom:1px solid var(--border);font-weight:500;font-size:0.9rem;display:flex;align-items:center;gap:8px;}
+.chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;}
+.chat-msg{max-width:70%;padding:10px 14px;border-radius:12px;font-size:0.84rem;line-height:1.5;}
 .chat-msg.planner{background:var(--gold-light);border:1px solid var(--border);align-self:flex-start;}
 .chat-msg.couple{background:var(--blue-light);border:1px solid rgba(90,122,154,0.2);align-self:flex-end;}
-.chat-msg-meta{font-size:0.68rem;color:var(--light);margin-top:3px;}
-.chat-input-wrap{padding:10px 14px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:center;}
-.chat-input-wrap input{flex:1;border:1px solid var(--border-strong);border-radius:20px;padding:8px 15px;font-family:'Jost',sans-serif;font-size:0.82rem;background:var(--bg);outline:none;}
+.chat-msg-meta{font-size:0.7rem;color:var(--light);margin-top:4px;}
+.chat-input-wrap{padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:center;}
+.chat-input-wrap input{flex:1;border:1px solid var(--border-strong);border-radius:20px;padding:9px 16px;font-family:'Jost',sans-serif;font-size:0.84rem;background:var(--bg);outline:none;}
 .chat-input-wrap input:focus{border-color:var(--gold);}
-.chat-send{background:var(--gold);color:#fff;border:none;border-radius:50%;width:34px;height:34px;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.chat-send{background:var(--gold);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .chat-send:hover{background:var(--gold-dark);}
-/* modal */
+
+/* ── COUPLE MODAL ── */
 .modal-overlay{position:fixed;inset:0;background:rgba(26,23,20,0.5);z-index:1000;display:none;align-items:center;justify-content:center;}
 .modal-overlay.open{display:flex;}
-.modal{background:var(--surface);border-radius:var(--radius);width:820px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg);}
-.region-btn{border:1px solid var(--border-strong);border-radius:20px;padding:4px 12px;font-family:'Jost',sans-serif;font-size:0.75rem;cursor:pointer;background:transparent;color:var(--mid);transition:all 0.15s;}
-.region-btn:hover{background:var(--gold-light);border-color:var(--gold);color:var(--gold-dark);}
-.region-btn.active{background:var(--gold);border-color:var(--gold);color:#fff;}
-.modal-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-.modal-title{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-style:italic;}
-.modal-close{background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--mid);}
-.modal-body{padding:22px;}
-.form-group{margin-bottom:13px;}
-.form-label{font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid);margin-bottom:4px;display:block;}
-.form-input{width:100%;border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:8px 11px;font-family:'Jost',sans-serif;font-size:0.86rem;background:var(--bg);outline:none;}
+.modal{background:var(--surface);border-radius:var(--radius);width:480px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg);}
+.modal-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-style:italic;}
+.modal-close{background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--mid);}
+.modal-body{padding:24px;}
+.form-group{margin-bottom:14px;}
+.form-label{font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid);margin-bottom:5px;display:block;}
+.form-input{width:100%;border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:9px 12px;font-family:'Jost',sans-serif;font-size:0.88rem;background:var(--bg);outline:none;}
 .form-input:focus{border-color:var(--gold);}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
-.modal-footer{padding:14px 22px;border-top:1px solid var(--border);display:flex;gap:9px;justify-content:flex-end;}
-.empty-state{text-align:center;padding:50px 20px;color:var(--light);}
-.empty-state .icon{font-size:2.5rem;margin-bottom:10px;opacity:0.5;}
-#toast{position:fixed;bottom:22px;right:22px;background:var(--ink);color:#fff;border-radius:var(--radius-sm);padding:10px 17px;font-size:0.82rem;z-index:9999;transform:translateY(60px);opacity:0;transition:all 0.3s;max-width:340px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;}
+
+/* ── EMPTY STATE ── */
+.empty-state{text-align:center;padding:60px 20px;color:var(--light);}
+.empty-state .icon{font-size:3rem;margin-bottom:12px;opacity:0.5;}
+.empty-state p{font-size:0.9rem;}
+
+/* ── TOASTS ── */
+#toast{position:fixed;bottom:24px;right:24px;background:var(--ink);color:#fff;border-radius:var(--radius-sm);padding:10px 18px;font-size:0.84rem;z-index:9999;transform:translateY(60px);opacity:0;transition:all 0.3s;}
 #toast.show{transform:translateY(0);opacity:1;}
-#toast.err{background:var(--rose);}
-.no-couple{display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;color:var(--light);gap:10px;}
-.no-couple .big{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-style:italic;color:var(--gold);}
-.loading{padding:30px;text-align:center;color:var(--light);font-size:0.85rem;}
+
+/* ── NO COUPLE SELECTED ── */
+.no-couple{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--light);gap:12px;}
+.no-couple .big{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-style:italic;color:var(--gold);}
 </style>
 </head>
 <body>
 
+<!-- PASSWORD -->
 <div id="pw-screen">
   <div class="pw-logo">🌸 My Greek Wedding</div>
   <div class="pw-sub">Planner Dashboard</div>
@@ -203,31 +273,43 @@ body{font-family:'Jost',sans-serif;font-weight:300;background:var(--bg);color:va
   </div>
 </div>
 
+<!-- MAIN APP -->
 <div id="app" style="display:none;flex-direction:column;height:100vh;">
+  <!-- TOP BAR -->
   <div class="topbar">
     <div class="topbar-logo">🌸 My Greek Wedding</div>
-    <button class="topbar-btn outline" onclick="showVenuesPage()">🏛 Budget Comparison</button>
+    <span id="tb-unread" class="topbar-badge" style="display:none"></span>
     <button class="topbar-btn outline" onclick="openModal('add-couple-modal')">+ New Couple</button>
-    <button class="topbar-btn outline" onclick="loadCouples()">↻ Refresh</button>
+    <button class="topbar-btn" onclick="loadCouples()">↻ Refresh</button>
   </div>
+
   <div class="body-wrap">
+    <!-- SIDEBAR -->
     <div class="sidebar">
-      <div class="sidebar-header">
-        <span id="couples-count">Couples</span>
+      <div class="sidebar-header">Couples (32)</div>
+      <div id="couples-list">
+        <div style="padding:20px;color:var(--light);font-size:0.82rem;">Loading couples…</div>
       </div>
-      <div id="couples-list"><div class="loading">Loading…</div></div>
       <div class="couple-add" onclick="openModal('add-couple-modal')">＋ Add couple</div>
     </div>
+
+    <!-- MAIN PANEL -->
     <div class="main-panel">
-      <div id="couple-header-wrap" style="padding:16px 24px 0;display:none;"></div>
+      <!-- couple header -->
+      <div id="couple-header-bar" style="padding:16px 24px 0;display:none;">
+        <div class="couple-header" id="couple-header-content"></div>
+      </div>
+
+      <!-- TAB NAV -->
       <div class="tab-nav" id="tab-nav" style="display:none;">
         <button class="tab-btn active" onclick="switchTab('overview',this)">♥ Overview</button>
         <button class="tab-btn" onclick="switchTab('budget',this)">🐷 Budget</button>
         <button class="tab-btn" onclick="switchTab('plan',this)">📋 Plan</button>
         <button class="tab-btn" onclick="switchTab('media',this)">🖼 Media</button>
         <button class="tab-btn" onclick="switchTab('chat',this)">💬 Chat</button>
-        <button class="tab-btn" onclick="switchTab('venues',this)">🏛 Venues</button>
       </div>
+
+      <!-- TAB CONTENT -->
       <div class="tab-content" id="tab-content">
         <div class="no-couple">
           <div class="big">Select a couple to begin</div>
@@ -247,20 +329,47 @@ body{font-family:'Jost',sans-serif;font-weight:300;background:var(--bg);color:va
     </div>
     <div class="modal-body">
       <div class="form-row">
-        <div class="form-group"><label class="form-label">Partner 1 *</label><input class="form-input" id="f-p1" placeholder="e.g. Sarah"/></div>
-        <div class="form-group"><label class="form-label">Partner 2 *</label><input class="form-input" id="f-p2" placeholder="e.g. James"/></div>
+        <div class="form-group">
+          <label class="form-label">Partner 1 Name</label>
+          <input class="form-input" id="f-p1" placeholder="e.g. Sarah"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Partner 2 Name</label>
+          <input class="form-input" id="f-p2" placeholder="e.g. James"/>
+        </div>
       </div>
-      <div class="form-group"><label class="form-label">Login Email *</label><input class="form-input" id="f-email" type="email" placeholder="couple@email.com"/></div>
-      <div class="form-group"><label class="form-label">Portal Password</label><input class="form-input" id="f-pass" placeholder="They'll use this to log in"/></div>
+      <div class="form-group">
+        <label class="form-label">Login Email</label>
+        <input class="form-input" id="f-email" type="email" placeholder="couple@email.com"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password (for couple portal)</label>
+        <input class="form-input" id="f-pass" placeholder="Password"/>
+      </div>
       <div class="form-row">
-        <div class="form-group"><label class="form-label">Wedding Date</label><input class="form-input" id="f-date" type="date"/></div>
-        <div class="form-group"><label class="form-label">Location</label><input class="form-input" id="f-loc" placeholder="e.g. Santorini"/></div>
+        <div class="form-group">
+          <label class="form-label">Wedding Date</label>
+          <input class="form-input" id="f-date" type="date"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Location</label>
+          <input class="form-input" id="f-loc" placeholder="e.g. Santorini"/>
+        </div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label class="form-label">Guests</label><input class="form-input" id="f-guests" type="number" placeholder="80"/></div>
-        <div class="form-group"><label class="form-label">Budget Goal (€)</label><input class="form-input" id="f-budget" type="number" placeholder="25000"/></div>
+        <div class="form-group">
+          <label class="form-label">Guest Count</label>
+          <input class="form-input" id="f-guests" type="number" placeholder="80"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Budget Goal (€)</label>
+          <input class="form-input" id="f-budget" type="number" placeholder="25000"/>
+        </div>
       </div>
-      <div class="form-group"><label class="form-label">Internal Notes</label><textarea class="form-input" id="f-notes" rows="2" placeholder="Private planner notes…"></textarea></div>
+      <div class="form-group">
+        <label class="form-label">Internal Notes</label>
+        <textarea class="form-input" id="f-notes" rows="2" placeholder="Private planner notes…"></textarea>
+      </div>
     </div>
     <div class="modal-footer">
       <button class="btn-sm" onclick="closeModal('add-couple-modal')">Cancel</button>
@@ -269,1308 +378,760 @@ body{font-family:'Jost',sans-serif;font-weight:300;background:var(--bg);color:va
   </div>
 </div>
 
+<!-- TOAST -->
 <div id="toast"></div>
 
 <script>
-// ── CONFIG ────────────────────────────────────────────────────────
 const SB_URL = 'https://bfslgaalktrgtbxwbdlv.supabase.co';
 const SB_KEY = 'sb_publishable_DZt4P67RcstQs7i7fktNeA_iuh9MXnJ';
 
-const CATS = [
-  {key:'wedding_planning',label:'Wedding Planning',emoji:'💍'},
-  {key:'venue',label:'Venue',emoji:'🏛'},
-  {key:'officiants',label:'Officiants / Celebrant',emoji:'📜'},
-  {key:'photography',label:'Photography',emoji:'📸'},
-  {key:'videography',label:'Videography',emoji:'🎬'},
-  {key:'hair',label:'Hair',emoji:'💇'},
-  {key:'makeup',label:'Makeup',emoji:'💄'},
-  {key:'flowers',label:'Florist',emoji:'🌸'},
-  {key:'sound_light',label:'Sound & Lighting',emoji:'🔊'},
-  {key:'dj',label:'DJ',emoji:'🎵'},
-  {key:'band',label:'Band',emoji:'🎸'},
-  {key:'photo_booth',label:'Photobooth',emoji:'📷'},
-  {key:'pastries',label:'Pastries & Cake',emoji:'🎂'},
-  {key:'rentals',label:'Rentals',emoji:'🪑'},
-  {key:'printing',label:'Printing / Stationery',emoji:'🖨'},
-  {key:'transportation',label:'Transportation',emoji:'🚗'},
-  {key:'fireworks',label:'Fireworks',emoji:'🎆'},
-  {key:'food',label:'Catering',emoji:'🍽'},
-  {key:'bar',label:'Bar',emoji:'🍷'},
-  {key:'yacht',label:'Yacht',emoji:'⛵'},
-  {key:'favors',label:'Favors',emoji:'🎁'},
+const CATEGORIES = [
+  {key:'wedding_planning', label:'Wedding Planning', emoji:'💍'},
+  {key:'venue', label:'Venue', emoji:'🏛'},
+  {key:'officiants', label:'Officiants/Celebrant', emoji:'📜'},
+  {key:'photography', label:'Photography', emoji:'📸'},
+  {key:'videography', label:'Videography', emoji:'🎬'},
+  {key:'hair', label:'Hair', emoji:'💇'},
+  {key:'makeup', label:'Makeup', emoji:'💄'},
+  {key:'flowers', label:'Florist', emoji:'🌸'},
+  {key:'sound_light', label:'Sound & Lighting', emoji:'🔊'},
+  {key:'dj', label:'DJ', emoji:'🎵'},
+  {key:'band', label:'Band', emoji:'🎸'},
+  {key:'photo_booth', label:'Photobooth', emoji:'📷'},
+  {key:'pastries', label:'Pastries & Cake', emoji:'🎂'},
+  {key:'rentals', label:'Rentals', emoji:'🪑'},
+  {key:'printing', label:'Printing / Stationery', emoji:'🖨'},
+  {key:'transportation', label:'Transportation', emoji:'🚗'},
+  {key:'fireworks', label:'Fireworks', emoji:'🎆'},
+  {key:'food', label:'Catering', emoji:'🍽'},
+  {key:'bar', label:'Bar', emoji:'🍷'},
+  {key:'yacht', label:'Yacht', emoji:'⛵'},
+  {key:'favors', label:'Favors', emoji:'🎁'},
 ];
 
-// ── STATE ─────────────────────────────────────────────────────────
-const S = {
-  couples:[], current:null,
-  coupleVendors:[], tasks:[], budgetItems:[], mediaFiles:[],
-  vendorCache:{}, currentThread:null, currentTab:'overview'
+let state = {
+  couples: [],
+  currentCouple: null,
+  coupleVendors: [],
+  tasks: [],
+  messages: [],
+  budgetItems: [],
+  mediaFiles: [],
+  chatThreads: [],
+  threadMessages: [],
+  currentThread: null,
+  vendorCache: {},
+  currentTab: 'overview',
 };
 
-// ── SUPABASE HELPERS ──────────────────────────────────────────────
-async function sbGet(table, qs='') {
-  const r = await fetch(`${SB_URL}/rest/v1/${table}${qs?'?'+qs:''}`, {
-    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Accept':'application/json'}
+// ── API helpers ──────────────────────────────
+async function sbGet(table, query='') {
+  const r = await fetch(`${SB_URL}/rest/v1/${table}?${query}`, {
+    headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`}
   });
-  const txt = await r.text();
-  if(!r.ok) throw new Error(`GET ${table}: ${txt}`);
-  return JSON.parse(txt);
+  if(!r.ok) throw new Error(await r.text());
+  return r.json();
 }
 async function sbPost(table, data) {
   const r = await fetch(`${SB_URL}/rest/v1/${table}`, {
     method:'POST',
-    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'},
-    body:JSON.stringify(data)
+    headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Content-Type':'application/json','Prefer':'return=representation'},
+    body: JSON.stringify(data)
   });
-  const txt = await r.text();
-  if(!r.ok) throw new Error(`POST ${table}: ${txt}`);
-  return JSON.parse(txt);
+  if(!r.ok) throw new Error(await r.text());
+  return r.json();
 }
 async function sbPatch(table, filter, data) {
   const r = await fetch(`${SB_URL}/rest/v1/${table}?${filter}`, {
     method:'PATCH',
-    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'},
-    body:JSON.stringify(data)
+    headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Content-Type':'application/json','Prefer':'return=representation'},
+    body: JSON.stringify(data)
   });
-  const txt = await r.text();
-  if(!r.ok) throw new Error(`PATCH ${table}: ${txt}`);
-  return JSON.parse(txt);
+  if(!r.ok) throw new Error(await r.text());
+  return r.json();
 }
 async function sbDelete(table, filter) {
   const r = await fetch(`${SB_URL}/rest/v1/${table}?${filter}`, {
     method:'DELETE',
-    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
+    headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`}
   });
-  if(!r.ok) throw new Error(`DELETE ${table}: ${await r.text()}`);
+  if(!r.ok) throw new Error(await r.text());
 }
 
-// ── PASSWORD ──────────────────────────────────────────────────────
+// ── Password ─────────────────────────────────
 function checkPw() {
-  if(document.getElementById('pw-input').value === 'Leenio') {
-    document.getElementById('pw-screen').style.display='none';
-    document.getElementById('app').style.display='flex';
+  const v = document.getElementById('pw-input').value;
+  if(v === 'Leenio') {
+    document.getElementById('pw-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
     loadCouples();
   } else {
-    const e=document.getElementById('pw-err'); e.style.display='block';
-    setTimeout(()=>e.style.display='none',2000);
+    document.getElementById('pw-err').style.display = 'block';
+    setTimeout(()=>document.getElementById('pw-err').style.display='none', 2000);
   }
 }
 
-// ── COUPLES ───────────────────────────────────────────────────────
+// ── Load couples ──────────────────────────────
 async function loadCouples() {
   try {
-    S.couples = await sbGet('couples','order=wedding_date.asc');
-    document.getElementById('couples-count').textContent = `Couples (${S.couples.length})`;
+    state.couples = await sbGet('couples','order=wedding_date.asc');
     renderCoupleList();
-  } catch(e) { toast('Error loading couples: '+e.message, true); }
+  } catch(e) {
+    toast('Error loading couples: ' + e.message);
+  }
 }
 
 function renderCoupleList() {
   const el = document.getElementById('couples-list');
-  if(!S.couples.length) { el.innerHTML='<div class="loading">No couples yet</div>'; return; }
-  el.innerHTML = S.couples.map(c=>{
-    const wd = c.wedding_date ? new Date(c.wedding_date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : 'TBD';
-    return `<div class="couple-item ${S.current?.id===c.id?'active':''}" onclick="selectCouple('${c.id}')">
+  if(!state.couples.length) {
+    el.innerHTML = '<div style="padding:20px;color:var(--light);font-size:0.82rem;">No couples yet</div>';
+    return;
+  }
+  el.innerHTML = state.couples.map(c => {
+    const wd = c.wedding_date ? new Date(c.wedding_date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : 'Date TBD';
+    const active = state.currentCouple?.id === c.id ? 'active' : '';
+    return `<div class="couple-item ${active}" onclick="selectCouple('${c.id}')">
       <div class="couple-name">${c.partner1_name} & ${c.partner2_name}</div>
-      <div class="couple-date">${wd} · ${c.wedding_location||'—'}</div>
+      <div class="couple-date">${wd} · ${c.wedding_location || '—'}</div>
     </div>`;
   }).join('');
 }
 
 async function selectCouple(id) {
-  S.current = S.couples.find(c=>c.id===id);
+  state.currentCouple = state.couples.find(c=>c.id===id);
   renderCoupleList();
-  document.getElementById('tab-nav').style.display='flex';
-  document.getElementById('couple-header-wrap').style.display='block';
+  document.getElementById('couple-header-bar').style.display = 'block';
+  document.getElementById('tab-nav').style.display = 'flex';
+  renderCoupleHeader();
   await loadCoupleData();
-  renderHeader();
-  switchTabDirect('overview');
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+  renderTab('overview');
+  // activate overview btn
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>{b.classList.toggle('active',i===0);});
+}
+
+function renderCoupleHeader() {
+  const c = state.currentCouple;
+  const wd = c.wedding_date ? new Date(c.wedding_date) : null;
+  let days = wd ? Math.ceil((wd - new Date()) / 86400000) : null;
+  const daysStr = days !== null ? (days > 0 ? `${days} days to go` : 'Wedding passed') : '';
+  document.getElementById('couple-header-content').innerHTML = `
+    <div>
+      <div class="couple-header-name">${c.partner1_name} & ${c.partner2_name}</div>
+      <div class="couple-header-detail">${c.wedding_location || ''} · ${c.wedding_date ? new Date(c.wedding_date).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}) : 'Date TBD'} · ${c.guest_count || '?'} guests ${daysStr ? '· '+daysStr : ''}</div>
+    </div>
+    <div class="couple-header-stats">
+      <div class="stat-item">
+        <div class="stat-val">${state.coupleVendors.filter(v=>v.status==='booked').length || 0}</div>
+        <div class="stat-label">Booked</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">${state.tasks.filter(t=>!t.completed).length || 0}</div>
+        <div class="stat-label">Tasks</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">€${(c.budget_goal||0).toLocaleString()}</div>
+        <div class="stat-label">Budget Goal</div>
+      </div>
+    </div>
+  `;
 }
 
 async function loadCoupleData() {
-  if(!S.current) return;
-  const id = S.current.id;
+  const cid = state.currentCouple.id;
   try {
-    [S.coupleVendors, S.tasks, S.budgetItems, S.mediaFiles, S.payments] = await Promise.all([
-      sbGet('couple_vendors',`couple_id=eq.${id}&order=created_at.asc`).catch(()=>[]),
-      sbGet('tasks',`couple_id=eq.${id}&order=due_date.asc`).catch(()=>[]),
-      sbGet('budget_items',`couple_id=eq.${id}&order=sort_order.asc`).catch(()=>[]),
-      sbGet('media_files',`couple_id=eq.${id}&order=created_at.desc`).catch(()=>[]),
-      sbGet('payments',`couple_id=eq.${id}&order=due_date.asc`).catch(()=>[]),
+    [state.coupleVendors, state.tasks, state.budgetItems, state.mediaFiles, state.chatThreads] = await Promise.all([
+      sbGet('couple_vendors', `couple_id=eq.${cid}&order=created_at.asc`).catch(()=>[]),
+      sbGet('tasks', `couple_id=eq.${cid}&order=due_date.asc`).catch(()=>[]),
+      sbGet('budget_items', `couple_id=eq.${cid}&order=sort_order.asc`).catch(()=>[]),
+      sbGet('media_files', `couple_id=eq.${cid}&order=created_at.desc`).catch(()=>[]),
+      sbGet('chat_threads', `couple_id=eq.${cid}&order=sort_order.asc`).catch(()=>[]),
     ]);
-    // resolve vendor names - fetch each one individually to avoid ID format issues
-    const ids = [...new Set(S.coupleVendors.map(v=>v.vendor_id).filter(v=>v && !S.vendorCache[v]))];
-    for(const vid of ids) {
-      try {
-        const res = await sbGet('vendors',`id=eq.${encodeURIComponent(vid)}&select=id,name,category,region,price_range`);
-        if(res && res[0]) S.vendorCache[vid] = res[0];
-        else S.vendorCache[vid] = {id:vid, name:vid, category:'', region:''};
-      } catch(e) { S.vendorCache[vid] = {id:vid, name:vid, category:'', region:''}; }
+    // resolve vendor names
+    const vendorIds = [...new Set(state.coupleVendors.map(v=>v.vendor_id))];
+    for(const vid of vendorIds) {
+      if(!state.vendorCache[vid]) {
+        const res = await sbGet('vendors', `id=eq.${vid}&select=id,name,category`).catch(()=>[]);
+        if(res[0]) state.vendorCache[vid] = res[0];
+      }
     }
-  } catch(e) { toast('Error loading data: '+e.message, true); }
+  } catch(e) { toast('Error loading data: '+e.message); }
 }
 
-function renderHeader() {
-  const c = S.current;
-  const wd = c.wedding_date ? new Date(c.wedding_date) : null;
-  const days = wd ? Math.ceil((wd-new Date())/86400000) : null;
-  const booked = S.coupleVendors.filter(v=>v.status==='booked').length;
-  const pending = S.tasks.filter(t=>!t.completed).length;
-  document.getElementById('couple-header-wrap').innerHTML = `
-    <div class="couple-header">
-      <div>
-        <div class="couple-header-name">${c.partner1_name} & ${c.partner2_name}</div>
-        <div class="couple-header-detail">
-          ${c.wedding_location||''} · ${wd?wd.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}):'Date TBD'}
-          · ${c.guest_count||'?'} guests${days!==null?' · '+(days>0?days+' days to go':'Wedding passed'):''}
-        </div>
-      </div>
-      <div class="couple-header-stats">
-        <div class="stat-item"><div class="stat-val">${booked}</div><div class="stat-label">Booked</div></div>
-        <div class="stat-item"><div class="stat-val">${S.coupleVendors.length}</div><div class="stat-label">Vendors</div></div>
-        <div class="stat-item"><div class="stat-val">${pending}</div><div class="stat-label">Tasks</div></div>
-        <div class="stat-item"><div class="stat-val">€${(c.budget_goal||0).toLocaleString()}</div><div class="stat-label">Budget</div></div>
-      </div>
-    </div>`;
-}
-
-// ── TABS ──────────────────────────────────────────────────────────
+// ── Tabs ──────────────────────────────────────
 function switchTab(tab, btn) {
+  state.currentTab = tab;
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   if(btn) btn.classList.add('active');
-  switchTabDirect(tab);
+  renderTab(tab);
 }
-function switchTabDirect(tab) {
-  S.currentTab = tab;
+
+function renderTab(tab) {
   const el = document.getElementById('tab-content');
   if(tab==='overview') el.innerHTML = buildOverview();
   else if(tab==='budget') el.innerHTML = buildBudget();
   else if(tab==='plan') el.innerHTML = buildPlan();
   else if(tab==='media') el.innerHTML = buildMedia();
   else if(tab==='chat') { el.innerHTML = buildChat(); initChat(); }
-  else if(tab==='venues') el.innerHTML = buildVenues();
 }
 
-// ── OVERVIEW ──────────────────────────────────────────────────────
+// ── OVERVIEW ─────────────────────────────────
 function buildOverview() {
-  let h = `<div class="section-toolbar"><h2>Wedding Overview</h2></div>`;
-  CATS.forEach(cat=>{
-    const cvs = S.coupleVendors.filter(cv=>cv.category===cat.key);
-    const decided = cvs.some(cv=>cv.status==='booked'||cv.status==='decided');
-    const chips = cvs.length
-      ? cvs.map(cv=>{
-          const v = S.vendorCache[cv.vendor_id];
-          const name = v?v.name:cv.vendor_id;
-          return `<div class="vendor-chip" onclick="openVendorDetail('${cv.id}')">
-            <span class="chip-dot ${cv.status}"></span>${name}
-            <span style="font-size:0.68rem;color:var(--light)">${cv.status}</span>
-          </div>`;
-        }).join('')
-      : `<div class="cat-no-vendors">No vendors assigned yet</div>`;
+  let html = `<div class="overview-toolbar">
+    <h2>Wedding Overview</h2>
+    <button class="btn-sm primary" onclick="openAssignVendorGlobal()">＋ Assign Vendor</button>
+  </div>`;
 
-    h += `<div class="category-row">
+  CATEGORIES.forEach(cat => {
+    const catVendors = state.coupleVendors.filter(cv => cv.category === cat.key);
+    const decided = catVendors.some(cv=>cv.status==='booked'||cv.status==='decided');
+    html += `<div class="category-row">
       <div class="cat-row-header" onclick="toggleCat(this)">
         <span class="cat-emoji">${cat.emoji}</span>
-        <span class="cat-name" style="cursor:pointer" onclick="event.stopPropagation();browseVendors('${cat.key}','${cat.label}',\`${cat.emoji}\`)">${cat.label}</span>
+        <span class="cat-name">${cat.label}</span>
         <span class="cat-status ${decided?'decided':'draft'}">${decided?'✓ Decided':'DRAFT'}</span>
         <div class="cat-actions" onclick="event.stopPropagation()">
-          <button class="cat-icon-btn" title="Browse vendors" onclick="browseVendors('${cat.key}','${cat.label}','${cat.emoji}')">🔍</button>
+          <button class="cat-icon-btn" title="Edit" onclick="editCatNote('${cat.key}')">✏️</button>
           <button class="cat-icon-btn" title="Compare" onclick="openCompare('${cat.key}','${cat.label}')">⊞</button>
-          <button class="cat-icon-btn" title="Chat" onclick="goToChat('${cat.key}')">💬</button>
+          <button class="cat-icon-btn" title="Chat" onclick="switchToChat('${cat.key}')">💬</button>
         </div>
         <span class="cat-chevron">▾</span>
       </div>
       <div class="cat-body">
-        <div class="vendor-chips">${chips}</div>
-        <div class="vendor-search-wrap" style="max-width:360px">
-          <input type="text" placeholder="🔍 Search & assign vendor…"
-            oninput="searchVendors(this,'${cat.key}')"
-            onfocus="showDd('${cat.key}')"
-            onblur="setTimeout(()=>hideDd('${cat.key}'),220)"/>
-          <div class="vendor-dropdown" id="dd-${cat.key}" style="display:none"></div>
+        <div class="vendor-chips">
+          ${catVendors.length ? catVendors.map(cv => {
+            const v = state.vendorCache[cv.vendor_id];
+            return `<div class="vendor-chip" onclick="openVendorCard('${cv.id}')">
+              <span class="chip-status ${cv.status}"></span>
+              ${v ? v.name : cv.vendor_id}
+              <span style="font-size:0.7rem;color:var(--light)">${cv.status}</span>
+            </div>`;
+          }).join('') : '<div class="cat-no-vendors">No vendors assigned yet</div>'}
+        </div>
+        <div class="cat-add-vendor" style="margin-top:10px;">
+          <div class="vendor-search-wrap">
+            <input type="text" placeholder="Search & assign vendor…" oninput="searchVendors(this,'${cat.key}')" onfocus="this.nextElementSibling.style.display='block'" onblur="setTimeout(()=>{this.nextElementSibling.style.display='none'},200)"/>
+            <div class="vendor-dropdown" style="display:none;" id="dd-${cat.key}"></div>
+          </div>
         </div>
       </div>
     </div>`;
   });
-  return h;
-}
-
-// ── VENDOR BROWSER ────────────────────────────────────────────────
-async function browseVendors(catKey, catLabel, catEmoji) {
-  // Show loading modal first
-  showModal('modal-browse', `${catEmoji} ${catLabel} — All Vendors`,
-    `<div style="text-align:center;padding:30px;color:var(--light)">Loading vendors…</div>`);
-
-  try {
-    // Load all vendors for this category
-    const vendors = await sbGet('vendors',
-      `category=eq.${catKey}&select=id,name,region,price_range,type,contact&order=name.asc&limit=200`);
-
-    // Get unique regions
-    const regions = [...new Set(vendors.map(v=>v.region).filter(Boolean))].sort();
-
-    // Already assigned vendor IDs for this couple+category
-    const assignedIds = new Set(S.coupleVendors.filter(cv=>cv.category===catKey).map(cv=>cv.vendor_id));
-
-    renderVendorBrowser(catKey, catLabel, catEmoji, vendors, regions, assignedIds, '');
-  } catch(e) {
-    document.querySelector('#dyn-modal-browse .modal-body').innerHTML =
-      `<div style="color:var(--rose);padding:20px">Error: ${e.message}</div>`;
-  }
-}
-
-function renderVendorBrowser(catKey, catLabel, catEmoji, vendors, regions, assignedIds, regionFilter) {
-  const filtered = regionFilter ? vendors.filter(v=>v.region===regionFilter) : vendors;
-
-  const regionBtns = [`<button class="region-btn ${!regionFilter?'active':''}" onclick="filterBrowser('${catKey}','${catLabel}','${catEmoji}','')">All (${vendors.length})</button>`];
-  regions.forEach(r => {
-    const count = vendors.filter(v=>v.region===r).length;
-    regionBtns.push(`<button class="region-btn ${regionFilter===r?'active':''}" onclick="filterBrowser('${catKey}','${catLabel}','${catEmoji}','${r}')">${r} (${count})</button>`);
-  });
-
-  const cards = filtered.map(v => {
-    const assigned = assignedIds.has(v.id);
-    const price = v.price_range || '';
-    const phone = v.contact?.phone || '';
-    const email = v.contact?.email || '';
-    return `<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;display:flex;flex-direction:column;gap:6px;">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
-        <div style="font-weight:500;font-size:0.88rem;flex:1">${v.name}</div>
-        ${price?`<span style="font-size:0.75rem;color:var(--gold-dark);background:var(--gold-light);padding:2px 8px;border-radius:10px;flex-shrink:0">${price}</span>`:''}
-      </div>
-      <div style="font-size:0.75rem;color:var(--light);display:flex;gap:10px;flex-wrap:wrap">
-        ${v.region?`<span>📍 ${v.region}</span>`:''}
-        ${v.type?`<span>· ${v.type}</span>`:''}
-      </div>
-      ${phone?`<div style="font-size:0.75rem;color:var(--mid)">📞 ${phone}</div>`:''}
-      ${email?`<div style="font-size:0.75rem;color:var(--mid)">✉️ ${email}</div>`:''}
-      <div style="margin-top:4px">
-        ${assigned
-          ? `<span style="font-size:0.75rem;color:var(--green);background:var(--green-light);padding:3px 10px;border-radius:10px">✓ Already assigned</span>`
-          : `<button class="btn-sm primary" style="font-size:0.75rem;padding:5px 12px" onmousedown="assignFromBrowser('${v.id}','${catKey}','${v.name.replace(/'/g,"\\'")}','${catLabel}','${catEmoji}')">＋ Assign</button>`
-        }
-      </div>
-    </div>`;
-  }).join('');
-
-  const body = `
-    <div style="margin-bottom:12px">
-      <input type="text" placeholder="🔍 Search by name…" oninput="searchBrowser(this,'${catKey}','${catLabel}','${catEmoji}')"
-        style="width:100%;border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:8px 12px;font-family:'Jost',sans-serif;font-size:0.84rem;background:var(--bg);outline:none;"/>
-    </div>
-    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px" id="browser-regions">
-      ${regionBtns.join('')}
-    </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-      <div style="font-size:0.78rem;color:var(--light)">${filtered.length} vendor${filtered.length!==1?'s':''} found</div>
-      <button class="btn-sm primary" onclick="closeModal('dyn-modal-browse');switchTabDirect('overview')">✓ Done</button>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;max-height:55vh;overflow-y:auto" id="browser-grid">
-      ${cards || `<div style="color:var(--light);font-size:0.85rem;padding:20px">No vendors found in this region</div>`}
-    </div>`;
-
-  // Store data on window for filter access
-  window._browserData = {catKey, catLabel, catEmoji, vendors, regions, assignedIds};
-
-  const modalBody = document.querySelector('#dyn-modal-browse .modal-body');
-  if(modalBody) modalBody.innerHTML = body;
-}
-
-function filterBrowser(catKey, catLabel, catEmoji, region) {
-  const d = window._browserData;
-  if(!d) return;
-  renderVendorBrowser(catKey, catLabel, catEmoji, d.vendors, d.regions, d.assignedIds, region);
-}
-
-function searchBrowser(input, catKey, catLabel, catEmoji) {
-  const q = input.value.toLowerCase().trim();
-  const d = window._browserData;
-  if(!d) return;
-  const filtered = q ? d.vendors.filter(v=>v.name.toLowerCase().includes(q)) : d.vendors;
-  const grid = document.getElementById('browser-grid');
-  if(!grid) return;
-  if(!filtered.length) { grid.innerHTML='<div style="color:var(--light);font-size:0.85rem;padding:20px">No results</div>'; return; }
-  grid.innerHTML = filtered.map(v => {
-    const assigned = d.assignedIds.has(v.id);
-    const phone = v.contact?.phone || '';
-    return `<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;display:flex;flex-direction:column;gap:6px;">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
-        <div style="font-weight:500;font-size:0.88rem;flex:1">${v.name}</div>
-        ${v.price_range?`<span style="font-size:0.75rem;color:var(--gold-dark);background:var(--gold-light);padding:2px 8px;border-radius:10px">${v.price_range}</span>`:''}
-      </div>
-      <div style="font-size:0.75rem;color:var(--light)">${v.region?'📍 '+v.region:''} ${v.type?'· '+v.type:''}</div>
-      ${phone?`<div style="font-size:0.75rem;color:var(--mid)">📞 ${phone}</div>`:''}
-      <div style="margin-top:4px">
-        ${assigned
-          ? `<span style="font-size:0.75rem;color:var(--green);background:var(--green-light);padding:3px 10px;border-radius:10px">✓ Already assigned</span>`
-          : `<button class="btn-sm primary" style="font-size:0.75px;padding:5px 12px" onmousedown="assignFromBrowser('${v.id}','${catKey}','${v.name.replace(/'/g,"\\'")}','${catLabel}','${catEmoji}')">＋ Assign</button>`
-        }
-      </div>
-    </div>`;
-  }).join('');
-}
-
-async function assignFromBrowser(vendorId, catKey, vendorName, catLabel, catEmoji) {
-  if(S.coupleVendors.find(cv=>cv.vendor_id===vendorId)) { toast('Already assigned'); return; }
-  try {
-    const res = await sbPost('couple_vendors',{
-      couple_id:S.current.id, vendor_id:vendorId, category:catKey, status:'suggested'
-    });
-    S.coupleVendors.push(res[0]);
-    if(!S.vendorCache[vendorId]) S.vendorCache[vendorId]={id:vendorId,name:vendorName,category:catKey};
-    // update assigned set in browser
-    if(window._browserData) window._browserData.assignedIds.add(vendorId);
-    toast(`✓ ${vendorName} assigned!`);
-    // refresh the button to show assigned
-    const btns = document.querySelectorAll('#browser-grid button');
-    btns.forEach(btn => {
-      if(btn.getAttribute('onmousedown')?.includes(vendorId)) {
-        btn.outerHTML = `<span style="font-size:0.75rem;color:var(--green);background:var(--green-light);padding:3px 10px;border-radius:10px">✓ Assigned</span>`;
-      }
-    });
-  } catch(e) { toast('Error: '+e.message, true); }
+  return html;
 }
 
 function toggleCat(header) {
-  header.nextElementSibling.classList.toggle('open');
-  header.querySelector('.cat-chevron').classList.toggle('open');
+  const body = header.nextElementSibling;
+  const chev = header.querySelector('.cat-chevron');
+  body.classList.toggle('open');
+  chev.classList.toggle('open');
 }
-function showDd(k){
-  const inp = document.querySelector(`#dd-${k}`)?.previousElementSibling;
-  const dd = document.getElementById('dd-'+k);
-  if(!dd||!inp) return;
-  const rect = inp.getBoundingClientRect();
-  dd.style.display='block';
-  dd.style.top=(rect.bottom+2)+'px';
-  dd.style.left=rect.left+'px';
-  dd.style.width=rect.width+'px';
-}
-function hideDd(k){const d=document.getElementById('dd-'+k);if(d)d.style.display='none';}
 
 async function searchVendors(input, catKey) {
   const q = input.value.trim();
   const dd = document.getElementById('dd-'+catKey);
-  if(!dd) return;
-  // reposition
-  const rect = input.getBoundingClientRect();
-  dd.style.top=(rect.bottom+2)+'px';
-  dd.style.left=rect.left+'px';
-  dd.style.width=Math.max(rect.width,300)+'px';
-  dd.style.display='block';
   if(q.length < 2) { dd.innerHTML=''; return; }
   try {
-    const res = await sbGet('vendors',`name=ilike.*${encodeURIComponent(q)}*&select=id,name,category,region&limit=10`);
+    const res = await sbGet('vendors', `name=ilike.*${encodeURIComponent(q)}*&category=eq.${catKey}&select=id,name&limit=8`);
     if(!res.length) { dd.innerHTML='<div class="vendor-dd-item" style="color:var(--light)">No results</div>'; return; }
-    dd.innerHTML = res.map(v=>{
-      const safeId = v.id.replace(/'/g,"\\'");
-      const safeName = v.name.replace(/'/g,"\\'");
-      return `<div class="vendor-dd-item" onmousedown="assignVendor('${safeId}','${catKey}','${safeName}')">
-        ${v.name}<span class="vendor-dd-cat">${v.category||''} ${v.region?'· '+v.region:''}</span>
-      </div>`;
-    }).join('');
-  } catch(e) { dd.innerHTML=`<div class="vendor-dd-item" style="color:var(--rose)">Error: ${e.message}</div>`; }
+    dd.innerHTML = res.map(v => `<div class="vendor-dd-item" onclick="assignVendor('${v.id}','${catKey}','${v.name.replace(/'/g,"\\'")}');this.closest('.vendor-search-wrap').querySelector('input').value='';">${v.name}</div>`).join('');
+  } catch(e) {}
 }
 
 async function assignVendor(vendorId, category, vendorName) {
-  if(S.coupleVendors.find(cv=>cv.vendor_id===vendorId)) { toast('Already assigned'); return; }
   try {
-    const res = await sbPost('couple_vendors',{
-      couple_id:S.current.id, vendor_id:vendorId, category, status:'suggested'
+    const existing = state.coupleVendors.find(cv=>cv.vendor_id===vendorId);
+    if(existing) { toast('Already assigned'); return; }
+    const res = await sbPost('couple_vendors', {
+      couple_id: state.currentCouple.id,
+      vendor_id: vendorId,
+      category: category,
+      status: 'suggested'
     });
-    S.coupleVendors.push(res[0]);
-    if(!S.vendorCache[vendorId]) S.vendorCache[vendorId]={id:vendorId,name:vendorName,category};
-    // clear the search input and hide dropdown
-    const dd = document.getElementById('dd-'+category);
-    if(dd){ dd.innerHTML=''; dd.style.display='none'; }
-    const inputs = document.querySelectorAll('.vendor-search-wrap input');
-    inputs.forEach(inp=>{ if(inp.closest('.cat-body')) inp.value=''; });
-    toast(`✓ ${vendorName} assigned!`);
-    switchTabDirect('overview');
-  } catch(e) { toast('Error assigning vendor: '+e.message, true); }
+    state.coupleVendors.push(res[0]);
+    if(!state.vendorCache[vendorId]) state.vendorCache[vendorId] = {id:vendorId,name:vendorName,category};
+    toast(`${vendorName} assigned!`);
+    renderTab('overview');
+  } catch(e) { toast('Error: '+e.message); }
 }
 
-async function openVendorDetail(cvId) {
-  const cv = S.coupleVendors.find(c=>c.id===cvId);
+async function openVendorCard(cvId) {
+  const cv = state.coupleVendors.find(c=>c.id===cvId);
   if(!cv) return;
-  const v = S.vendorCache[cv.vendor_id];
-  const name = v?v.name:cv.vendor_id;
+  const v = state.vendorCache[cv.vendor_id];
+  const name = v ? v.name : cv.vendor_id;
   const statuses = ['suggested','shortlisted','decided','booked','rejected'];
-  const opts = statuses.map(s=>`<option value="${s}"${cv.status===s?' selected':''}>${s.charAt(0).toUpperCase()+s.slice(1)}</option>`).join('');
-  const hearts = n=>[1,2,3,4,5].map(i=>`<span style="cursor:pointer;font-size:1.1rem;color:${i<=n?'var(--rose)':'var(--border-strong)'}" onmousedown="setRating('${cvId}',${i})">♥</span>`).join('');
-  showModal('modal-vendor',`${name}`,`
-    <div class="form-group">
-      <label class="form-label">Status</label>
-      <select class="form-input" onchange="updateCV('${cvId}','status',this.value)">${opts}</select>
+  const opts = statuses.map(s=>`<option value="${s}" ${cv.status===s?'selected':''}>${s.charAt(0).toUpperCase()+s.slice(1)}</option>`).join('');
+  const hearts = [1,2,3,4,5].map(i=>`<span style="cursor:pointer;font-size:1.2rem;color:${i<=(cv.rating||0)?'var(--rose)':'var(--border-strong)'}" onclick="rateVendorInCard('${cvId}',${i})">♥</span>`).join('');
+  showQuickModal(`<b>${name}</b>`,`
+    <div style="margin-bottom:12px">
+      <div class="form-label">Status</div>
+      <select class="form-input" id="vc-status" onchange="updateCVStatus('${cvId}',this.value)">${opts}</select>
     </div>
-    <div class="form-group">
-      <label class="form-label">Rating</label>
-      <div id="hearts-${cvId}">${hearts(cv.rating||0)}</div>
+    <div style="margin-bottom:12px">
+      <div class="form-label">Rating</div>
+      <div id="vc-hearts">${hearts}</div>
     </div>
-    <div class="form-group">
-      <label class="form-label">Price Quoted (€)</label>
-      <input class="form-input" type="number" value="${cv.price_quoted||''}" placeholder="0" onchange="updateCV('${cvId}','price_quoted',this.value)"/>
+    <div style="margin-bottom:12px">
+      <div class="form-label">Price Quoted (€)</div>
+      <input class="form-input" id="vc-price" type="number" value="${cv.price_quoted||''}" placeholder="0" onchange="updateCVField('${cvId}','price_quoted',this.value)"/>
     </div>
-    <div class="form-group">
-      <label class="form-label">Admin Notes <span style="color:var(--rose);font-size:0.7rem">(hidden from couple)</span></label>
-      <textarea class="form-input" rows="2" onchange="updateCV('${cvId}','admin_notes',this.value)">${cv.admin_notes||''}</textarea>
+    <div style="margin-bottom:12px">
+      <div class="form-label">Admin Notes (hidden from couple)</div>
+      <textarea class="form-input" id="vc-notes" rows="2" onchange="updateCVField('${cvId}','admin_notes',this.value)">${cv.admin_notes||''}</textarea>
     </div>
-    <div class="form-group">
-      <label class="form-label">Couple Notes</label>
-      <textarea class="form-input" rows="2" onchange="updateCV('${cvId}','couple_notes',this.value)">${cv.couple_notes||''}</textarea>
+    <div>
+      <div class="form-label">Couple Notes</div>
+      <textarea class="form-input" id="vc-cnotes" rows="2" onchange="updateCVField('${cvId}','couple_notes',this.value)">${cv.couple_notes||''}</textarea>
     </div>
-    <div style="margin-top:14px;display:flex;justify-content:space-between">
-      <button class="btn-sm" style="color:var(--rose);border-color:rgba(201,122,122,0.4)" onclick="removeVendor('${cvId}')">Remove Vendor</button>
-      <button class="btn-sm primary" onclick="closeModal('modal-vendor')">Done</button>
+    <div style="margin-top:14px;text-align:right">
+      <button class="btn-sm" style="color:var(--rose);border-color:var(--rose)" onclick="removeVendor('${cvId}')">Remove</button>
     </div>
   `);
 }
 
-async function setRating(cvId, r) {
-  await updateCV(cvId,'rating',r);
-  const el = document.getElementById('hearts-'+cvId);
-  if(el) el.innerHTML=[1,2,3,4,5].map(i=>`<span style="cursor:pointer;font-size:1.1rem;color:${i<=r?'var(--rose)':'var(--border-strong)'}" onmousedown="setRating('${cvId}',${i})">♥</span>`).join('');
+async function rateVendorInCard(cvId, rating) {
+  await updateCVField(cvId, 'rating', rating);
+  const cv = state.coupleVendors.find(c=>c.id===cvId);
+  const hearts = document.getElementById('vc-hearts');
+  if(hearts) hearts.innerHTML = [1,2,3,4,5].map(i=>`<span style="cursor:pointer;font-size:1.2rem;color:${i<=rating?'var(--rose)':'var(--border-strong)'}" onclick="rateVendorInCard('${cvId}',${i})">♥</span>`).join('');
 }
 
-async function updateCV(cvId, field, value) {
-  const cv = S.coupleVendors.find(c=>c.id===cvId);
+async function updateCVStatus(cvId, status) {
+  const cv = state.coupleVendors.find(c=>c.id===cvId);
+  if(!cv) return;
+  cv.status = status;
+  await sbPatch('couple_vendors', `id=eq.${cvId}`, {status}).catch(e=>toast('Error: '+e.message));
+  renderTab('overview');
+}
+
+async function updateCVField(cvId, field, value) {
+  const cv = state.coupleVendors.find(c=>c.id===cvId);
   if(!cv) return;
   cv[field] = value;
-  await sbPatch('couple_vendors',`id=eq.${cvId}`,{[field]:value}).catch(e=>toast('Save error: '+e.message,true));
+  await sbPatch('couple_vendors', `id=eq.${cvId}`, {[field]:value}).catch(e=>toast('Error: '+e.message));
 }
 
 async function removeVendor(cvId) {
   if(!confirm('Remove this vendor?')) return;
-  await sbDelete('couple_vendors',`id=eq.${cvId}`).catch(e=>toast('Error: '+e.message,true));
-  S.coupleVendors = S.coupleVendors.filter(c=>c.id!==cvId);
-  closeModal('modal-vendor');
+  await sbDelete('couple_vendors', `id=eq.${cvId}`).catch(e=>toast('Error: '+e.message));
+  state.coupleVendors = state.coupleVendors.filter(c=>c.id!==cvId);
+  closeQuickModal();
+  renderTab('overview');
   toast('Vendor removed');
-  switchTabDirect('overview');
 }
 
 function openCompare(catKey, catLabel) {
-  const cvs = S.coupleVendors.filter(cv=>cv.category===catKey);
-  if(!cvs.length) { toast('No vendors in this category yet'); return; }
-  const cards = cvs.map(cv=>{
-    const v = S.vendorCache[cv.vendor_id];
-    return `<div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;min-width:160px;flex:1">
-      <div style="font-weight:500;margin-bottom:4px">${v?v.name:cv.vendor_id}</div>
-      <div style="font-size:0.73rem;color:var(--mid);margin-bottom:6px">${cv.status}</div>
+  const catVendors = state.coupleVendors.filter(cv=>cv.category===catKey);
+  if(!catVendors.length) { toast('No vendors in this category yet'); return; }
+  let cardsHtml = catVendors.map(cv=>{
+    const v = state.vendorCache[cv.vendor_id];
+    return `<div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;flex:1;min-width:180px;">
+      <div style="font-weight:500;margin-bottom:6px">${v?v.name:cv.vendor_id}</div>
+      <div style="font-size:0.75rem;color:var(--mid);margin-bottom:8px">${cv.status}</div>
       <div>${[1,2,3,4,5].map(i=>`<span style="color:${i<=(cv.rating||0)?'var(--rose)':'var(--border-strong)'}">♥</span>`).join('')}</div>
-      ${cv.price_quoted?`<div style="margin-top:7px;font-weight:500;color:var(--gold-dark)">€${Number(cv.price_quoted).toLocaleString()}</div>`:''}
-      ${cv.admin_notes?`<div style="font-size:0.72rem;color:var(--mid);margin-top:5px">${cv.admin_notes}</div>`:''}
+      ${cv.price_quoted?`<div style="margin-top:8px;font-weight:500;color:var(--gold-dark)">€${Number(cv.price_quoted).toLocaleString()}</div>`:''}
+      ${cv.couple_notes?`<div style="font-size:0.75rem;color:var(--mid);margin-top:6px">${cv.couple_notes}</div>`:''}
     </div>`;
   }).join('');
-  showModal('modal-compare',`Compare — ${catLabel}`,`<div style="display:flex;gap:10px;flex-wrap:wrap">${cards}</div>`);
+  showQuickModal(`Compare — ${catLabel}`,`<div style="display:flex;gap:12px;flex-wrap:wrap">${cardsHtml}</div>`);
 }
 
-function goToChat(catKey) {
+function switchToChat(catKey) {
   switchTab('chat', document.querySelectorAll('.tab-btn')[4]);
-  setTimeout(()=>selectThread(catKey),300);
+  setTimeout(()=>selectThread(catKey),200);
 }
 
-// ── BUDGET ────────────────────────────────────────────────────────
-function calcItemTotal(b) {
-  const guests = Number(S.current.guest_count||0);
-  const price = Number(b.item_price||0);
-  const qty = Number(b.guests||0);
-  const perHead = b.pricing_type==='per_head';
-  const base = perHead ? (qty||guests) * price : price;
-  const comm = base * (Number(b.commission_rate||0)/100);
-  const vat = base * (Number(b.vat_amount||0)/100);
-  return {base, comm, vat, total: base+vat};
-}
-
+// ── BUDGET ───────────────────────────────────
 function buildBudget() {
-  let totPaid=0, totActual=0, totComm=0;
-  CATS.forEach(cat=>{
-    S.budgetItems.filter(b=>b.category===cat.key).forEach(b=>{
-      const {total,comm} = calcItemTotal(b);
-      totPaid += Number(b.amount_paid||0);
-      totActual += total;
-      totComm += comm;
+  let totalPending=0, totalPaid=0, totalGoal=0, totalActual=0;
+
+  CATEGORIES.forEach(cat => {
+    const items = state.budgetItems.filter(b=>b.category===cat.key);
+    items.forEach(b=>{
+      totalPending += Number(b.item_price||0) - Number(b.amount_paid||0);
+      totalPaid += Number(b.amount_paid||0);
+      const goal = Number(b.guests||0) * Number(b.item_price||0) || Number(b.item_price||0);
+      totalGoal += goal;
+      totalActual += goal;
     });
   });
-  const totPend = totActual - totPaid;
-  const goal = Number(S.current.budget_goal||0);
 
-  let h=`<div class="section-toolbar"><h2>Budget</h2>
-    <button class="btn-sm" onclick="showPaymentsSummary()">💳 Payments</button>
-  </div>
-  <div class="budget-summary">
-    <div class="budget-card pending"><div class="val">€${Math.round(totPend).toLocaleString()}</div><div class="lbl">Pending</div></div>
-    <div class="budget-card paid"><div class="val">€${Math.round(totPaid).toLocaleString()}</div><div class="lbl">Paid</div></div>
-    <div class="budget-card"><div class="val">€${goal.toLocaleString()}</div><div class="lbl">Goal</div></div>
-    <div class="budget-card ${totActual>goal&&goal>0?'over':''}"><div class="val">€${Math.round(totActual).toLocaleString()}</div><div class="lbl">Actual</div></div>
-  </div>
-  <div style="background:var(--green-light);border:1px solid rgba(90,138,90,0.2);border-radius:var(--radius-sm);padding:10px 16px;margin-bottom:14px;font-size:0.82rem;color:var(--green)">
-    💰 Your total commission: <strong>€${Math.round(totComm).toLocaleString()}</strong>
-  </div>
-  <div class="budget-col-labels"><span>Category</span><span>Pending</span><span>Paid</span><span>Goal</span><span>Actual</span><span></span></div>`;
+  let html = `
+    <div class="budget-summary">
+      <div class="budget-card pending"><div class="val">€${totalPending.toLocaleString()}</div><div class="lbl">Pending</div></div>
+      <div class="budget-card paid"><div class="val">€${totalPaid.toLocaleString()}</div><div class="lbl">Paid</div></div>
+      <div class="budget-card"><div class="val">€${(state.currentCouple.budget_goal||0).toLocaleString()}</div><div class="lbl">Goal</div></div>
+      <div class="budget-card ${totalActual > (state.currentCouple.budget_goal||Infinity) ? 'over':''}"><div class="val">€${totalActual.toLocaleString()}</div><div class="lbl">Actual</div></div>
+    </div>
+    <div class="budget-col-label">
+      <span>Category</span><span>Pending</span><span>Paid</span><span>Goal</span><span>Actual</span><span></span>
+    </div>`;
 
-  CATS.forEach(cat=>{
-    const items = S.budgetItems.filter(b=>b.category===cat.key);
-    let catPaid=0, catAct=0;
-    items.forEach(b=>{ const {total}=calcItemTotal(b); catPaid+=Number(b.amount_paid||0); catAct+=total; });
-    const catPend = catAct - catPaid;
+  CATEGORIES.forEach(cat => {
+    const items = state.budgetItems.filter(b=>b.category===cat.key);
+    let catPending=0, catPaid=0, catGoal=0;
+    items.forEach(b=>{
+      catPaid += Number(b.amount_paid||0);
+      catGoal += Number(b.item_price||0);
+    });
+    catPending = catGoal - catPaid;
+    const catActual = catGoal;
     const decided = items.some(b=>b.status==='decided');
-    const over = catAct > goal/CATS.length && goal > 0;
+    const over = catActual > catGoal && catGoal > 0;
 
-    h+=`<div class="budget-row">
-      <div class="budget-row-header" onclick="this.nextElementSibling.classList.toggle('open')">
-        <span class="bcol name">${cat.emoji} ${cat.label} <span class="cat-status ${decided?'decided':'draft'}">${decided?'✓':'DRAFT'}</span></span>
-        <span class="bcol">€${Math.round(catPend).toLocaleString()}</span>
-        <span class="bcol" style="color:var(--green)">€${Math.round(catPaid).toLocaleString()}</span>
-        <span class="bcol">€${Math.round(catAct).toLocaleString()}</span>
-        <span class="bcol">€${Math.round(catAct).toLocaleString()}</span>
-        <span style="color:var(--light);font-size:0.75rem">▾</span>
+    html += `<div class="budget-row">
+      <div class="budget-row-header" onclick="toggleBudgetRow(this)">
+        <span class="budget-col name">${cat.emoji} ${cat.label} <span class="cat-status ${decided?'decided':'draft'}" style="margin-left:6px">${decided?'✓':'DRAFT'}</span></span>
+        <span class="budget-col">€${catPending.toLocaleString()}</span>
+        <span class="budget-col" style="color:var(--green)">€${catPaid.toLocaleString()}</span>
+        <span class="budget-col">€${catGoal.toLocaleString()}</span>
+        <span class="budget-col ${over?'over':''}">€${catActual.toLocaleString()}</span>
+        <span style="color:var(--light);font-size:0.8rem">▾</span>
       </div>
       <div class="budget-body">
-        ${items.length ? `
-        <table style="width:100%;font-size:0.79rem;border-collapse:collapse;margin-bottom:10px">
-          <tr style="color:var(--light);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em">
-            <th style="text-align:left;padding:4px 6px;font-weight:400">Item</th>
-            <th style="text-align:center;padding:4px 6px;font-weight:400">Type</th>
-            <th style="text-align:right;padding:4px 6px;font-weight:400">Price</th>
-            <th style="text-align:right;padding:4px 6px;font-weight:400">VAT%</th>
-            <th style="text-align:right;padding:4px 6px;font-weight:400;color:var(--green)">Comm%</th>
-            <th style="text-align:right;padding:4px 6px;font-weight:400;color:var(--green)">Comm€</th>
-            <th style="text-align:right;padding:4px 6px;font-weight:400">Total</th>
-            <th style="padding:4px 2px"></th>
-          </tr>
-          ${items.map(b=>{
-            const {base,comm,vat,total}=calcItemTotal(b);
-            const perHead=b.pricing_type==='per_head';
-            const guests=Number(b.guests||S.current.guest_count||0);
-            return `<tr style="border-top:1px solid var(--border)">
-              <td style="padding:6px 6px;color:var(--ink)">${b.item_name}</td>
-              <td style="padding:6px 6px;text-align:center">
-                <span style="font-size:0.7rem;padding:2px 7px;border-radius:10px;background:${perHead?'var(--blue-light)':'var(--gold-light)'};color:${perHead?'var(--blue)':'var(--gold-dark)'}">
-                  ${perHead?`👥 ×${guests}`:'📌 Fixed'}
-                </span>
-              </td>
-              <td style="padding:6px 6px;text-align:right">€${Number(b.item_price||0).toLocaleString()}</td>
-              <td style="padding:6px 6px;text-align:right;color:var(--mid)">${b.vat_amount||0}%</td>
-              <td style="padding:6px 6px;text-align:right;color:var(--green)">${b.commission_rate||0}%</td>
-              <td style="padding:6px 6px;text-align:right;color:var(--green)">€${Math.round(comm).toLocaleString()}</td>
-              <td style="padding:6px 6px;text-align:right;font-weight:500">€${Math.round(total).toLocaleString()}</td>
-              <td style="padding:6px 2px">
-                <button class="cat-icon-btn" onmousedown="editBudgetItem('${b.id}')" title="Edit">✏️</button>
-                <button class="cat-icon-btn" onmousedown="removeBudgetItem('${b.id}')" title="Remove">✕</button>
-              </td>
-            </tr>`;
-          }).join('')}
-          <tr style="border-top:2px solid var(--border-strong);font-weight:500">
-            <td colspan="6" style="padding:6px 6px;color:var(--mid);font-size:0.78rem">Category Total</td>
-            <td style="padding:6px 6px;text-align:right;color:var(--gold-dark)">€${Math.round(catAct).toLocaleString()}</td>
-            <td></td>
-          </tr>
-        </table>` : `<div style="font-size:0.78rem;color:var(--light);padding:8px 0 10px">No items yet</div>`}
-
-        <!-- ADD ITEM FORM -->
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-top:4px">
-          <div style="font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid);margin-bottom:8px">＋ Add Item</div>
-          <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:flex-end">
-            <div style="flex:2;min-width:130px">
-              <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Item name *</div>
-              <input id="bi-n-${cat.key}" class="form-input" placeholder="e.g. Planning fee"/>
-            </div>
-            <div>
-              <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Type</div>
-              <select id="bi-t-${cat.key}" class="form-input" style="width:110px">
-                <option value="fixed">📌 Fixed</option>
-                <option value="per_head">👥 Per head</option>
-              </select>
-            </div>
-            <div style="width:90px">
-              <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Price (€)</div>
-              <input id="bi-p-${cat.key}" class="form-input" type="number" placeholder="0"/>
-            </div>
-            <div style="width:70px">
-              <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">VAT %</div>
-              <input id="bi-v-${cat.key}" class="form-input" type="number" placeholder="0"/>
-            </div>
-            <div style="width:80px">
-              <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Comm % <span style="color:var(--light)">(opt)</span></div>
-              <input id="bi-c-${cat.key}" class="form-input" type="number" placeholder="—"/>
-            </div>
-            <button class="btn-sm primary" style="height:36px" onclick="addBudgetItem('${cat.key}')">＋ Add</button>
-          </div>
-        </div>
-
-        <!-- PAYMENTS SECTION -->
-        <div style="margin-top:12px">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px">
-            <div style="font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid)">💳 Payments</div>
-            <button class="btn-sm" onclick="addPaymentForm('${cat.key}')" style="font-size:0.72rem;padding:4px 10px">＋ Add Payment</button>
-          </div>
-          <div id="payments-${cat.key}">
-            ${buildPaymentsList(cat.key)}
-          </div>
-          <div id="payment-form-${cat.key}" style="display:none"></div>
+        ${items.map(b=>`
+          <div class="budget-item-row">
+            <span class="budget-item-name">${b.item_name}</span>
+            <span class="budget-commission">(+${b.commission_rate||0}%)</span>
+            <span class="budget-item-val">€${Number(b.item_price||0).toLocaleString()}</span>
+            <button class="cat-icon-btn" onclick="removeBudgetItem('${b.id}','${cat.key}')">✕</button>
+          </div>`).join('')}
+        <div class="budget-add-item">
+          <input id="bi-name-${cat.key}" placeholder="Item name" style="flex:2"/>
+          <input id="bi-price-${cat.key}" type="number" placeholder="Price (€)" style="width:120px"/>
+          <input id="bi-comm-${cat.key}" type="number" placeholder="Commission %" style="width:120px"/>
+          <button class="btn-sm primary" onclick="addBudgetItem('${cat.key}')">＋</button>
         </div>
       </div>
     </div>`;
   });
-  return h;
+  return html;
 }
 
-function buildPaymentsList(catKey) {
-  const payments = (S.payments||[]).filter(p=>p.category===catKey);
-  if(!payments.length) return `<div style="font-size:0.78rem;color:var(--light)">No payments recorded yet</div>`;
-  return payments.map(p=>{
-    const vatAmt = Number(p.amount||0) * (Number(p.vat_rate||0)/100);
-    const total = Number(p.amount||0) + vatAmt;
-    const isPaid = p.status==='paid';
-    return `<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:0.8rem">
-      <span style="font-size:1rem">${p.method==='bank'?'🏦':'💵'}</span>
-      <span style="flex:1;color:var(--mid)">${p.description||'Payment'}</span>
-      <span style="color:var(--light);font-size:0.72rem">${p.due_date?new Date(p.due_date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):''}</span>
-      ${p.vat_rate?`<span style="color:var(--light);font-size:0.7rem">+${p.vat_rate}% VAT</span>`:''}
-      <span style="font-weight:500;color:${isPaid?'var(--green)':'var(--gold-dark)'}">€${Math.round(total).toLocaleString()}</span>
-      <span style="font-size:0.7rem;padding:2px 7px;border-radius:10px;background:${isPaid?'var(--green-light)':'var(--gold-light)'};color:${isPaid?'var(--green)':'var(--gold-dark)'}">
-        ${isPaid?'✓ Paid':'Pending'}
-      </span>
-      <button class="cat-icon-btn" onmousedown="togglePaymentPaid('${p.id}','${catKey}')">✓</button>
-      <button class="cat-icon-btn" onmousedown="removePayment('${p.id}','${catKey}')">✕</button>
-    </div>`;
-  }).join('');
-}
-
-function addPaymentForm(catKey) {
-  const el = document.getElementById(`payment-form-${catKey}`);
-  if(!el) return;
-  el.style.display = 'block';
-  el.innerHTML = `<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-top:8px">
-    <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:flex-end">
-      <div style="flex:2;min-width:120px">
-        <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Description</div>
-        <input id="pf-desc-${catKey}" class="form-input" placeholder="e.g. Deposit"/>
-      </div>
-      <div style="width:100px">
-        <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Amount (€)</div>
-        <input id="pf-amt-${catKey}" class="form-input" type="number" placeholder="0"/>
-      </div>
-      <div style="width:70px">
-        <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">VAT %</div>
-        <input id="pf-vat-${catKey}" class="form-input" type="number" placeholder="0"/>
-      </div>
-      <div>
-        <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Method</div>
-        <select id="pf-method-${catKey}" class="form-input" style="width:100px">
-          <option value="bank">🏦 Bank</option>
-          <option value="cash">💵 Cash</option>
-        </select>
-      </div>
-      <div style="width:130px">
-        <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Due Date</div>
-        <input id="pf-due-${catKey}" class="form-input" type="date"/>
-      </div>
-      <button class="btn-sm primary" style="height:36px" onclick="savePayment('${catKey}')">Save</button>
-      <button class="btn-sm" style="height:36px" onclick="document.getElementById('payment-form-${catKey}').style.display='none'">Cancel</button>
-    </div>
-  </div>`;
-}
-
-async function savePayment(catKey) {
-  const desc = document.getElementById(`pf-desc-${catKey}`)?.value.trim();
-  const amt = parseFloat(document.getElementById(`pf-amt-${catKey}`)?.value)||0;
-  const vat = parseFloat(document.getElementById(`pf-vat-${catKey}`)?.value)||0;
-  const method = document.getElementById(`pf-method-${catKey}`)?.value;
-  const due = document.getElementById(`pf-due-${catKey}`)?.value;
-  if(!amt){ toast('Enter amount'); return; }
-  try {
-    const res = await sbPost('payments',{
-      couple_id:S.current.id, category:catKey,
-      description:desc||'Payment', amount:amt, vat_rate:vat,
-      method, due_date:due||null, status:'pending'
-    });
-    if(!S.payments) S.payments=[];
-    S.payments.push(res[0]);
-    document.getElementById(`payment-form-${catKey}`).style.display='none';
-    document.getElementById(`payments-${catKey}`).innerHTML = buildPaymentsList(catKey);
-    toast('Payment added!');
-  } catch(e){ toast('Error: '+e.message, true); }
-}
-
-async function togglePaymentPaid(id, catKey) {
-  if(!S.payments) return;
-  const p = S.payments.find(p=>p.id===id);
-  if(!p) return;
-  p.status = p.status==='paid'?'pending':'paid';
-  await sbPatch('payments',`id=eq.${id}`,{status:p.status}).catch(e=>toast('Error: '+e.message,true));
-  document.getElementById(`payments-${catKey}`).innerHTML = buildPaymentsList(catKey);
-}
-
-async function removePayment(id, catKey) {
-  await sbDelete('payments',`id=eq.${id}`).catch(e=>toast('Error: '+e.message,true));
-  if(S.payments) S.payments = S.payments.filter(p=>p.id!==id);
-  document.getElementById(`payments-${catKey}`).innerHTML = buildPaymentsList(catKey);
-}
-
-function editBudgetItem(id) {
-  const b = S.budgetItems.find(x=>x.id===id);
-  if(!b) return;
-  showModal('modal-edit-bi','Edit Budget Item',`
-    <div class="form-group"><label class="form-label">Item Name</label>
-      <input class="form-input" id="ebi-name" value="${b.item_name}"/></div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Type</label>
-        <select class="form-input" id="ebi-type">
-          <option value="fixed" ${b.pricing_type!=='per_head'?'selected':''}>📌 Fixed</option>
-          <option value="per_head" ${b.pricing_type==='per_head'?'selected':''}>👥 Per Head</option>
-        </select></div>
-      <div class="form-group"><label class="form-label">Price (€)</label>
-        <input class="form-input" type="number" id="ebi-price" value="${b.item_price||0}"/></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">VAT %</label>
-        <input class="form-input" type="number" id="ebi-vat" value="${b.vat_amount||0}"/></div>
-      <div class="form-group"><label class="form-label">Commission % <span style="color:var(--light)">(optional)</span></label>
-        <input class="form-input" type="number" id="ebi-comm" value="${b.commission_rate||0}"/></div>
-    </div>
-    <div class="modal-footer" style="padding:16px 0 0;border:none">
-      <button class="btn-sm" onclick="closeModal('dyn-modal-edit-bi')">Cancel</button>
-      <button class="btn-sm primary" onclick="saveBudgetItemEdit('${id}')">Save</button>
-    </div>
-  `);
-}
-
-async function saveBudgetItemEdit(id) {
-  const b = S.budgetItems.find(x=>x.id===id);
-  if(!b) return;
-  b.item_name = document.getElementById('ebi-name').value.trim();
-  b.pricing_type = document.getElementById('ebi-type').value;
-  b.item_price = parseFloat(document.getElementById('ebi-price').value)||0;
-  b.vat_amount = parseFloat(document.getElementById('ebi-vat').value)||0;
-  b.commission_rate = parseFloat(document.getElementById('ebi-comm').value)||0;
-  await sbPatch('budget_items',`id=eq.${id}`,{
-    item_name:b.item_name, pricing_type:b.pricing_type,
-    item_price:b.item_price, vat_amount:b.vat_amount, commission_rate:b.commission_rate
-  }).catch(e=>toast('Error: '+e.message,true));
-  closeModal('dyn-modal-edit-bi');
-  toast('Saved!');
-  switchTabDirect('budget');
+function toggleBudgetRow(header) {
+  const body = header.nextElementSibling;
+  body.classList.toggle('open');
 }
 
 async function addBudgetItem(catKey) {
-  const name = document.getElementById(`bi-n-${catKey}`)?.value.trim();
-  const price = parseFloat(document.getElementById(`bi-p-${catKey}`)?.value)||0;
-  const vat = parseFloat(document.getElementById(`bi-v-${catKey}`)?.value)||0;
-  const comm = parseFloat(document.getElementById(`bi-c-${catKey}`)?.value)||0;
-  const type = document.getElementById(`bi-t-${catKey}`)?.value||'fixed';
-  if(!name){ toast('Enter item name'); return; }
+  const name = document.getElementById(`bi-name-${catKey}`)?.value.trim();
+  const price = parseFloat(document.getElementById(`bi-price-${catKey}`)?.value) || 0;
+  const comm = parseFloat(document.getElementById(`bi-comm-${catKey}`)?.value) || 0;
+  if(!name) { toast('Enter item name'); return; }
   try {
-    const res = await sbPost('budget_items',{
-      couple_id:S.current.id, category:catKey, item_name:name,
-      item_price:price, vat_amount:vat, commission_rate:comm,
-      pricing_type:type, sort_order:S.budgetItems.length
+    const res = await sbPost('budget_items', {
+      couple_id: state.currentCouple.id,
+      category: catKey,
+      item_name: name,
+      item_price: price,
+      commission_rate: comm,
+      sort_order: state.budgetItems.length
     });
-    S.budgetItems.push(res[0]);
+    state.budgetItems.push(res[0]);
     toast('Item added!');
-    switchTabDirect('budget');
-  } catch(e){ toast('Error: '+e.message, true); }
+    renderTab('budget');
+  } catch(e) { toast('Error: '+e.message); }
 }
 
-async function removeBudgetItem(id) {
-  await sbDelete('budget_items',`id=eq.${id}`).catch(e=>toast('Error: '+e.message,true));
-  S.budgetItems = S.budgetItems.filter(b=>b.id!==id);
-  switchTabDirect('budget');
+async function removeBudgetItem(id, catKey) {
+  await sbDelete('budget_items', `id=eq.${id}`).catch(e=>toast('Error: '+e.message));
+  state.budgetItems = state.budgetItems.filter(b=>b.id!==id);
+  renderTab('budget');
 }
 
-function showPaymentsSummary() {
-  if(!S.payments?.length){ toast('No payments recorded yet'); return; }
-  const pending = S.payments.filter(p=>p.status!=='paid');
-  const paid = S.payments.filter(p=>p.status==='paid');
-  const sumPending = pending.reduce((a,p)=>a+Number(p.amount||0)*(1+Number(p.vat_rate||0)/100),0);
-  const sumPaid = paid.reduce((a,p)=>a+Number(p.amount||0)*(1+Number(p.vat_rate||0)/100),0);
-  const rows = p => p.map(x=>`<div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:0.8rem">
-    <span>${x.method==='bank'?'🏦':'💵'}</span>
-    <span style="flex:1">${x.description}</span>
-    <span style="color:var(--light)">${CATS.find(c=>c.key===x.category)?.label||x.category}</span>
-    <span style="color:var(--light)">${x.due_date?new Date(x.due_date).toLocaleDateString('en-GB',{day:'numeric',month:'short'}):''}</span>
-    <span style="font-weight:500">€${Math.round(Number(x.amount||0)*(1+Number(x.vat_rate||0)/100)).toLocaleString()}</span>
-  </div>`).join('');
-  showModal('modal-payments','💳 All Payments',`
-    <div style="margin-bottom:14px">
-      <div style="display:flex;gap:12px;margin-bottom:14px">
-        <div style="flex:1;background:var(--rose-light);border-radius:var(--radius-sm);padding:12px;text-align:center">
-          <div style="font-size:1.2rem;font-weight:500;color:var(--rose)">€${Math.round(sumPending).toLocaleString()}</div>
-          <div style="font-size:0.7rem;color:var(--mid)">Pending</div>
-        </div>
-        <div style="flex:1;background:var(--green-light);border-radius:var(--radius-sm);padding:12px;text-align:center">
-          <div style="font-size:1.2rem;font-weight:500;color:var(--green)">€${Math.round(sumPaid).toLocaleString()}</div>
-          <div style="font-size:0.7rem;color:var(--mid)">Paid</div>
-        </div>
-      </div>
-      ${pending.length?`<div style="font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid);margin-bottom:6px">Pending</div>${rows(pending)}`:''}
-      ${paid.length?`<div style="font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid);margin-top:12px;margin-bottom:6px">Paid</div>${rows(paid)}`:''}
-    </div>
-  `);
-}
-
-// ── PLAN ──────────────────────────────────────────────────────────
+// ── PLAN ─────────────────────────────────────
 function buildPlan() {
-  let h=`<div class="section-toolbar">
-    <h2>Timeline & Tasks</h2>
-    <button class="btn-sm primary" onclick="document.getElementById('task-form-wrap').style.display='block'">＋ Add Task</button>
-  </div>
-  <div class="task-form-wrap" id="task-form-wrap" style="display:none">
-    <div class="task-form">
-      <input id="t-title" placeholder="Task title…"/>
-      <select id="t-cat"><option value="">Category…</option>${CATS.map(c=>`<option value="${c.key}">${c.label}</option>`).join('')}</select>
-      <input id="t-due" type="date"/>
-      <button class="btn-sm primary" onclick="addTask()">Save</button>
-      <button class="btn-sm" onclick="document.getElementById('task-form-wrap').style.display='none'">Cancel</button>
+  let html = `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+      <h2 style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.4rem;flex:1">Wedding Timeline</h2>
+      <button class="btn-sm primary" onclick="showAddTask()">＋ Add Task</button>
     </div>
-  </div>`;
+    <div id="task-form-wrap" style="display:none;">
+      <div class="task-form">
+        <input id="t-title" placeholder="Task title" style="flex:2"/>
+        <select id="t-cat">
+          <option value="">Category…</option>
+          ${CATEGORIES.map(c=>`<option value="${c.key}">${c.label}</option>`).join('')}
+        </select>
+        <input id="t-due" type="date"/>
+        <button class="btn-sm primary" onclick="addTask()">Save</button>
+        <button class="btn-sm" onclick="hideAddTask()">Cancel</button>
+      </div>
+    </div>`;
 
-  const tasks=[...S.tasks].sort((a,b)=>(a.due_date||'9999')>(b.due_date||'9999')?1:-1);
-  if(!tasks.length) return h+`<div class="empty-state"><div class="icon">📋</div><p>No tasks yet</p></div>`;
-
-  const groups={};
+  // Group tasks by month
+  const tasks = [...state.tasks].sort((a,b)=>(a.due_date||'9999')>(b.due_date||'9999')?1:-1);
+  const groups = {};
   tasks.forEach(t=>{
-    const k=t.due_date?t.due_date.slice(0,7):'no-date';
-    (groups[k]=groups[k]||[]).push(t);
+    const key = t.due_date ? t.due_date.slice(0,7) : 'no-date';
+    if(!groups[key]) groups[key] = [];
+    groups[key].push(t);
   });
 
-  Object.entries(groups).forEach(([k,gt])=>{
-    const label=k==='no-date'?'No Date':new Date(k+'-01').toLocaleDateString('en-GB',{month:'long',year:'numeric'});
-    h+=`<div class="month-group"><div class="month-label">${label}</div>`;
-    gt.forEach(t=>{
-      const od=t.due_date&&!t.completed&&new Date(t.due_date)<new Date();
-      h+=`<div class="plan-item">
-        <div class="plan-check ${t.completed?'done':''}" onclick="toggleTask('${t.id}',${!!t.completed})">${t.completed?'✓':''}</div>
-        <div class="plan-title ${t.completed?'done':''}">${t.title}
-          ${t.category?`<span class="plan-cat">${CATS.find(c=>c.key===t.category)?.label||t.category}</span>`:''}
-        </div>
-        <div class="plan-date ${od?'overdue':''}">${t.due_date?new Date(t.due_date).toLocaleDateString('en-GB',{day:'numeric',month:'short'}):''} ${od?'⚠️':''}</div>
-        <button class="cat-icon-btn" onclick="deleteTask('${t.id}')" style="margin-left:6px;flex-shrink:0">✕</button>
+  if(!tasks.length) {
+    html += `<div class="empty-state"><div class="icon">📋</div><p>No tasks yet. Add one above!</p></div>`;
+  } else {
+    Object.entries(groups).forEach(([monthKey, monthTasks])=>{
+      const label = monthKey==='no-date' ? 'No Date' : new Date(monthKey+'-01').toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+      html += `<div class="month-group">
+        <div class="month-label">${label}</div>
+        ${monthTasks.map(t=>{
+          const overdue = t.due_date && !t.completed && new Date(t.due_date) < new Date();
+          return `<div class="plan-item">
+            <div class="plan-check ${t.completed?'done':''}" onclick="toggleTask('${t.id}','${t.completed}')">
+              ${t.completed ? '✓' : ''}
+            </div>
+            <div class="plan-title ${t.completed?'done':''}">${t.title}
+              ${t.category ? `<span style="font-size:0.72rem;color:var(--light);margin-left:6px">${CATEGORIES.find(c=>c.key===t.category)?.label||t.category}</span>` : ''}
+            </div>
+            <div class="plan-date ${overdue?'overdue':''}">${t.due_date ? new Date(t.due_date).toLocaleDateString('en-GB',{day:'numeric',month:'short'}) : ''} ${overdue?'⚠️':''}</div>
+            <button class="cat-icon-btn" onclick="deleteTask('${t.id}')" style="margin-left:8px">✕</button>
+          </div>`;
+        }).join('')}
       </div>`;
     });
-    h+=`</div>`;
-  });
-  return h;
+  }
+  return html;
 }
+
+function showAddTask() { document.getElementById('task-form-wrap').style.display='block'; }
+function hideAddTask() { document.getElementById('task-form-wrap').style.display='none'; }
 
 async function addTask() {
-  const title=document.getElementById('t-title').value.trim();
-  const cat=document.getElementById('t-cat').value;
-  const due=document.getElementById('t-due').value;
-  if(!title){toast('Enter task title');return;}
+  const title = document.getElementById('t-title').value.trim();
+  const cat = document.getElementById('t-cat').value;
+  const due = document.getElementById('t-due').value;
+  if(!title) { toast('Enter task title'); return; }
   try {
-    const res=await sbPost('tasks',{couple_id:S.current.id,title,category:cat||null,due_date:due||null});
-    S.tasks.push(res[0]);
+    const res = await sbPost('tasks', {couple_id:state.currentCouple.id,title,category:cat||null,due_date:due||null});
+    state.tasks.push(res[0]);
+    hideAddTask();
     toast('Task added!');
-    switchTabDirect('plan');
-  } catch(e){toast('Error: '+e.message,true);}
+    renderTab('plan');
+  } catch(e) { toast('Error: '+e.message); }
 }
-async function toggleTask(id, done) {
-  const t=S.tasks.find(t=>t.id===id);
-  if(!t)return;
-  t.completed=!done;
-  await sbPatch('tasks',`id=eq.${id}`,{completed:!done,completed_at:!done?new Date().toISOString():null}).catch(e=>toast('Error: '+e.message,true));
-  switchTabDirect('plan');
+
+async function toggleTask(id, currentCompleted) {
+  const done = currentCompleted === 'true' || currentCompleted === true;
+  const t = state.tasks.find(t=>t.id===id);
+  if(!t) return;
+  t.completed = !done;
+  await sbPatch('tasks', `id=eq.${id}`, {completed:!done, completed_at: !done ? new Date().toISOString() : null}).catch(e=>toast('Error: '+e.message));
+  renderTab('plan');
 }
+
 async function deleteTask(id) {
-  if(!confirm('Delete task?'))return;
-  await sbDelete('tasks',`id=eq.${id}`).catch(e=>toast('Error: '+e.message,true));
-  S.tasks=S.tasks.filter(t=>t.id!==id);
-  switchTabDirect('plan');
+  if(!confirm('Delete this task?')) return;
+  await sbDelete('tasks', `id=eq.${id}`).catch(e=>toast('Error: '+e.message));
+  state.tasks = state.tasks.filter(t=>t.id!==id);
+  renderTab('plan');
 }
 
-// ── MEDIA ─────────────────────────────────────────────────────────
+// ── MEDIA ─────────────────────────────────────
 function buildMedia() {
-  const icons={contract:'📄',invoice:'🧾',proof_of_payment:'✅',offer:'📋',other:'📎'};
-  let h=`<div class="section-toolbar"><h2>Media & Documents</h2></div>
-  <div class="media-upload-zone" onclick="toast('File upload coming soon — needs Supabase Storage setup')">
-    <div style="font-size:2rem;margin-bottom:8px">☁️</div>
-    <div style="font-size:0.85rem;color:var(--mid)">Click to upload — contracts, invoices, offers, photos</div>
-    <div style="font-size:0.72rem;color:var(--light);margin-top:5px">PDF, DOCX, PPTX, JPG, PNG</div>
-  </div>`;
-  if(!S.mediaFiles.length) return h+`<div class="empty-state"><div class="icon">🖼</div><p>No files uploaded yet</p></div>`;
-  h+=`<div class="media-grid">${S.mediaFiles.map(f=>`
-    <div class="media-card">
-      <div style="font-size:1.8rem;margin-bottom:7px">${icons[f.file_type]||'📎'}</div>
-      <div style="font-size:0.78rem;font-weight:500;word-break:break-all">${f.file_name}</div>
-      <div style="font-size:0.7rem;color:var(--light);margin-top:3px">${f.file_type||'file'} · ${new Date(f.created_at).toLocaleDateString()}</div>
-      <div style="margin-top:5px;font-size:0.7rem;color:${f.visible_to_couple?'var(--green)':'var(--rose)'}">${f.visible_to_couple?'👁 Couple can see':'🔒 Planner only'}</div>
-    </div>`).join('')}</div>`;
-  return h;
+  const icons = {contract:'📄',invoice:'🧾',proof_of_payment:'✅',offer:'📋',other:'📎'};
+  let html = `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+      <h2 style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.4rem;flex:1">Media & Documents</h2>
+    </div>
+    <div class="media-upload" onclick="toast('File upload requires Supabase Storage — coming soon!')">
+      <div class="media-upload-icon">☁️</div>
+      <div class="media-upload-text">Click to upload files — contracts, invoices, offers, photos</div>
+      <div style="font-size:0.72rem;color:var(--light);margin-top:6px">PDF, DOCX, PPTX, JPG, PNG</div>
+    </div>`;
+
+  if(!state.mediaFiles.length) {
+    html += `<div class="empty-state"><div class="icon">🖼</div><p>No files uploaded yet</p></div>`;
+  } else {
+    html += `<div class="media-grid">`;
+    state.mediaFiles.forEach(f=>{
+      const icon = icons[f.file_type] || '📎';
+      html += `<div class="media-card">
+        <div class="media-icon">${icon}</div>
+        <div class="media-name">${f.file_name}</div>
+        <div class="media-meta">${f.file_type||'file'} · ${new Date(f.created_at).toLocaleDateString()}</div>
+        <div style="margin-top:6px;font-size:0.72rem;color:${f.visible_to_couple?'var(--green)':'var(--rose)'}">
+          ${f.visible_to_couple?'👁 Visible to couple':'🔒 Planner only'}
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+  return html;
 }
 
-// ── CHAT ──────────────────────────────────────────────────────────
+// ── CHAT ─────────────────────────────────────
 function buildChat() {
   return `<div class="chat-wrap">
-    <div class="chat-sidebar">
-      <div style="padding:10px 12px;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--light);border-bottom:1px solid var(--border)">Threads</div>
+    <div class="chat-sidebar" id="chat-sidebar-el">
+      <div style="padding:12px 14px;font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--light);border-bottom:1px solid var(--border)">Threads</div>
       <div id="thread-list"></div>
     </div>
-    <div class="chat-area">
-      <div class="chat-header" id="chat-hd">Select a thread</div>
-      <div class="chat-messages" id="chat-msgs"><div style="margin:auto;color:var(--light);font-size:0.82rem">Pick a category to start</div></div>
+    <div class="chat-area" id="chat-area-el">
+      <div class="chat-header" id="chat-header-el">Select a thread</div>
+      <div class="chat-messages" id="chat-messages-el"><div style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--light);font-size:0.85rem;">Select a category to start chatting</div></div>
       <div class="chat-input-wrap" id="chat-input-wrap" style="display:none">
-        <input id="chat-in" placeholder="Type a message…" onkeydown="if(event.key==='Enter')sendMsg()"/>
-        <button class="chat-send" onclick="sendMsg()">➤</button>
+        <input id="chat-input" placeholder="Type a message…" onkeydown="if(event.key==='Enter')sendChatMessage()"/>
+        <button class="chat-send" onclick="sendChatMessage()">➤</button>
       </div>
     </div>
   </div>`;
 }
 
-function initChat() {
-  const el=document.getElementById('thread-list');
-  if(!el) return;
-  let h=`<div class="chat-thread-item" onclick="selectThread('general',null,'💬 General Chat')">
+async function initChat() {
+  // Build thread list from CATEGORIES + existing threads
+  const threadListEl = document.getElementById('thread-list');
+  if(!threadListEl) return;
+
+  // General thread first
+  let html = `<div class="chat-thread-item" onclick="selectThread('general')">
     <div class="chat-thread-name">💬 General Chat</div>
+    <div class="chat-thread-preview">General conversation</div>
   </div>`;
-  CATS.forEach(cat=>{
-    const cvs=S.coupleVendors.filter(cv=>cv.category===cat.key);
-    h+=`<div class="chat-thread-item" onclick="selectThread('${cat.key}',null,'${cat.emoji} ${cat.label}')">
+
+  CATEGORIES.forEach(cat => {
+    const catVendors = state.coupleVendors.filter(cv=>cv.category===cat.key);
+    html += `<div class="chat-thread-item" onclick="selectThread('${cat.key}')">
       <div class="chat-thread-name">${cat.emoji} ${cat.label}</div>
     </div>`;
-    cvs.forEach(cv=>{
-      const v=S.vendorCache[cv.vendor_id];
-      if(v) h+=`<div class="chat-vendor-item" onclick="selectThread('${cat.key}','${cv.vendor_id}','${v.name}')">
+    catVendors.forEach(cv=>{
+      const v = state.vendorCache[cv.vendor_id];
+      if(v) html += `<div class="chat-vendor-item" onclick="selectThread('${cat.key}','${cv.vendor_id}')">
         <div class="chat-vendor-name">› ${v.name}</div>
       </div>`;
     });
   });
-  el.innerHTML=h;
+  threadListEl.innerHTML = html;
 }
 
-async function selectThread(catKey, vendorId, title) {
-  S.currentThread={catKey,vendorId};
-  document.getElementById('chat-hd').textContent=title||catKey;
-  document.getElementById('chat-input-wrap').style.display='flex';
-  document.querySelectorAll('.chat-thread-item,.chat-vendor-item').forEach(e=>e.classList.remove('active'));
+async function selectThread(catKey, vendorId=null) {
+  state.currentThread = {catKey, vendorId};
+
+  // Highlight active
+  document.querySelectorAll('.chat-thread-item,.chat-vendor-item').forEach(el=>el.classList.remove('active'));
+
+  const header = document.getElementById('chat-header-el');
+  const cat = CATEGORIES.find(c=>c.key===catKey);
+  const v = vendorId ? state.vendorCache[vendorId] : null;
+  if(header) header.textContent = v ? v.name : (cat ? `${cat.emoji} ${cat.label}` : '💬 General Chat');
+
+  document.getElementById('chat-input-wrap').style.display = 'flex';
+
+  // Load messages
   try {
-    const cat = vendorId ? `${catKey}_${vendorId}` : catKey;
-    const msgs=await sbGet('messages',`couple_id=eq.${S.current.id}&category=eq.${cat}&order=created_at.asc`);
-    const el=document.getElementById('chat-msgs');
-    if(!msgs.length){el.innerHTML='<div style="margin:auto;color:var(--light);font-size:0.82rem">No messages yet</div>';return;}
-    el.innerHTML=msgs.map(m=>`<div class="chat-msg ${m.sender}">
+    let query = `couple_id=eq.${state.currentCouple.id}&order=created_at.asc`;
+    if(vendorId) query += `&category=eq.${catKey}_${vendorId}`;
+    else query += `&category=eq.${catKey}`;
+    const msgs = await sbGet('messages', query);
+    renderMessages(msgs);
+  } catch(e) {
+    renderMessages([]);
+  }
+}
+
+function renderMessages(msgs) {
+  const el = document.getElementById('chat-messages-el');
+  if(!el) return;
+  if(!msgs.length) {
+    el.innerHTML = '<div style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--light);font-size:0.85rem;">No messages yet. Start the conversation!</div>';
+    return;
+  }
+  el.innerHTML = msgs.map(m=>`
+    <div class="chat-msg ${m.sender}">
       <div>${m.content}</div>
       <div class="chat-msg-meta">${m.sender_name||m.sender} · ${new Date(m.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</div>
     </div>`).join('');
-    el.scrollTop=el.scrollHeight;
-  } catch(e){toast('Error loading messages: '+e.message,true);}
+  el.scrollTop = el.scrollHeight;
 }
 
-async function sendMsg() {
-  const inp=document.getElementById('chat-in');
-  const content=inp.value.trim();
-  if(!content||!S.currentThread)return;
-  const {catKey,vendorId}=S.currentThread;
-  const category=vendorId?`${catKey}_${vendorId}`:catKey;
+async function sendChatMessage() {
+  const input = document.getElementById('chat-input');
+  if(!input) return;
+  const content = input.value.trim();
+  if(!content) return;
+  const {catKey, vendorId} = state.currentThread || {};
+  const category = vendorId ? `${catKey}_${vendorId}` : catKey;
   try {
-    await sbPost('messages',{couple_id:S.current.id,sender:'planner',sender_name:'Niovi',content,category,read_by_couple:false,read_by_planner:true});
-    inp.value='';
-    await selectThread(catKey,vendorId,document.getElementById('chat-hd').textContent);
-  } catch(e){toast('Error: '+e.message,true);}
-}
-
-// ── CREATE COUPLE ─────────────────────────────────────────────────
-async function createCouple() {
-  const p1=document.getElementById('f-p1').value.trim();
-  const p2=document.getElementById('f-p2').value.trim();
-  const email=document.getElementById('f-email').value.trim();
-  if(!p1||!p2||!email){toast('Fill required fields');return;}
-  try {
-    const res=await sbPost('couples',{
-      partner1_name:p1,partner2_name:p2,name:`${p1} & ${p2}`,email,
-      password_hash:document.getElementById('f-pass').value||'',
-      wedding_date:document.getElementById('f-date').value||null,
-      wedding_location:document.getElementById('f-loc').value||null,
-      guest_count:parseInt(document.getElementById('f-guests').value)||null,
-      budget_goal:parseFloat(document.getElementById('f-budget').value)||null,
-      notes:document.getElementById('f-notes').value||null,
+    await sbPost('messages', {
+      couple_id: state.currentCouple.id,
+      sender: 'planner',
+      sender_name: 'Niovi',
+      content,
+      category: category || 'general',
+      read_by_couple: false,
+      read_by_planner: true
     });
-    S.couples.push(res[0]);
+    input.value = '';
+    await selectThread(catKey, vendorId);
+    toast('Message sent!');
+  } catch(e) { toast('Error: '+e.message); }
+}
+
+// ── CREATE COUPLE ─────────────────────────────
+async function createCouple() {
+  const p1 = document.getElementById('f-p1').value.trim();
+  const p2 = document.getElementById('f-p2').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const pass = document.getElementById('f-pass').value.trim();
+  if(!p1||!p2||!email) { toast('Fill in required fields'); return; }
+  try {
+    const res = await sbPost('couples', {
+      partner1_name: p1,
+      partner2_name: p2,
+      name: `${p1} & ${p2}`,
+      email,
+      password_hash: pass,
+      wedding_date: document.getElementById('f-date').value || null,
+      wedding_location: document.getElementById('f-loc').value || null,
+      guest_count: parseInt(document.getElementById('f-guests').value) || null,
+      budget_goal: parseFloat(document.getElementById('f-budget').value) || null,
+      notes: document.getElementById('f-notes').value || null,
+    });
+    state.couples.push(res[0]);
     closeModal('add-couple-modal');
     renderCoupleList();
     toast('Couple created! 🌸');
     selectCouple(res[0].id);
-  } catch(e){toast('Error: '+e.message,true);}
+  } catch(e) { toast('Error: '+e.message); }
 }
 
-// ── MODALS ────────────────────────────────────────────────────────
-const _modals={};
-function showModal(id,title,body){
-  let el=document.getElementById('dyn-'+id);
-  if(!el){
-    el=document.createElement('div');
-    el.id='dyn-'+id;
-    el.className='modal-overlay';
-    el.addEventListener('click',e=>{if(e.target===el)el.classList.remove('open');});
-    document.body.appendChild(el);
-  }
-  el.innerHTML=`<div class="modal">
+// ── MODAL ─────────────────────────────────────
+let _quickModal = null;
+function showQuickModal(title, body) {
+  if(_quickModal) document.body.removeChild(_quickModal);
+  _quickModal = document.createElement('div');
+  _quickModal.className = 'modal-overlay open';
+  _quickModal.innerHTML = `<div class="modal">
     <div class="modal-header">
       <div class="modal-title">${title}</div>
-      <button class="modal-close" onclick="closeModal('dyn-${id}')">✕</button>
+      <button class="modal-close" onclick="closeQuickModal()">✕</button>
     </div>
     <div class="modal-body">${body}</div>
   </div>`;
-  el.classList.add('open');
+  _quickModal.addEventListener('click',e=>{if(e.target===_quickModal)closeQuickModal();});
+  document.body.appendChild(_quickModal);
 }
-function openModal(id){document.getElementById(id)?.classList.add('open');}
-function closeModal(id){document.getElementById(id)?.classList.remove('open');}
-document.addEventListener('click',e=>{if(e.target.classList.contains('modal-overlay'))e.target.classList.remove('open');});
+function closeQuickModal() { if(_quickModal){document.body.removeChild(_quickModal);_quickModal=null;} }
 
-// ── TOAST ─────────────────────────────────────────────────────────
-function toast(msg,err=false,dur=3000){
-  const el=document.getElementById('toast');
-  el.textContent=msg;
-  el.className=err?'show err':'show';
-  clearTimeout(el._t);
-  el._t=setTimeout(()=>el.className='',dur);
-}
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
+document.addEventListener('click', e=>{
+  if(e.target.classList.contains('modal-overlay')) closeModal(e.target.id);
+});
 
-// ── ATHENIAN VENUES ───────────────────────────────────────────────
-const VENUES = [
-  {
-    name: 'Pyrgos Vasilissis',
-    days: {
-      weekday: { total: 20300, rent: 2000, rentNote: 'For the mulberry trees garden', minGuests: 'N/A', welcomeDrinks: 'Included in menu pricing', canapes: 'Included in menu pricing', menu: {guests:100,price:75,total:7500,note:'For served menu'}, drinksDinner: {guests:100,price:15,total:1500,note:'Wines must be provided by the venue'}, openBar: {guests:100,price:30,total:3000,note:'Simple labels and 3 cocktails for the entire duration of the event'}, serviceTips: {cost:2500,note:'Estimation for 1 maitre, 10-12 waiters, 2 Bartender, 6-8 Chef, 1-2 cleaning lady'}, soundLighting: {cost:2500,note:'Including basic sound package, DJ and ceremony sound'}, dj: 'Included in S&L', ceremonySetup: {guests:100,price:9,total:900,note:'cost is for chairs'}, prepRoom: 'N/A', rentExtension: 'N/A', waterStation: {guests:100,price:4,total:400}, earlySetup: 'N/A', partyLights: '⚠️' },
-      friday: { total: 20300, rent: 2000, rentNote: 'For the mulberry trees garden', minGuests: 'N/A', welcomeDrinks: 'Included in menu pricing', canapes: 'Included in menu pricing', menu: {guests:100,price:75,total:7500,note:'For served menu'}, drinksDinner: {guests:100,price:15,total:1500,note:'Wines must be provided by the venue'}, openBar: {guests:100,price:30,total:3000,note:'Simple labels and 3 cocktails for the entire duration'}, serviceTips: {cost:2500,note:'Estimation for 1 maitre, 10-12 waiters, 2 Bartender, 6-8 Chef, 1-2 cleaning lady'}, soundLighting: {cost:2500,note:'Including basic sound package, DJ and ceremony sound'}, dj: 'Included in S&L', ceremonySetup: {guests:100,price:9,total:900,note:'cost is for chairs'}, prepRoom: 'N/A', rentExtension: 'N/A', waterStation: {guests:100,price:4,total:400}, earlySetup: 'N/A', partyLights: '⚠️' },
-      saturday: { total: 38300, rent: 23000, rentNote: 'Rent for the Gardens at the Queen\'s tower', minGuests: 'N/A', welcomeDrinks: 'Included in menu pricing', canapes: 'Included in menu pricing', menu: {guests:100,price:75,total:7500,note:'For served menu'}, drinksDinner: {guests:100,price:15,total:1500,note:'Wines must be provided by the venue'}, openBar: {guests:100,price:30,total:3000,note:'Simple labels and 3 cocktails for the entire duration'}, serviceTips: {cost:2500,note:'Estimation for 1 maitre, 10-12 waiters, 2 Bartender, 6-8 Chef, 1-2 cleaning lady'}, soundLighting: {cost:2500,note:'Including basic sound package, DJ and ceremony sound'}, dj: 'Included in S&L', ceremonySetup: {guests:100,price:9,total:900,note:'cost is for chairs'}, prepRoom: 'N/A', rentExtension: 'N/A', waterStation: {guests:100,price:4,total:400}, earlySetup: 'N/A', partyLights: '⚠️' },
-      sunday: { total: 20300, rent: 2000, rentNote: 'For the mulberry trees garden', minGuests: 'N/A', welcomeDrinks: 'Included in menu pricing', canapes: 'Included in menu pricing', menu: {guests:100,price:75,total:7500,note:'For served menu'}, drinksDinner: {guests:100,price:15,total:1500,note:'Wines must be provided by the venue'}, openBar: {guests:100,price:30,total:3000,note:'Simple labels and 3 cocktails for the entire duration'}, serviceTips: {cost:2500,note:'Estimation for 1 maitre, 10-12 waiters, 2 Bartender, 6-8 Chef, 1-2 cleaning lady'}, soundLighting: {cost:2500,note:'Including basic sound package, DJ and ceremony sound'}, dj: 'Included in S&L', ceremonySetup: {guests:100,price:9,total:900,note:'cost is for chairs'}, prepRoom: 'N/A', rentExtension: 'N/A', waterStation: {guests:100,price:4,total:400}, earlySetup: 'N/A', partyLights: '⚠️' },
-    }
-  },
-  {
-    name: 'Residence (Island Resort)',
-    days: {
-      weekday: { total: 22570, rent: 'Included in menu pricing', minGuests: '80 guests', welcomeDrinks: 'Included in menu pricing', canapes: 'Included in menu pricing', menu: {guests:100,price:124.2,total:12420,note:'10% discount on weekdays on F&B, starting price for seated menu'}, openBar: {guests:100,price:40.5,total:4050,note:'10% discount on weekdays on F&B'}, soundLighting: {cost:2100,note:'Included in sound & lighting pricing'}, dj: 'Included in S&L', ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', rentExtension: 'N/A', waterStation: 'N/A', earlySetup: 'N/A', partyLights: 'Included' },
-      friday: { total: 32800, rent: 'Included in menu pricing', minGuests: '150 guests (150×€56=€8400, 250 guests)', welcomeDrinks: 'Included in menu pricing', canapes: 'Included in menu pricing', menu: {guests:100,price:138,total:13800,note:'starting price for seated menu'}, openBar: {guests:100,price:45,total:4500}, soundLighting: {cost:2100}, dj: 'Included in S&L', ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', rentExtension: 'N/A', waterStation: 'N/A', earlySetup: 'N/A', partyLights: 'Included' },
-      saturday: { total: 35600, rent: 'included in menu pricing', minGuests: '200 guests (200×€56=€11200, 300 guests)', welcomeDrinks: 'Included in menu pricing', canapes: 'Included in menu pricing', menu: {guests:100,price:136,total:13600,note:'starting price for seated menu'}, openBar: {guests:100,price:45,total:4500}, soundLighting: {cost:2100}, dj: 'Included in S&L', ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', rentExtension: 'N/A', waterStation: 'N/A', earlySetup: 'N/A', partyLights: 'Included' },
-      sunday: { total: 24400, rent: 'Included in menu pricing', minGuests: '100 guests', welcomeDrinks: 'Included in menu pricing', canapes: 'Included in menu pricing', menu: {guests:100,price:138,total:13800,note:'starting price for seated menu'}, openBar: {guests:100,price:45,total:4500}, soundLighting: {cost:2100}, dj: 'Included in S&L', ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', rentExtension: 'N/A', waterStation: 'N/A', earlySetup: 'N/A', partyLights: 'Included' },
-    }
-  },
-  {
-    name: 'Gallery (Island Resort)',
-    days: {
-      weekday: { total: 22270, rent: 'included in menu pricing', minGuests: '60 guests', welcomeDrinks: 'Included in menu pricing', canapes: 'Included in menu pricing', menu: {guests:100,price:124.2,total:12420,note:'10% discount on weekdays on F&B, starting price for seated menu'}, openBar: {guests:100,price:40.5,total:4050,note:'10% discount on weekdays on F&B'}, serviceTips: {guests:25,price:124,total:3100,note:'Estimation'}, soundLighting: {cost:1800}, dj: 'N/A', ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', rentExtension: 'no need- 11 hours based on ceremony starting time', waterStation: 'Included in menu pricing', earlySetup: 'N/A', partyLights: 'basic party lights are included in S&L pricing' },
-      friday: { total: 26900, rent: 'Included in menu pricing', minGuests: '50 guests (50×€56=€2800, 150 guests)', welcomeDrinks: 'Included in menu pricing', canapes: 'Included in menu pricing', menu: {guests:100,price:138,total:13800,note:'starting price for seated menu'}, openBar: {guests:100,price:45,total:4500}, serviceTips: {guests:25,price:124,total:3100,note:'Estimation'}, soundLighting: {cost:1800}, dj: 'N/A', ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', rentExtension: 'no need- 11 hours based on ceremony starting time', waterStation: 'Included in menu pricing', earlySetup: 'N/A', partyLights: 'basic party lights are included in S&L pricing' },
-      saturday: { total: 29700, rent: 'included in menu pricing', minGuests: '100 guests (100×€56=€5600, 200 guests)', welcomeDrinks: 'Included in menu pricing', canapes: 'Included in menu pricing', menu: {guests:100,price:138,total:13800,note:'starting price for seated menu'}, openBar: {guests:100,price:45,total:4500}, serviceTips: {guests:25,price:124,total:3100,note:'Estimation'}, soundLighting: {cost:1800}, dj: 'N/A', ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', rentExtension: 'no need- 11 hours based on ceremony starting time', waterStation: 'Included in menu pricing', earlySetup: 'N/A', partyLights: 'basic party lights are included in S&L pricing' },
-      sunday: { total: 24100, rent: 'included in menu pricing', minGuests: '100 guests', welcomeDrinks: 'Included in menu pricing', canapes: 'Included in menu pricing', menu: {guests:100,price:138,total:13800,note:'starting price for seated menu'}, openBar: {guests:100,price:45,total:4500}, serviceTips: {guests:25,price:124,total:3100,note:'Estimation'}, soundLighting: {cost:1800}, dj: 'N/A', ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', rentExtension: 'no need- 11 hours based on ceremony starting time', waterStation: 'Included in menu pricing', earlySetup: 'N/A', partyLights: 'basic party lights are included in S&L pricing' },
-    }
-  },
-  {
-    name: 'Pyrgos Melisourgou',
-    days: {
-      weekday: { total: 22500, rent: 4500, rentNote: 'Monday to Wednesday! For Thursdays the rent is 5500€, included in rent: vallet parking and basic sound system', menu: {guests:100,price:75,total:7500,note:'For served menu'}, openBar: {guests:100,price:30,total:3000,note:'Simple labels and 3 cocktails for the entire duration'}, serviceTips: {cost:2500,note:'Estimation for 1 maitre, 10-12 waiters, 2 Bartender, 6-8 Chef, 1-2 cleaning lady'}, soundLighting: {cost:2500,note:'Including basic sound package, DJ and ceremony sound'}, dj: 'N/A Included in S&L', ceremonySetup: {guests:100,price:9,total:900,note:'The use of the chapel area is free of charge, cost is for chairs'}, prepRoom: 'Available free of charge but not airconditioned!', waterStation: {guests:100,price:4,total:400}, partyLights: {cost:1200} },
-      friday: { total: 28000, rent: 10000, rentNote: 'included in rent: vallet parking and basic sound system', menu: {guests:100,price:75,total:7500,note:'For served menu'}, openBar: {guests:100,price:30,total:3000}, serviceTips: {cost:2500}, soundLighting: {cost:2500}, dj: 'Included in S&L', ceremonySetup: {guests:100,price:9,total:900,note:'free of charge, cost is for chairs'}, prepRoom: 'Available free of charge but not airconditioned!', waterStation: {guests:100,price:4,total:400}, partyLights: {cost:1200} },
-      saturday: { total: 32000, rent: 14000, rentNote: 'Included in rent: vallet parking and basic sound system', menu: {guests:100,price:75,total:7500,note:'For served menu'}, openBar: {guests:100,price:30,total:3000}, serviceTips: {cost:2500}, soundLighting: {cost:2500}, dj: 'Included in S&L', ceremonySetup: {guests:100,price:9,total:900,note:'free of charge, cost is for chairs'}, prepRoom: 'Available free of charge but not airconditioned!', waterStation: {guests:100,price:4,total:400}, partyLights: {cost:1200} },
-      sunday: { total: 26000, rent: 8000, rentNote: 'Included in rent: vallet parking and basic sound system', menu: {guests:100,price:75,total:7500,note:'For served menu'}, openBar: {guests:100,price:30,total:3000}, serviceTips: {cost:2500}, soundLighting: {cost:2500}, dj: 'Included in S&L', ceremonySetup: {guests:100,price:9,total:900,note:'free of charge, cost is for chairs'}, prepRoom: 'Available free of charge but not airconditioned!', waterStation: {guests:100,price:4,total:400}, partyLights: {cost:1200} },
-    }
-  },
-  {
-    name: 'En Thalatti Sea Soul',
-    days: {
-      weekday: { total: 12650, rent: 2500, rentNote: 'up to 180 guests', menu: {guests:100,price:66,total:6600}, openBar: {guests:100,price:20,total:2000,note:'Simple labels and 3 cocktails for 6 hours'}, serviceTips: {guests:1,price:110,total:110,note:'Included in menu pricing, cost is for bartender'}, soundLighting: {cost:900}, dj: 'Included in basic S&L cost', ceremonySetup: {guests:60,price:9,total:540,note:'Included in venue rent with 40 chairs'}, prepRoom: 'Included but for use during the event', waterStation: {guests:100,price:1,total:100,note:'Optional, infused water station'}, partyLights: '⚠️' },
-      friday: { total: 13650, rent: 3500, rentNote: 'up to 200 guests', menu: {guests:100,price:66,total:6600}, openBar: {guests:100,price:20,total:2000}, serviceTips: {guests:1,price:110,total:110}, soundLighting: {cost:900}, dj: 'Included in basic S&L cost', ceremonySetup: {guests:60,price:9,total:540}, prepRoom: 'Included but for use during the event', waterStation: {guests:100,price:1,total:100,note:'Optional'}, partyLights: '⚠️' },
-      saturday: { total: 14650, rent: 4500, rentNote: 'up to 200 guests', menu: {guests:100,price:66,total:6600}, openBar: {guests:100,price:20,total:2000}, serviceTips: {guests:1,price:110,total:110}, soundLighting: {cost:900}, dj: 'Included in basic S&L cost', ceremonySetup: {guests:60,price:9,total:540}, prepRoom: 'Included but for use during the event', waterStation: {guests:100,price:1,total:100}, partyLights: '⚠️' },
-      sunday: { total: 13650, rent: 4500, rentNote: 'up to 200 guests', menu: {guests:100,price:66,total:6600}, openBar: {guests:100,price:20,total:2000}, serviceTips: {guests:1,price:110,total:110}, soundLighting: {cost:900}, dj: 'Included in basic S&L cost', ceremonySetup: {guests:60,price:9,total:540}, prepRoom: 'Included but for use during the event', waterStation: {guests:100,price:1,total:100}, partyLights: '⚠️' },
-    }
-  },
-  {
-    name: 'Ble Pavillon',
-    days: {
-      weekday: { total: 16450, rent: 'N/A', minGuests: '50×€45=€2250, Minimum guests 150', welcomeDrinks: 'N/A', canapes: 'N/A', menu: {guests:100,price:85,total:8500}, openBar: {guests:100,price:32,total:3200,note:'Whisky Gordons Gin Rum Tequila + 2 cocktails'}, serviceTips: 'N/A', soundLighting: {cost:800}, dj: 'N/A, Included in basic S&L package', ceremonySetup: {cost:1700,note:'800€ cost for ceremony 9€ per chair'}, prepRoom: 'N/A', rentExtension: 'N/A', waterStation: 'N/A', earlySetup: 'N/A', partyLights: '⚠️' },
-      friday: { total: 16450, rent: 'N/A', minGuests: '50×€45=€2250, Minimum guests 150', menu: {guests:100,price:85,total:8500}, openBar: {guests:100,price:32,total:3200,note:'Whisky Gordons Gin Rum Tequila + 2 cocktails'}, soundLighting: {cost:930}, dj: 'Included in basic S&L package', ceremonySetup: {cost:1700,note:'800€ cost for ceremony 9€ per chair'}, partyLights: '⚠️' },
-      saturday: { total: 19200, rent: 'N/A', minGuests: '100×€45=€4500, Minimum guests 200', menu: {guests:100,price:90,total:9000}, openBar: {guests:100,price:32,total:3200}, soundLighting: {cost:800}, dj: 'Included in basic S&L package', ceremonySetup: {cost:1700,note:'800€ cost for ceremony 9€ per chair'}, partyLights: '⚠️' },
-      sunday: { total: 16450, rent: 'N/A', minGuests: '50×€45=€2250, Minimum guests 150', menu: {guests:100,price:85,total:8500}, openBar: {guests:100,price:32,total:3200}, soundLighting: {cost:800}, dj: 'Included in basic S&L package', ceremonySetup: {cost:1700,note:'800€ cost for ceremony 9€ per chair'}, partyLights: '⚠️' },
-    }
-  },
-  {
-    name: 'Pyrgos Petreza',
-    days: {
-      weekday: { total: 25400, rent: 9500, welcomeDrinks: {guests:100,price:3,total:300,note:'For two mocktails'}, canapes: {guests:100,price:5,total:500,note:'for 3 options'}, menu: {guests:100,price:85,total:8500,note:'Starting price'}, drinksDinner: {guests:100,price:5,total:500,note:'Pyrgos\' wines'}, openBar: {guests:100,price:35,total:3500,note:'Simple labels and beer, Cocktails are extra!'}, serviceTips: 'Service included in pricing, Tips not mandatory', soundLighting: 'Basic sound system included', dj: {cost:1000,note:'External vendor'}, ceremonySetup: {guests:60,price:5,total:300,note:'40 chairs are free of charge. The rest are charged'}, prepRoom: {cost:600,note:'Optional'}, rentExtension: {guests:1,price:700,total:700,note:'Staff overtime is 350€/hour, Bar overtime is 350€/hour'}, waterStation: 'Included, Still water & Water with mint – lemon & cucumber', partyLights: '⚠️' },
-      friday: { total: 26900, rent: 11300, welcomeDrinks: {guests:100,price:3,total:300}, canapes: {guests:100,price:5,total:500}, menu: {guests:100,price:85,total:8500}, drinksDinner: {guests:100,price:5,total:500}, openBar: {guests:100,price:35,total:3500}, serviceTips: 'Service included in pricing, Tips not mandatory', soundLighting: 'Basic sound system included', dj: {cost:1000}, ceremonySetup: {guests:60,price:5,total:300,note:'40 chairs are free of charge. The rest are charged'}, prepRoom: {cost:600}, rentExtension: {guests:1,price:700,total:700}, waterStation: 'Included', partyLights: '⚠️' },
-      saturday: { total: 15900, rent: 'N/A ⚠️', menu: {guests:100,price:85,total:8500}, openBar: {guests:100,price:35,total:3500}, soundLighting: 'Basic sound system included', dj: {cost:1000}, ceremonySetup: {guests:60,price:5,total:300}, prepRoom: {cost:600}, partyLights: '⚠️' },
-      sunday: { total: 25700, rent: 10000, welcomeDrinks: {guests:100,price:3,total:300}, canapes: {guests:100,price:5,total:500}, menu: {guests:100,price:85,total:8500}, drinksDinner: {guests:100,price:5,total:500}, openBar: {guests:100,price:35,total:3500}, soundLighting: 'Basic sound system included', dj: {cost:1000}, ceremonySetup: {guests:60,price:5,total:300}, prepRoom: {cost:600}, rentExtension: {guests:1,price:700,total:700}, partyLights: '⚠️' },
-    }
-  },
-  {
-    name: 'Private House (Island Resort)',
-    days: {
-      weekday: { total: 22270, rent: 'included in menu pricing', minGuests: '60 guests', menu: {guests:100,price:124.2,total:12420,note:'10% discount on weekdays on F&B'}, openBar: {guests:100,price:40.5,total:4050,note:'10% discount on weekdays on F&B'}, serviceTips: {guests:25,price:124,total:3100,note:'estimation'}, soundLighting: {cost:1800}, ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', partyLights: 'Included' },
-      friday: { total: 29700, rent: 'Included in menu pricing', minGuests: '100×€56=€5600, 200 guests', menu: {guests:100,price:138,total:13800}, openBar: {guests:100,price:45,total:4500}, serviceTips: {guests:25,price:124,total:3100}, soundLighting: {cost:1800}, ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', partyLights: 'Included' },
-      saturday: { total: 32500, rent: 'Included in menu pricing', minGuests: '150×€56=€8400, 250 guests', menu: {guests:100,price:138,total:13800}, openBar: {guests:100,price:45,total:4500}, serviceTips: {guests:25,price:124,total:3100}, soundLighting: {cost:1800}, ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', partyLights: 'Included' },
-      sunday: { total: 24100, rent: 'included in menu pricing', minGuests: '100 guests', menu: {guests:100,price:138,total:13800}, openBar: {guests:100,price:45,total:4500}, serviceTips: {guests:25,price:124,total:3100}, soundLighting: {cost:1800}, ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', partyLights: 'Included' },
-    }
-  },
-  {
-    name: 'Margi Farm',
-    days: {
-      weekday: { total: 17250, rent: 'No rental fee', minGuests: 'N/A', welcomeDrinks: 'Included in menu', canapes: 'Included in menu', menu: {guests:100,price:93,total:9300,note:'Buffet starting price'}, drinksDinner: {guests:100,price:20,total:2000,note:'Still Water, Beer, Soft Drinks and wines'}, openBar: {guests:100,price:29,total:2900,note:'Regular brands and 3 cocktails for 4 hours'}, serviceTips: 'Included in menu pricing', soundLighting: {cost:1200,note:'Basic sound system included in DJ pricing, Cost is for basic party lights'}, dj: {cost:950,note:'Exclusive vendor'}, ceremonySetup: {guests:100,price:9,total:900,note:'Cost is for chairs'}, prepRoom: 'N/A', waterStation: 'Included in menu pricing', partyLights: '⚠️' },
-      friday: { total: 17250, rent: 'No rental fee as long as the minimum number of guests is satisfied', minGuests: '100 guests', welcomeDrinks: 'Included in menu', canapes: 'Included in menu', menu: {guests:100,price:93,total:9300,note:'Buffet starting price'}, drinksDinner: {guests:100,price:20,total:2000}, openBar: {guests:100,price:29,total:2900}, serviceTips: 'Included in menu pricing', soundLighting: {cost:1200}, dj: {cost:950}, ceremonySetup: {guests:100,price:9,total:900}, waterStation: 'Included in menu pricing', partyLights: '⚠️' },
-      saturday: { total: 17250, rent: 'Rental fee will be specified by the venue for the guests we have less than the minimum', minGuests: '120 guests', welcomeDrinks: 'Included in menu', canapes: 'Included in menu', menu: {guests:100,price:93,total:9300}, drinksDinner: {guests:100,price:20,total:2000}, openBar: {guests:100,price:29,total:2900}, serviceTips: 'Included in menu pricing', soundLighting: {cost:1200}, dj: {cost:950}, ceremonySetup: {guests:100,price:9,total:900}, waterStation: 'Included in menu pricing', partyLights: '⚠️' },
-      sunday: { total: 17250, rent: 'No rental fee as long as minimum guests satisfied', minGuests: '100 guests', welcomeDrinks: 'Included in menu', canapes: 'Included in menu', menu: {guests:100,price:93,total:9300}, drinksDinner: {guests:100,price:20,total:2000}, openBar: {guests:100,price:29,total:2900}, serviceTips: 'Included in menu pricing', soundLighting: {cost:1200}, dj: {cost:950}, ceremonySetup: {guests:100,price:9,total:900}, waterStation: 'Included in menu pricing', partyLights: '⚠️' },
-    }
-  },
-  {
-    name: 'Ble Azure',
-    days: {
-      weekday: { total: 20500, rent: 'Included in menu pricing', minGuests: '100×€45=€4500, Minimum guests 200', welcomeDrinks: {guests:0,price:0,total:0,note:'Traditional recipe of ancient Greece or Berry Mocktail non alchoholic (cranberry juice & pink lemonade) or Pineapple Aperol Spitz'}, canapes: 'Included in menu pricing', menu: {guests:100,price:90,total:9000}, openBar: {guests:100,price:32,total:3200,note:'Whisky Gordons Gin Rum Tequila + 2 cocktails'}, serviceTips: 'Included in menu pricing', soundLighting: {cost:900}, dj: 'N/A', ceremonySetup: {cost:1700,note:'800€ ceremony cost + 9€ per chair'}, prepRoom: 'available free of charge', waterStation: 'including in menu pricing', partyLights: {cost:1200} },
-      friday: { total: 20500, rent: 'Included in menu pricing', minGuests: '100×€45=€4500, Minimum guests 200', menu: {guests:100,price:90,total:9000}, openBar: {guests:100,price:32,total:3200}, soundLighting: {cost:900}, ceremonySetup: {cost:1700}, prepRoom: 'available free of charge', waterStation: 'including in menu pricing', partyLights: {cost:1200} },
-      saturday: { total: 23250, rent: 'Included in menu pricing', minGuests: '150×€45=€6750, Minimum guests 250', menu: {guests:100,price:95,total:9500}, openBar: {guests:100,price:32,total:3200}, soundLighting: {cost:900}, ceremonySetup: {cost:1700}, prepRoom: 'available free of charge', waterStation: 'including in menu pricing', partyLights: {cost:1200} },
-      sunday: { total: 20500, rent: 'Included in menu pricing', minGuests: '100×€45=€4500, Minimum guests 200', menu: {guests:100,price:90,total:9000}, openBar: {guests:100,price:32,total:3200}, soundLighting: {cost:900}, ceremonySetup: {cost:1700}, prepRoom: 'available free of charge', waterStation: 'including in menu pricing', partyLights: {cost:1200} },
-    }
-  },
-  {
-    name: 'Reef',
-    days: {
-      weekday: { total: 16815, rent: 'N/A, Included in pricing', minGuests: 'N/A', welcomeDrinks: 'Included in pricing', canapes: 'Included in pricing', menu: {guests:100,price:120,total:12000}, openBar: {guests:100,price:25,total:2500}, serviceTips: {cost:315,note:'valet parking + 1 hostess'}, soundLighting: {cost:1100}, dj: 'Included in basic S&L', ceremonySetup: {guests:100,price:9,total:900,note:'Optional 500€ ceremony structure for shading. Also 9€/chair'}, prepRoom: 'Available free of charge', rentExtension: 'N/A, On Fridays and Saturdays, events can continue until 5:00 AM. On all other days, events must end by 3:00 AM', waterStation: 'N/A, Included in pricing', earlySetup: 'Set up starts at 17:00. If needed earlier we need to arrange extra fee based on availability!', partyLights: '⚠️' },
-      friday: { total: 18815, rent: 'N/A, Included in pricing', minGuests: '50×€70=€3500, 150 guests for Fridays', menu: {guests:100,price:105,total:10530}, openBar: {guests:100,price:25,total:2500}, serviceTips: {cost:315}, soundLighting: {cost:1100}, dj: 'Included in basic S&L', ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', partyLights: '⚠️' },
-      saturday: { total: 22815, rent: 'N/A, Included in pricing', minGuests: '100×€70=€7000, 200 guests for Saturdays', menu: {guests:100,price:110,total:11000}, openBar: {guests:100,price:25,total:2500}, serviceTips: {cost:315}, soundLighting: {cost:1100}, dj: 'Included in basic S&L', ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', partyLights: '⚠️' },
-      sunday: { total: 20315, rent: 'N/A, Included in pricing', minGuests: '50×€70=€3500, 150 guests for Sundays', menu: {guests:100,price:120,total:12000}, openBar: {guests:100,price:25,total:2500}, serviceTips: {cost:315}, soundLighting: {cost:1100}, dj: 'Included in basic S&L', ceremonySetup: {guests:100,price:9,total:900}, prepRoom: 'Available free of charge', partyLights: '⚠️' },
-    }
-  },
-  {
-    name: 'Thymari con gusto',
-    days: {
-      weekday: { total: 20400, rent: 3800, canapes: {guests:100,price:10,total:1000,note:'Estimated price'}, menu: {guests:100,price:100,total:10000,note:'Estimated price'}, openBar: {guests:100,price:20,total:2000}, serviceTips: {guests:8,price:100,total:800,note:'Estimated price'}, soundLighting: {cost:500}, dj: {guests:0,price:0,total:0,note:'Including in basic sound & lighting pricing'}, ceremonySetup: {cost:1100,note:'200€ ceremony cost + 9€ per chair'}, partyLights: {cost:1200} },
-      friday: { total: 20900, rent: 4500, canapes: {guests:100,price:10,total:1000}, menu: {guests:100,price:100,total:10000}, openBar: {guests:100,price:20,total:2000}, serviceTips: {guests:8,price:100,total:800}, soundLighting: {cost:500}, dj: 'Including in basic sound & lighting pricing', ceremonySetup: {cost:1100}, partyLights: {cost:1200} },
-      saturday: { total: 21600, rent: 5000, canapes: {guests:100,price:13,total:1000}, menu: {guests:100,price:100,total:10000}, openBar: {guests:100,price:20,total:2000}, serviceTips: {guests:8,price:100,total:800}, soundLighting: {cost:500}, dj: 'Including in basic sound & lighting pricing', ceremonySetup: {cost:1100}, partyLights: {cost:1200} },
-      sunday: { total: 20900, rent: 4930, canapes: {guests:100,price:10,total:1000}, menu: {guests:100,price:100,total:10000}, openBar: {guests:100,price:20,total:2000}, serviceTips: {guests:8,price:100,total:800}, soundLighting: {cost:500}, dj: 'Including in basic sound & lighting pricing', ceremonySetup: {cost:1100}, partyLights: {cost:1200} },
-    }
-  },
-  {
-    name: 'Ktima Laas',
-    days: {
-      weekday: { total: 12960, rent: 'Included in menu pricing', minGuests: 'N/A', welcomeDrinks: '2 options included in menu pricing', canapes: 'included in menu pricing', menu: {guests:100,price:80,total:8000,note:'For buffet menu'}, openBar: {guests:100,price:16,total:1600,note:'full open bar with simple labels and 3 cocktail options'}, serviceTips: {cost:360,note:'service staff for dinner is included, only chefs for live stations are extra if those are added! The cost is for bartenders'}, soundLighting: {cost:1200,note:'Included sound systems, Cost is an estimation for party lights'}, dj: {cost:500,note:'Exclusive vendor'}, ceremonySetup: {guests:100,price:9,total:900,note:'Cost is for chairs'}, prepRoom: {cost:400,note:'Optional, Fully equipped suite available to stay the night too and breakfast included'}, waterStation: 'Water is included', partyLights: '⚠️' },
-      friday: { total: 13460, rent: 'Included in menu pricing', menu: {guests:100,price:85,total:8500,note:'For buffet menu'}, openBar: {guests:100,price:16,total:1600}, serviceTips: {cost:360}, soundLighting: {cost:1200}, dj: {cost:500}, ceremonySetup: {guests:100,price:9,total:900}, prepRoom: {cost:400}, waterStation: 'Water is included', partyLights: '⚠️' },
-      saturday: { total: 13460, rent: 'Included in menu pricing', menu: {guests:100,price:85,total:8500}, openBar: {guests:100,price:16,total:1600}, serviceTips: {cost:360}, soundLighting: {cost:1200}, dj: {cost:500}, ceremonySetup: {guests:100,price:9,total:900}, prepRoom: {cost:400}, waterStation: 'Water is included', partyLights: '⚠️' },
-      sunday: { total: 13460, rent: 'Included in menu pricing', menu: {guests:100,price:85,total:8500}, openBar: {guests:100,price:16,total:1600}, serviceTips: {cost:360}, soundLighting: {cost:1200}, dj: {cost:500}, ceremonySetup: {guests:100,price:9,total:900}, prepRoom: {cost:400}, waterStation: 'Water is included', partyLights: '⚠️' },
-    }
-  },
-];
-
-const DAY_LABELS = {weekday:'Weekday (Mon-Thu)', friday:'Friday', saturday:'Saturday', sunday:'Sunday'};
-const DAYS = ['weekday','friday','saturday','sunday'];
-const ROW_LABELS = [
-  {key:'rent', label:'Rent'},
-  {key:'minGuests', label:'Minimum Guests'},
-  {key:'welcomeDrinks', label:'Welcome Drinks'},
-  {key:'canapes', label:'Canapés'},
-  {key:'menu', label:'Menu'},
-  {key:'drinksDinner', label:'Drinks During Dinner'},
-  {key:'openBar', label:'Open Bar'},
-  {key:'serviceTips', label:'Service & Tips'},
-  {key:'soundLighting', label:'Basic Sound & Lighting'},
-  {key:'dj', label:'DJ'},
-  {key:'ceremonySetup', label:'Ceremony Set Up'},
-  {key:'prepRoom', label:'Preparation Room'},
-  {key:'rentExtension', label:'Rent Extension'},
-  {key:'waterStation', label:'Water & Lemonade Station'},
-  {key:'earlySetup', label:'Early Set Up Fee'},
-  {key:'partyLights', label:'Party Lights'},
-];
-
-function formatCell(val) {
-  if(val === undefined || val === null) return '<span style="color:var(--light)">—</span>';
-  if(typeof val === 'string') {
-    if(val === 'N/A') return '<span style="color:var(--light)">N/A</span>';
-    if(val === '⚠️') return '<span style="background:var(--rose-light);color:var(--rose);padding:2px 6px;border-radius:4px;font-size:0.72rem">⚠️</span>';
-    return `<span style="color:var(--mid);font-size:0.78rem">${val}</span>`;
-  }
-  if(typeof val === 'object') {
-    let parts = [];
-    if(val.guests && val.price) parts.push(`<span style="color:var(--light);font-size:0.72rem">${val.guests}×€${val.price} = </span><strong>€${(val.total||val.guests*val.price).toLocaleString()}</strong>`);
-    else if(val.cost !== undefined) parts.push(`<strong>€${Number(val.cost).toLocaleString()}</strong>`);
-    else if(val.total !== undefined) parts.push(`<strong>€${Number(val.total).toLocaleString()}</strong>`);
-    if(val.note) parts.push(`<div style="font-size:0.72rem;color:var(--light);margin-top:2px">${val.note}</div>`);
-    return parts.join('') || '<span style="color:var(--light)">—</span>';
-  }
-  return String(val);
+// ── TOAST ─────────────────────────────────────
+function toast(msg, dur=2500) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), dur);
 }
 
-function buildVenues() {
-  let h = `<div class="section-toolbar" style="margin-bottom:18px">
-    <h2>🏛 Athenian Venues 2025–26</h2>
-    <div style="font-size:0.78rem;color:var(--light)">${VENUES.length} venues · Budget comparison</div>
-  </div>`;
-
-  VENUES.forEach((venue, vi) => {
-    const totals = DAYS.map(d => venue.days[d]?.total || 0);
-    const minTotal = Math.min(...totals.filter(t=>t>0));
-    const maxTotal = Math.max(...totals);
-
-    h += `<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;overflow:hidden;">
-      <div style="padding:14px 18px;cursor:pointer;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)" onclick="toggleVenue(this)">
-        <span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.2rem;flex:1">${venue.name}</span>
-        <div style="display:flex;gap:8px">
-          ${DAYS.map(d=>{
-            const t = venue.days[d]?.total;
-            return t ? `<div style="text-align:center">
-              <div style="font-size:0.68rem;color:var(--light)">${d==='weekday'?'Mon-Thu':d.charAt(0).toUpperCase()+d.slice(1)}</div>
-              <div style="font-size:0.88rem;font-weight:500;color:${t===minTotal?'var(--green)':t===maxTotal?'var(--rose)':'var(--ink)'}">€${t.toLocaleString()}</div>
-            </div>` : '';
-          }).join('')}
-        </div>
-        <span style="color:var(--light);font-size:0.8rem;margin-left:8px">▾</span>
-      </div>
-      <div class="venue-body" style="display:none;overflow-x:auto;">
-        <table style="width:100%;border-collapse:collapse;min-width:700px">
-          <thead>
-            <tr style="background:var(--surface2)">
-              <th style="text-align:left;padding:10px 14px;font-size:0.72rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--mid);width:160px;border-bottom:2px solid var(--border-strong)">Item</th>
-              ${DAYS.map(d=>`<th style="text-align:left;padding:10px 14px;font-size:0.72rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--mid);border-bottom:2px solid var(--border-strong)">${DAY_LABELS[d]}</th>`).join('')}
-            </tr>
-            <tr style="background:var(--gold-light)">
-              <td style="padding:8px 14px;font-weight:600;font-size:0.82rem;border-bottom:1px solid var(--border-strong)">TOTAL</td>
-              ${DAYS.map(d=>{
-                const t = venue.days[d]?.total;
-                return `<td style="padding:8px 14px;font-weight:700;font-size:1rem;color:${t===minTotal?'var(--green)':t===maxTotal?'var(--rose)':'var(--gold-dark)'};border-bottom:1px solid var(--border-strong)">${t?'€'+t.toLocaleString():'—'}</td>`;
-              }).join('')}
-            </tr>
-          </thead>
-          <tbody>
-            ${ROW_LABELS.map((row,ri)=>`
-              <tr style="background:${ri%2===0?'var(--surface)':'var(--surface2)'}">
-                <td style="padding:8px 14px;font-size:0.78rem;font-weight:500;color:var(--mid);border-bottom:1px solid var(--border);vertical-align:top">${row.label}</td>
-                ${DAYS.map(d=>`<td style="padding:8px 14px;border-bottom:1px solid var(--border);vertical-align:top">${formatCell(venue.days[d]?.[row.key])}</td>`).join('')}
-              </tr>`).join('')}
-          </tbody>
-        </table>
-      </div>
-    </div>`;
-  });
-  return h;
-}
-
-function toggleVenue(header) {
-  const body = header.nextElementSibling;
-  const chev = header.querySelector('span:last-child');
-  const open = body.style.display === 'block';
-  body.style.display = open ? 'none' : 'block';
-  chev.style.transform = open ? '' : 'rotate(180deg)';
-}
-function showVenuesPage() {
-  document.getElementById('couple-header-wrap').style.display='none';
-  document.getElementById('tab-nav').style.display='none';
-  const el = document.getElementById('tab-content');
-  el.innerHTML = `<div style="margin-bottom:16px;display:flex;align-items:center;gap:12px">
-    <button class="btn-sm" onclick="backFromVenues()">← Back</button>
-    <span style="font-size:0.78rem;color:var(--light)">Athenian Venues Budget Comparison 2025–26</span>
-  </div>` + buildVenues();
-}
-
-function backFromVenues() {
-  if(S.current) {
-    document.getElementById('couple-header-wrap').style.display='block';
-    document.getElementById('tab-nav').style.display='flex';
-    switchTabDirect(S.currentTab||'overview');
-  } else {
-    document.getElementById('tab-content').innerHTML = `<div class="no-couple"><div class="big">Select a couple to begin</div><p>Choose from the sidebar or create a new couple</p></div>`;
-  }
-}
-
-// ── INIT ──────────────────────────────────────────────────────────
-document.getElementById('pw-input').addEventListener('keydown',e=>{if(e.key==='Enter')checkPw();});
+// ── INIT ──────────────────────────────────────
+document.getElementById('pw-input').addEventListener('keydown', e=>{
+  if(e.key==='Enter') checkPw();
+});
 </script>
 </body>
 </html>
-
