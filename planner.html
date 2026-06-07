@@ -559,7 +559,10 @@ function renderVendorBrowser(catKey, catLabel, catEmoji, vendors, regions, assig
     <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px" id="browser-regions">
       ${regionBtns.join('')}
     </div>
-    <div style="font-size:0.78rem;color:var(--light);margin-bottom:10px">${filtered.length} vendor${filtered.length!==1?'s':''} found</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div style="font-size:0.78rem;color:var(--light)">${filtered.length} vendor${filtered.length!==1?'s':''} found</div>
+      <button class="btn-sm primary" onclick="closeModal('dyn-modal-browse');switchTabDirect('overview')">✓ Done</button>
+    </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;max-height:55vh;overflow-y:auto" id="browser-grid">
       ${cards || `<div style="color:var(--light);font-size:0.85rem;padding:20px">No vendors found in this region</div>`}
     </div>`;
