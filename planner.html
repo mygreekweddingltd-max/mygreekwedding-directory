@@ -47,7 +47,7 @@ body{font-family:'Jost',sans-serif;font-weight:300;background:var(--bg);color:va
 .tab-btn{padding:13px 18px;font-family:'Jost',sans-serif;font-size:0.82rem;color:var(--mid);border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;}
 .tab-btn:hover{color:var(--ink);}
 .tab-btn.active{color:var(--gold-dark);border-bottom-color:var(--gold);font-weight:500;}
-.tab-content{flex:1;overflow-y:auto;padding:20px 24px;}
+.tab-content{flex:1;overflow-y:auto;padding:20px 24px;overflow-x:visible;}
 .couple-header{background:var(--surface);border-radius:var(--radius);padding:18px 22px;border:1px solid var(--border);margin-bottom:18px;display:flex;align-items:center;gap:20px;}
 .couple-header-name{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-style:italic;}
 .couple-header-detail{font-size:0.8rem;color:var(--light);margin-top:3px;}
@@ -62,7 +62,7 @@ body{font-family:'Jost',sans-serif;font-weight:300;background:var(--bg);color:va
 .btn-sm:hover{background:var(--gold-light);color:var(--gold-dark);border-color:var(--gold);}
 .btn-sm.primary{background:var(--gold);color:#fff;border-color:var(--gold);}
 .btn-sm.primary:hover{background:var(--gold-dark);}
-.category-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:7px;overflow:hidden;}
+.category-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:7px;}
 .cat-row-header{display:flex;align-items:center;padding:11px 14px;cursor:pointer;gap:8px;transition:background 0.15s;}
 .cat-row-header:hover{background:var(--surface2);}
 .cat-emoji{width:26px;text-align:center;font-size:1rem;}
@@ -75,7 +75,7 @@ body{font-family:'Jost',sans-serif;font-weight:300;background:var(--bg);color:va
 .cat-icon-btn:hover{background:var(--gold-light);border-color:var(--gold);}
 .cat-chevron{font-size:0.72rem;color:var(--light);transition:transform 0.2s;margin-left:4px;}
 .cat-chevron.open{transform:rotate(180deg);}
-.cat-body{display:none;padding:10px 14px 14px;background:var(--surface2);border-top:1px solid var(--border);}
+.cat-body{display:none;padding:10px 14px 14px;background:var(--surface2);border-top:1px solid var(--border);border-radius:0 0 var(--radius-sm) var(--radius-sm);}
 .cat-body.open{display:block;}
 .vendor-chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px;}
 .vendor-chip{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:4px 11px;font-size:0.76rem;display:flex;align-items:center;gap:5px;cursor:pointer;}
@@ -91,7 +91,7 @@ body{font-family:'Jost',sans-serif;font-weight:300;background:var(--bg);color:va
 .vendor-search-wrap{position:relative;}
 .vendor-search-wrap input{width:100%;border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:7px 11px;font-family:'Jost',sans-serif;font-size:0.8rem;background:var(--surface);outline:none;}
 .vendor-search-wrap input:focus{border-color:var(--gold);}
-.vendor-dropdown{position:absolute;top:calc(100% + 2px);left:0;right:0;background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius-sm);max-height:200px;overflow-y:auto;z-index:200;box-shadow:var(--shadow);}
+.vendor-dropdown{position:fixed;background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius-sm);max-height:220px;overflow-y:auto;z-index:9999;box-shadow:0 8px 24px rgba(26,23,20,0.15);min-width:300px;}
 .vendor-dd-item{padding:8px 12px;font-size:0.8rem;cursor:pointer;border-bottom:1px solid var(--border);}
 .vendor-dd-item:hover{background:var(--gold-light);}
 .vendor-dd-item:last-child{border-bottom:none;}
@@ -387,17 +387,21 @@ async function loadCoupleData() {
   if(!S.current) return;
   const id = S.current.id;
   try {
-    [S.coupleVendors, S.tasks, S.budgetItems, S.mediaFiles] = await Promise.all([
+    [S.coupleVendors, S.tasks, S.budgetItems, S.mediaFiles, S.payments] = await Promise.all([
       sbGet('couple_vendors',`couple_id=eq.${id}&order=created_at.asc`).catch(()=>[]),
       sbGet('tasks',`couple_id=eq.${id}&order=due_date.asc`).catch(()=>[]),
       sbGet('budget_items',`couple_id=eq.${id}&order=sort_order.asc`).catch(()=>[]),
       sbGet('media_files',`couple_id=eq.${id}&order=created_at.desc`).catch(()=>[]),
+      sbGet('payments',`couple_id=eq.${id}&order=due_date.asc`).catch(()=>[]),
     ]);
-    // resolve vendor names
-    const ids = [...new Set(S.coupleVendors.map(v=>v.vendor_id).filter(v=>!S.vendorCache[v]))];
-    if(ids.length) {
-      const vlist = await sbGet('vendors',`id=in.(${ids.map(i=>`"${i}"`).join(',')})&select=id,name,category,region,price_range`).catch(()=>[]);
-      vlist.forEach(v=>S.vendorCache[v.id]=v);
+    // resolve vendor names - fetch each one individually to avoid ID format issues
+    const ids = [...new Set(S.coupleVendors.map(v=>v.vendor_id).filter(v=>v && !S.vendorCache[v]))];
+    for(const vid of ids) {
+      try {
+        const res = await sbGet('vendors',`id=eq.${encodeURIComponent(vid)}&select=id,name,category,region,price_range`);
+        if(res && res[0]) S.vendorCache[vid] = res[0];
+        else S.vendorCache[vid] = {id:vid, name:vid, category:'', region:''};
+      } catch(e) { S.vendorCache[vid] = {id:vid, name:vid, category:'', region:''}; }
     }
   } catch(e) { toast('Error loading data: '+e.message, true); }
 }
@@ -489,16 +493,30 @@ function toggleCat(header) {
   header.nextElementSibling.classList.toggle('open');
   header.querySelector('.cat-chevron').classList.toggle('open');
 }
-function showDd(k){const d=document.getElementById('dd-'+k);if(d)d.style.display='block';}
+function showDd(k){
+  const inp = document.querySelector(`#dd-${k}`)?.previousElementSibling;
+  const dd = document.getElementById('dd-'+k);
+  if(!dd||!inp) return;
+  const rect = inp.getBoundingClientRect();
+  dd.style.display='block';
+  dd.style.top=(rect.bottom+2)+'px';
+  dd.style.left=rect.left+'px';
+  dd.style.width=rect.width+'px';
+}
 function hideDd(k){const d=document.getElementById('dd-'+k);if(d)d.style.display='none';}
 
 async function searchVendors(input, catKey) {
   const q = input.value.trim();
   const dd = document.getElementById('dd-'+catKey);
   if(!dd) return;
+  // reposition
+  const rect = input.getBoundingClientRect();
+  dd.style.top=(rect.bottom+2)+'px';
+  dd.style.left=rect.left+'px';
+  dd.style.width=Math.max(rect.width,300)+'px';
+  dd.style.display='block';
   if(q.length < 2) { dd.innerHTML=''; return; }
   try {
-    // Search across ALL vendors (not filtering by category so user can find any vendor)
     const res = await sbGet('vendors',`name=ilike.*${encodeURIComponent(q)}*&select=id,name,category,region&limit=10`);
     if(!res.length) { dd.innerHTML='<div class="vendor-dd-item" style="color:var(--light)">No results</div>'; return; }
     dd.innerHTML = res.map(v=>{
@@ -519,7 +537,12 @@ async function assignVendor(vendorId, category, vendorName) {
     });
     S.coupleVendors.push(res[0]);
     if(!S.vendorCache[vendorId]) S.vendorCache[vendorId]={id:vendorId,name:vendorName,category};
-    toast(`${vendorName} assigned! ✓`);
+    // clear the search input and hide dropdown
+    const dd = document.getElementById('dd-'+category);
+    if(dd){ dd.innerHTML=''; dd.style.display='none'; }
+    const inputs = document.querySelectorAll('.vendor-search-wrap input');
+    inputs.forEach(inp=>{ if(inp.closest('.cat-body')) inp.value=''; });
+    toast(`✓ ${vendorName} assigned!`);
     switchTabDirect('overview');
   } catch(e) { toast('Error assigning vendor: '+e.message, true); }
 }
@@ -604,53 +627,144 @@ function goToChat(catKey) {
 }
 
 // ── BUDGET ────────────────────────────────────────────────────────
+function calcItemTotal(b) {
+  const guests = Number(S.current.guest_count||0);
+  const price = Number(b.item_price||0);
+  const qty = Number(b.guests||0);
+  const perHead = b.pricing_type==='per_head';
+  const base = perHead ? (qty||guests) * price : price;
+  const comm = base * (Number(b.commission_rate||0)/100);
+  const vat = base * (Number(b.vat_amount||0)/100);
+  return {base, comm, vat, total: base+vat};
+}
+
 function buildBudget() {
-  let totPend=0,totPaid=0,totActual=0;
+  let totPaid=0, totActual=0, totComm=0;
   CATS.forEach(cat=>{
     S.budgetItems.filter(b=>b.category===cat.key).forEach(b=>{
-      totPaid+=Number(b.amount_paid||0);
-      totActual+=Number(b.item_price||0);
+      const {total,comm} = calcItemTotal(b);
+      totPaid += Number(b.amount_paid||0);
+      totActual += total;
+      totComm += comm;
     });
   });
-  totPend=totActual-totPaid;
-  const goal=Number(S.current.budget_goal||0);
+  const totPend = totActual - totPaid;
+  const goal = Number(S.current.budget_goal||0);
 
-  let h=`<div class="section-toolbar"><h2>Budget</h2></div>
+  let h=`<div class="section-toolbar"><h2>Budget</h2>
+    <button class="btn-sm" onclick="showPaymentsSummary()">💳 Payments</button>
+  </div>
   <div class="budget-summary">
-    <div class="budget-card pending"><div class="val">€${totPend.toLocaleString()}</div><div class="lbl">Pending</div></div>
-    <div class="budget-card paid"><div class="val">€${totPaid.toLocaleString()}</div><div class="lbl">Paid</div></div>
+    <div class="budget-card pending"><div class="val">€${Math.round(totPend).toLocaleString()}</div><div class="lbl">Pending</div></div>
+    <div class="budget-card paid"><div class="val">€${Math.round(totPaid).toLocaleString()}</div><div class="lbl">Paid</div></div>
     <div class="budget-card"><div class="val">€${goal.toLocaleString()}</div><div class="lbl">Goal</div></div>
-    <div class="budget-card ${totActual>goal&&goal>0?'over':''}"><div class="val">€${totActual.toLocaleString()}</div><div class="lbl">Actual</div></div>
+    <div class="budget-card ${totActual>goal&&goal>0?'over':''}"><div class="val">€${Math.round(totActual).toLocaleString()}</div><div class="lbl">Actual</div></div>
+  </div>
+  <div style="background:var(--green-light);border:1px solid rgba(90,138,90,0.2);border-radius:var(--radius-sm);padding:10px 16px;margin-bottom:14px;font-size:0.82rem;color:var(--green)">
+    💰 Your total commission: <strong>€${Math.round(totComm).toLocaleString()}</strong>
   </div>
   <div class="budget-col-labels"><span>Category</span><span>Pending</span><span>Paid</span><span>Goal</span><span>Actual</span><span></span></div>`;
 
   CATS.forEach(cat=>{
-    const items=S.budgetItems.filter(b=>b.category===cat.key);
-    let catPaid=0,catAct=0;
-    items.forEach(b=>{catPaid+=Number(b.amount_paid||0);catAct+=Number(b.item_price||0);});
-    const catPend=catAct-catPaid;
-    const decided=items.some(b=>b.status==='decided');
+    const items = S.budgetItems.filter(b=>b.category===cat.key);
+    let catPaid=0, catAct=0;
+    items.forEach(b=>{ const {total}=calcItemTotal(b); catPaid+=Number(b.amount_paid||0); catAct+=total; });
+    const catPend = catAct - catPaid;
+    const decided = items.some(b=>b.status==='decided');
+    const over = catAct > goal/CATS.length && goal > 0;
+
     h+=`<div class="budget-row">
       <div class="budget-row-header" onclick="this.nextElementSibling.classList.toggle('open')">
         <span class="bcol name">${cat.emoji} ${cat.label} <span class="cat-status ${decided?'decided':'draft'}">${decided?'✓':'DRAFT'}</span></span>
-        <span class="bcol">€${catPend.toLocaleString()}</span>
-        <span class="bcol" style="color:var(--green)">€${catPaid.toLocaleString()}</span>
-        <span class="bcol">€${catAct.toLocaleString()}</span>
-        <span class="bcol ${catAct>catPaid&&catAct>0&&catAct>catAct?'over':''}">€${catAct.toLocaleString()}</span>
+        <span class="bcol">€${Math.round(catPend).toLocaleString()}</span>
+        <span class="bcol" style="color:var(--green)">€${Math.round(catPaid).toLocaleString()}</span>
+        <span class="bcol">€${Math.round(catAct).toLocaleString()}</span>
+        <span class="bcol">€${Math.round(catAct).toLocaleString()}</span>
         <span style="color:var(--light);font-size:0.75rem">▾</span>
       </div>
       <div class="budget-body">
-        ${items.map(b=>`<div class="bi-row">
-          <span style="color:var(--mid)">${b.item_name}</span>
-          <span class="bi-comm">(+${b.commission_rate||0}%)</span>
-          <span>€${Number(b.item_price||0).toLocaleString()}</span>
-          <button class="cat-icon-btn" onmousedown="removeBudgetItem('${b.id}')">✕</button>
-        </div>`).join('')}
-        <div class="budget-add-row" style="margin-top:10px">
-          <input id="bi-n-${cat.key}" placeholder="Item name" style="flex:2;min-width:120px"/>
-          <input id="bi-p-${cat.key}" type="number" placeholder="Price €" style="width:90px"/>
-          <input id="bi-c-${cat.key}" type="number" placeholder="Comm %" style="width:80px"/>
-          <button class="btn-sm primary" onclick="addBudgetItem('${cat.key}')">＋ Add</button>
+        ${items.length ? `
+        <table style="width:100%;font-size:0.79rem;border-collapse:collapse;margin-bottom:10px">
+          <tr style="color:var(--light);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em">
+            <th style="text-align:left;padding:4px 6px;font-weight:400">Item</th>
+            <th style="text-align:center;padding:4px 6px;font-weight:400">Type</th>
+            <th style="text-align:right;padding:4px 6px;font-weight:400">Price</th>
+            <th style="text-align:right;padding:4px 6px;font-weight:400">VAT%</th>
+            <th style="text-align:right;padding:4px 6px;font-weight:400;color:var(--green)">Comm%</th>
+            <th style="text-align:right;padding:4px 6px;font-weight:400;color:var(--green)">Comm€</th>
+            <th style="text-align:right;padding:4px 6px;font-weight:400">Total</th>
+            <th style="padding:4px 2px"></th>
+          </tr>
+          ${items.map(b=>{
+            const {base,comm,vat,total}=calcItemTotal(b);
+            const perHead=b.pricing_type==='per_head';
+            const guests=Number(b.guests||S.current.guest_count||0);
+            return `<tr style="border-top:1px solid var(--border)">
+              <td style="padding:6px 6px;color:var(--ink)">${b.item_name}</td>
+              <td style="padding:6px 6px;text-align:center">
+                <span style="font-size:0.7rem;padding:2px 7px;border-radius:10px;background:${perHead?'var(--blue-light)':'var(--gold-light)'};color:${perHead?'var(--blue)':'var(--gold-dark)'}">
+                  ${perHead?`👥 ×${guests}`:'📌 Fixed'}
+                </span>
+              </td>
+              <td style="padding:6px 6px;text-align:right">€${Number(b.item_price||0).toLocaleString()}</td>
+              <td style="padding:6px 6px;text-align:right;color:var(--mid)">${b.vat_amount||0}%</td>
+              <td style="padding:6px 6px;text-align:right;color:var(--green)">${b.commission_rate||0}%</td>
+              <td style="padding:6px 6px;text-align:right;color:var(--green)">€${Math.round(comm).toLocaleString()}</td>
+              <td style="padding:6px 6px;text-align:right;font-weight:500">€${Math.round(total).toLocaleString()}</td>
+              <td style="padding:6px 2px">
+                <button class="cat-icon-btn" onmousedown="editBudgetItem('${b.id}')" title="Edit">✏️</button>
+                <button class="cat-icon-btn" onmousedown="removeBudgetItem('${b.id}')" title="Remove">✕</button>
+              </td>
+            </tr>`;
+          }).join('')}
+          <tr style="border-top:2px solid var(--border-strong);font-weight:500">
+            <td colspan="6" style="padding:6px 6px;color:var(--mid);font-size:0.78rem">Category Total</td>
+            <td style="padding:6px 6px;text-align:right;color:var(--gold-dark)">€${Math.round(catAct).toLocaleString()}</td>
+            <td></td>
+          </tr>
+        </table>` : `<div style="font-size:0.78rem;color:var(--light);padding:8px 0 10px">No items yet</div>`}
+
+        <!-- ADD ITEM FORM -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-top:4px">
+          <div style="font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid);margin-bottom:8px">＋ Add Item</div>
+          <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:flex-end">
+            <div style="flex:2;min-width:130px">
+              <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Item name *</div>
+              <input id="bi-n-${cat.key}" class="form-input" placeholder="e.g. Planning fee"/>
+            </div>
+            <div>
+              <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Type</div>
+              <select id="bi-t-${cat.key}" class="form-input" style="width:110px">
+                <option value="fixed">📌 Fixed</option>
+                <option value="per_head">👥 Per head</option>
+              </select>
+            </div>
+            <div style="width:90px">
+              <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Price (€)</div>
+              <input id="bi-p-${cat.key}" class="form-input" type="number" placeholder="0"/>
+            </div>
+            <div style="width:70px">
+              <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">VAT %</div>
+              <input id="bi-v-${cat.key}" class="form-input" type="number" placeholder="0"/>
+            </div>
+            <div style="width:80px">
+              <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Comm % <span style="color:var(--light)">(opt)</span></div>
+              <input id="bi-c-${cat.key}" class="form-input" type="number" placeholder="—"/>
+            </div>
+            <button class="btn-sm primary" style="height:36px" onclick="addBudgetItem('${cat.key}')">＋ Add</button>
+          </div>
+        </div>
+
+        <!-- PAYMENTS SECTION -->
+        <div style="margin-top:12px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px">
+            <div style="font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid)">💳 Payments</div>
+            <button class="btn-sm" onclick="addPaymentForm('${cat.key}')" style="font-size:0.72rem;padding:4px 10px">＋ Add Payment</button>
+          </div>
+          <div id="payments-${cat.key}">
+            ${buildPaymentsList(cat.key)}
+          </div>
+          <div id="payment-form-${cat.key}" style="display:none"></div>
         </div>
       </div>
     </div>`;
@@ -658,22 +772,198 @@ function buildBudget() {
   return h;
 }
 
-async function addBudgetItem(catKey) {
-  const name=document.getElementById(`bi-n-${catKey}`)?.value.trim();
-  const price=parseFloat(document.getElementById(`bi-p-${catKey}`)?.value)||0;
-  const comm=parseFloat(document.getElementById(`bi-c-${catKey}`)?.value)||0;
-  if(!name){toast('Enter item name');return;}
+function buildPaymentsList(catKey) {
+  const payments = (S.payments||[]).filter(p=>p.category===catKey);
+  if(!payments.length) return `<div style="font-size:0.78rem;color:var(--light)">No payments recorded yet</div>`;
+  return payments.map(p=>{
+    const vatAmt = Number(p.amount||0) * (Number(p.vat_rate||0)/100);
+    const total = Number(p.amount||0) + vatAmt;
+    const isPaid = p.status==='paid';
+    return `<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:0.8rem">
+      <span style="font-size:1rem">${p.method==='bank'?'🏦':'💵'}</span>
+      <span style="flex:1;color:var(--mid)">${p.description||'Payment'}</span>
+      <span style="color:var(--light);font-size:0.72rem">${p.due_date?new Date(p.due_date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):''}</span>
+      ${p.vat_rate?`<span style="color:var(--light);font-size:0.7rem">+${p.vat_rate}% VAT</span>`:''}
+      <span style="font-weight:500;color:${isPaid?'var(--green)':'var(--gold-dark)'}">€${Math.round(total).toLocaleString()}</span>
+      <span style="font-size:0.7rem;padding:2px 7px;border-radius:10px;background:${isPaid?'var(--green-light)':'var(--gold-light)'};color:${isPaid?'var(--green)':'var(--gold-dark)'}">
+        ${isPaid?'✓ Paid':'Pending'}
+      </span>
+      <button class="cat-icon-btn" onmousedown="togglePaymentPaid('${p.id}','${catKey}')">✓</button>
+      <button class="cat-icon-btn" onmousedown="removePayment('${p.id}','${catKey}')">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function addPaymentForm(catKey) {
+  const el = document.getElementById(`payment-form-${catKey}`);
+  if(!el) return;
+  el.style.display = 'block';
+  el.innerHTML = `<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-top:8px">
+    <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:flex-end">
+      <div style="flex:2;min-width:120px">
+        <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Description</div>
+        <input id="pf-desc-${catKey}" class="form-input" placeholder="e.g. Deposit"/>
+      </div>
+      <div style="width:100px">
+        <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Amount (€)</div>
+        <input id="pf-amt-${catKey}" class="form-input" type="number" placeholder="0"/>
+      </div>
+      <div style="width:70px">
+        <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">VAT %</div>
+        <input id="pf-vat-${catKey}" class="form-input" type="number" placeholder="0"/>
+      </div>
+      <div>
+        <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Method</div>
+        <select id="pf-method-${catKey}" class="form-input" style="width:100px">
+          <option value="bank">🏦 Bank</option>
+          <option value="cash">💵 Cash</option>
+        </select>
+      </div>
+      <div style="width:130px">
+        <div style="font-size:0.68rem;color:var(--light);margin-bottom:3px">Due Date</div>
+        <input id="pf-due-${catKey}" class="form-input" type="date"/>
+      </div>
+      <button class="btn-sm primary" style="height:36px" onclick="savePayment('${catKey}')">Save</button>
+      <button class="btn-sm" style="height:36px" onclick="document.getElementById('payment-form-${catKey}').style.display='none'">Cancel</button>
+    </div>
+  </div>`;
+}
+
+async function savePayment(catKey) {
+  const desc = document.getElementById(`pf-desc-${catKey}`)?.value.trim();
+  const amt = parseFloat(document.getElementById(`pf-amt-${catKey}`)?.value)||0;
+  const vat = parseFloat(document.getElementById(`pf-vat-${catKey}`)?.value)||0;
+  const method = document.getElementById(`pf-method-${catKey}`)?.value;
+  const due = document.getElementById(`pf-due-${catKey}`)?.value;
+  if(!amt){ toast('Enter amount'); return; }
   try {
-    const res=await sbPost('budget_items',{couple_id:S.current.id,category:catKey,item_name:name,item_price:price,commission_rate:comm,sort_order:S.budgetItems.length});
+    const res = await sbPost('payments',{
+      couple_id:S.current.id, category:catKey,
+      description:desc||'Payment', amount:amt, vat_rate:vat,
+      method, due_date:due||null, status:'pending'
+    });
+    if(!S.payments) S.payments=[];
+    S.payments.push(res[0]);
+    document.getElementById(`payment-form-${catKey}`).style.display='none';
+    document.getElementById(`payments-${catKey}`).innerHTML = buildPaymentsList(catKey);
+    toast('Payment added!');
+  } catch(e){ toast('Error: '+e.message, true); }
+}
+
+async function togglePaymentPaid(id, catKey) {
+  if(!S.payments) return;
+  const p = S.payments.find(p=>p.id===id);
+  if(!p) return;
+  p.status = p.status==='paid'?'pending':'paid';
+  await sbPatch('payments',`id=eq.${id}`,{status:p.status}).catch(e=>toast('Error: '+e.message,true));
+  document.getElementById(`payments-${catKey}`).innerHTML = buildPaymentsList(catKey);
+}
+
+async function removePayment(id, catKey) {
+  await sbDelete('payments',`id=eq.${id}`).catch(e=>toast('Error: '+e.message,true));
+  if(S.payments) S.payments = S.payments.filter(p=>p.id!==id);
+  document.getElementById(`payments-${catKey}`).innerHTML = buildPaymentsList(catKey);
+}
+
+function editBudgetItem(id) {
+  const b = S.budgetItems.find(x=>x.id===id);
+  if(!b) return;
+  showModal('modal-edit-bi','Edit Budget Item',`
+    <div class="form-group"><label class="form-label">Item Name</label>
+      <input class="form-input" id="ebi-name" value="${b.item_name}"/></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Type</label>
+        <select class="form-input" id="ebi-type">
+          <option value="fixed" ${b.pricing_type!=='per_head'?'selected':''}>📌 Fixed</option>
+          <option value="per_head" ${b.pricing_type==='per_head'?'selected':''}>👥 Per Head</option>
+        </select></div>
+      <div class="form-group"><label class="form-label">Price (€)</label>
+        <input class="form-input" type="number" id="ebi-price" value="${b.item_price||0}"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">VAT %</label>
+        <input class="form-input" type="number" id="ebi-vat" value="${b.vat_amount||0}"/></div>
+      <div class="form-group"><label class="form-label">Commission % <span style="color:var(--light)">(optional)</span></label>
+        <input class="form-input" type="number" id="ebi-comm" value="${b.commission_rate||0}"/></div>
+    </div>
+    <div class="modal-footer" style="padding:16px 0 0;border:none">
+      <button class="btn-sm" onclick="closeModal('dyn-modal-edit-bi')">Cancel</button>
+      <button class="btn-sm primary" onclick="saveBudgetItemEdit('${id}')">Save</button>
+    </div>
+  `);
+}
+
+async function saveBudgetItemEdit(id) {
+  const b = S.budgetItems.find(x=>x.id===id);
+  if(!b) return;
+  b.item_name = document.getElementById('ebi-name').value.trim();
+  b.pricing_type = document.getElementById('ebi-type').value;
+  b.item_price = parseFloat(document.getElementById('ebi-price').value)||0;
+  b.vat_amount = parseFloat(document.getElementById('ebi-vat').value)||0;
+  b.commission_rate = parseFloat(document.getElementById('ebi-comm').value)||0;
+  await sbPatch('budget_items',`id=eq.${id}`,{
+    item_name:b.item_name, pricing_type:b.pricing_type,
+    item_price:b.item_price, vat_amount:b.vat_amount, commission_rate:b.commission_rate
+  }).catch(e=>toast('Error: '+e.message,true));
+  closeModal('dyn-modal-edit-bi');
+  toast('Saved!');
+  switchTabDirect('budget');
+}
+
+async function addBudgetItem(catKey) {
+  const name = document.getElementById(`bi-n-${catKey}`)?.value.trim();
+  const price = parseFloat(document.getElementById(`bi-p-${catKey}`)?.value)||0;
+  const vat = parseFloat(document.getElementById(`bi-v-${catKey}`)?.value)||0;
+  const comm = parseFloat(document.getElementById(`bi-c-${catKey}`)?.value)||0;
+  const type = document.getElementById(`bi-t-${catKey}`)?.value||'fixed';
+  if(!name){ toast('Enter item name'); return; }
+  try {
+    const res = await sbPost('budget_items',{
+      couple_id:S.current.id, category:catKey, item_name:name,
+      item_price:price, vat_amount:vat, commission_rate:comm,
+      pricing_type:type, sort_order:S.budgetItems.length
+    });
     S.budgetItems.push(res[0]);
     toast('Item added!');
     switchTabDirect('budget');
-  } catch(e){toast('Error: '+e.message,true);}
+  } catch(e){ toast('Error: '+e.message, true); }
 }
+
 async function removeBudgetItem(id) {
   await sbDelete('budget_items',`id=eq.${id}`).catch(e=>toast('Error: '+e.message,true));
-  S.budgetItems=S.budgetItems.filter(b=>b.id!==id);
+  S.budgetItems = S.budgetItems.filter(b=>b.id!==id);
   switchTabDirect('budget');
+}
+
+function showPaymentsSummary() {
+  if(!S.payments?.length){ toast('No payments recorded yet'); return; }
+  const pending = S.payments.filter(p=>p.status!=='paid');
+  const paid = S.payments.filter(p=>p.status==='paid');
+  const sumPending = pending.reduce((a,p)=>a+Number(p.amount||0)*(1+Number(p.vat_rate||0)/100),0);
+  const sumPaid = paid.reduce((a,p)=>a+Number(p.amount||0)*(1+Number(p.vat_rate||0)/100),0);
+  const rows = p => p.map(x=>`<div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:0.8rem">
+    <span>${x.method==='bank'?'🏦':'💵'}</span>
+    <span style="flex:1">${x.description}</span>
+    <span style="color:var(--light)">${CATS.find(c=>c.key===x.category)?.label||x.category}</span>
+    <span style="color:var(--light)">${x.due_date?new Date(x.due_date).toLocaleDateString('en-GB',{day:'numeric',month:'short'}):''}</span>
+    <span style="font-weight:500">€${Math.round(Number(x.amount||0)*(1+Number(x.vat_rate||0)/100)).toLocaleString()}</span>
+  </div>`).join('');
+  showModal('modal-payments','💳 All Payments',`
+    <div style="margin-bottom:14px">
+      <div style="display:flex;gap:12px;margin-bottom:14px">
+        <div style="flex:1;background:var(--rose-light);border-radius:var(--radius-sm);padding:12px;text-align:center">
+          <div style="font-size:1.2rem;font-weight:500;color:var(--rose)">€${Math.round(sumPending).toLocaleString()}</div>
+          <div style="font-size:0.7rem;color:var(--mid)">Pending</div>
+        </div>
+        <div style="flex:1;background:var(--green-light);border-radius:var(--radius-sm);padding:12px;text-align:center">
+          <div style="font-size:1.2rem;font-weight:500;color:var(--green)">€${Math.round(sumPaid).toLocaleString()}</div>
+          <div style="font-size:0.7rem;color:var(--mid)">Paid</div>
+        </div>
+      </div>
+      ${pending.length?`<div style="font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid);margin-bottom:6px">Pending</div>${rows(pending)}`:''}
+      ${paid.length?`<div style="font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid);margin-top:12px;margin-bottom:6px">Paid</div>${rows(paid)}`:''}
+    </div>
+  `);
 }
 
 // ── PLAN ──────────────────────────────────────────────────────────
