@@ -462,46 +462,39 @@ function buildOverview() {
   let h = `<div class="section-toolbar"><h2>Wedding Overview</h2></div>`;
   CATS.forEach(cat=>{
     const cvs = S.coupleVendors.filter(cv=>cv.category===cat.key);
-    const decided = cvs.some(cv=>cv.status==='booked'||cv.status==='decided');
-    const chips = cvs.length
-      ? cvs.map(cv=>{
-          const v = S.vendorCache[cv.vendor_id];
-          const name = v?v.name:cv.vendor_id;
-          const isLocked = cv.status==='booked';
-          const isRejected = cv.status==='rejected';
-          return `<div class="vendor-chip ${isRejected?'opacity:0.5':''}" style="${isRejected?'opacity:0.5;':''}" onclick="openVendorDetail('${cv.id}')">
-            <span class="chip-dot ${cv.status}"></span>
-            <span style="${isLocked?'font-weight:500':''}">${name}</span>
-            <span style="font-size:0.68rem;color:var(--light)">${cv.status}</span>
-            ${isLocked
-              ? `<span style="font-size:0.75rem" title="Locked in">🔒</span>`
-              : `<button class="cat-icon-btn" style="width:22px;height:22px;font-size:0.7rem;background:var(--green-light);border-color:rgba(90,138,90,0.3);color:var(--green)" onmousedown="event.stopPropagation();lockInVendor('${cv.id}','${cat.key}')" title="Lock in this vendor">🔒</button>`
-            }
-          </div>`;
-        }).join('')
-      : `<div class="cat-no-vendors">No vendors assigned yet</div>`;
+    const locked = cvs.find(cv=>cv.status==='booked');
+    const decided = !!locked;
+    const statusColors = {suggested:'var(--blue)',shortlisted:'var(--gold-dark)',decided:'var(--green)',booked:'var(--green)',rejected:'var(--rose)'};
+    const statusBg = {suggested:'var(--blue-light)',shortlisted:'var(--gold-light)',decided:'var(--green-light)',booked:'var(--green-light)',rejected:'var(--rose-light)'};
+
+    let chipsHtml = cvs.length ? cvs.map(cv=>{
+      const v = S.vendorCache[cv.vendor_id];
+      const name = v?v.name:cv.vendor_id;
+      const isLocked = cv.status==='booked';
+      const isRejected = cv.status==='rejected';
+      return `<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:${statusBg[cv.status]||'var(--surface2)'};border-radius:var(--radius-sm);border:1px solid ${isLocked?'var(--green)':isRejected?'rgba(201,122,122,0.2)':'var(--border)'};opacity:${isRejected?'0.6':'1'}">
+        <span style="font-size:0.84rem;font-weight:${isLocked?'500':'400'};flex:1;color:${isRejected?'var(--light)':'var(--ink)'}">${name}${isLocked?' 🔒':''}</span>
+        <span style="font-size:0.7rem;padding:2px 8px;border-radius:10px;background:${statusColors[cv.status]||'var(--mid)'};color:#fff">${isLocked?'Locked In':cv.status}</span>
+        ${!isLocked&&!isRejected?`<button class="btn-sm" style="font-size:0.7rem;padding:2px 8px;background:var(--green);color:#fff;border-color:var(--green)" onmousedown="event.stopPropagation();lockInVendor('${cv.id}','${cat.key}')">🔒 Lock In</button>`:''}
+        <button class="cat-icon-btn" onclick="event.stopPropagation();openVendorDetail('${cv.id}')" title="Edit">✏️</button>
+      </div>`;
+    }).join('') : `<div style="font-size:0.8rem;color:var(--light);font-style:italic;padding:4px 0">No vendors yet — click <strong>＋ Add</strong> to browse</div>`;
 
     h += `<div class="category-row">
       <div class="cat-row-header" onclick="toggleCat(this)">
         <span class="cat-emoji">${cat.emoji}</span>
-        <span class="cat-name" style="cursor:pointer" onclick="event.stopPropagation();browseVendors('${cat.key}','${cat.label}',\`${cat.emoji}\`)">${cat.label}</span>
-        <span class="cat-status ${decided?'decided':'draft'}">${decided?'✓ Decided':'DRAFT'}</span>
+        <span class="cat-name">${cat.label}</span>
+        <span class="cat-status ${decided?'decided':'draft'}">${decided?'🔒 Locked In':'DRAFT'}</span>
         <div class="cat-actions" onclick="event.stopPropagation()">
-          <button class="cat-icon-btn" title="Browse vendors" onclick="browseVendors('${cat.key}','${cat.label}','${cat.emoji}')">🔍</button>
+          <button class="cat-icon-btn" title="Add vendors" onclick="browseVendors('${cat.key}','${cat.label}','${cat.emoji}')">＋</button>
           <button class="cat-icon-btn" title="Compare" onclick="openCompare('${cat.key}','${cat.label}')">⊞</button>
           <button class="cat-icon-btn" title="Chat" onclick="goToChat('${cat.key}')">💬</button>
         </div>
         <span class="cat-chevron">▾</span>
       </div>
       <div class="cat-body">
-        <div class="vendor-chips">${chips}</div>
-        <div class="vendor-search-wrap" style="max-width:360px">
-          <input type="text" placeholder="🔍 Search & assign vendor…"
-            oninput="searchVendors(this,'${cat.key}')"
-            onfocus="showDd('${cat.key}')"
-            onblur="setTimeout(()=>hideDd('${cat.key}'),220)"/>
-          <div class="vendor-dropdown" id="dd-${cat.key}" style="display:none"></div>
-        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px">${chipsHtml}</div>
+        <button class="btn-sm" onclick="browseVendors('${cat.key}','${cat.label}','${cat.emoji}')">＋ Browse & Add Vendors</button>
       </div>
     </div>`;
   });
@@ -1391,10 +1384,16 @@ async function uploadFiles(files) {
       const path=`${S.current.id}/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;
       const r=await fetch(`${SB_URL}/storage/v1/object/media/${path}`,{
         method:'POST',
-        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':file.type||'application/octet-stream','x-upsert':'true'},
+        headers:{
+          'apikey':SB_KEY,
+          'Authorization':'Bearer '+SB_KEY,
+          'Content-Type':file.type||'application/octet-stream',
+          'x-upsert':'true',
+          'Cache-Control':'3600'
+        },
         body:file
       });
-      if(!r.ok) throw new Error(await r.text());
+      if(!r.ok) { const err=await r.text(); throw new Error(err); }
       const fileUrl=`${SB_URL}/storage/v1/object/public/media/${path}`;
       const res=await sbPost('media_files',{couple_id:S.current.id,file_name:file.name,file_url:fileUrl,file_type:fileType,visible_to_couple:true,uploaded_by:'planner'});
       S.mediaFiles.unshift(res[0]);
